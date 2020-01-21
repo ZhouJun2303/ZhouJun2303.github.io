@@ -16,7 +16,7 @@ xpg     [tank](https://zhoujun2303.github.io/xpg/)
 
 
 ### 二维码不显示  
-自行解决请点击()[click](https://blog.csdn.net/qq_38232598/article/details/91346392)  
+自行解决请点击[click](https://blog.csdn.net/qq_38232598/article/details/91346392)  
 或请点击 [click](http://139.129.89.22:8892/tank.png)
 
 
