@@ -9,7 +9,7 @@ DEMO     [DEMO](https://zhoujun2303.github.io/DEMO/)
 xpg     [tank](https://zhoujun2303.github.io/xpg/)  
 
 ### tankproject
-包含H5体验，安卓下载，如果你觉得项目不错可以 [联系我]('tencent://message/?uin=478103223&Site=http://www.xxx.com&Menu=yes')  
+包含H5体验，安卓下载，如果你觉得项目不错可以 [click]('tencent://message/?uin=478103223&Site=http://www.xxx.com&Menu=yes')  
 体验请[click](https://zhoujun2303.github.io/tank_fire/)  
 
 ## Authors 
