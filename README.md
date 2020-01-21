@@ -1,7 +1,8 @@
 # 示例项目
  
-目前包含了一个房卡麻将，使用protobuf的bc类游戏
-#project
+包含多个演示项目
+
+##project-
 [plan](https://zhoujun2303.github.io/plan/)
 
 ## Authors 
