@@ -15,8 +15,9 @@ xpg     [tank](https://zhoujun2303.github.io/xpg/)
 ![code](https://github.com/ZhouJun2303/ZhouJun2303.github.io/blob/master/tank.png)  
 
 
-二维码不显示请点击[click](https://blog.csdn.net/qq_38232598/article/details/91346392)  
-HR请点击 [click](https://blog.csdn.net/qq_38232598/article/details/91346392)
+### 二维码不显示  
+自行解决请点击()[click](https://blog.csdn.net/qq_38232598/article/details/91346392)  
+或请点击 [click](http://139.129.89.22:8892/tank.png)
 
 
 ## Authors 
