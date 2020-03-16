@@ -1,0 +1,123 @@
+[
+  {
+    "__type__": "cc.SpriteFrame",
+    "content": {
+      "name": "1",
+      "texture": "4a4kz4GelB6J/fgZnPvcHD",
+      "rect": [
+        260,
+        301,
+        159,
+        154
+      ],
+      "offset": [
+        -20.5,
+        262
+      ],
+      "originalSize": [
+        720,
+        1280
+      ],
+      "capInsets": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "__type__": "cc.SpriteFrame",
+    "content": {
+      "name": "3",
+      "texture": "2c9uI2MIBDcp0AOb7Jw1A4",
+      "rect": [
+        252,
+        286,
+        170,
+        173
+      ],
+      "offset": [
+        -23,
+        267.5
+      ],
+      "originalSize": [
+        720,
+        1280
+      ],
+      "capInsets": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "__type__": "cc.SpriteFrame",
+    "content": {
+      "name": "2",
+      "texture": "99dp/cxm1CCIYfiGgemmcO",
+      "rect": [
+        277,
+        311,
+        129,
+        127
+      ],
+      "offset": [
+        -18.5,
+        265.5
+      ],
+      "originalSize": [
+        720,
+        1280
+      ],
+      "capInsets": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "__type__": "cc.AnimationClip",
+    "_name": "blod",
+    "_duration": 0.08333333333333333,
+    "speed": 0.15,
+    "curveData": {
+      "comps": {
+        "cc.Sprite": {
+          "spriteFrame": [
+            {
+              "frame": 0,
+              "value": null
+            },
+            {
+              "frame": 0.016666666666666666,
+              "value": {
+                "__uuid__": "0bF5/sL6ROeKzfOmlK+ofu"
+              }
+            },
+            {
+              "frame": 0.03333333333333333,
+              "value": {
+                "__uuid__": "6f9fKNApZMWpMzqdSGwt6h"
+              }
+            },
+            {
+              "frame": 0.05,
+              "value": {
+                "__uuid__": "3edj1yYIFCBo9zJyLR525N"
+              }
+            },
+            {
+              "frame": 0.06666666666666667,
+              "value": null
+            }
+          ]
+        }
+      }
+    }
+  }
+]
