@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="form_action.asp" method="get">
+        测试ID: <input id="ID" type="text" name="fname" />
+        <input type="button" value="提交" onclick="dircator()" />
+    </form>
+    <script>
+        dircator = function () {
+            let msg = document.getElementById("ID").value;
+            let wx= isWeiXin();
+            if(wx){
+                alert("请用浏览器打开!!!");
+                return
+            }
+            if (msg == null || !msg) {
+                alert("请输入账号");
+            } else {
+                console.log(msg);
+                window.location.href = "https://zhoujun2303.github.io/www/?user=" + msg;
+            }
+        }
+        function isWeiXin() {
+            //window.navigator.userAgent属性包含了浏览器类型、版本、操作系统类型、浏览器引擎类型等信息，这个属性可以用来判断浏览器类型
+            var ua = window.navigator.userAgent.toLowerCase();
+            //通过正则表达式匹配ua中是否含有MicroMessenger字符串
+            if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
+</body>
+
+</html>
