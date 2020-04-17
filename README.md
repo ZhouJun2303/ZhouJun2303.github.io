@@ -10,7 +10,7 @@ xpg     [tank](https://zhoujun2303.github.io/xpg/)
 
 ### online(联网类别游戏)
 
-### tankproject
+### tankproject(1)
 包含H5体验，安卓下载，如果你觉得项目不错可以 [联系我](http://47.105.209.80:8891/)  
 体验请[click](http://47.105.209.80:8891/)  
 或者扫描二维码  
@@ -19,7 +19,7 @@ xpg     [tank](https://zhoujun2303.github.io/xpg/)
 自行解决请点击[click](https://blog.csdn.net/qq_38232598/article/details/91346392)  
 或请点击 [click](http://47.105.209.80:8892/tank.png)
 
-### heroFight
+### heroFight(2)
 英雄回合制战斗游戏 [测试账号a,b,1-8](http://193.112.39.144:8889/)
 
 
