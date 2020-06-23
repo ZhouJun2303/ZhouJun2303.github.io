@@ -1,0 +1,1 @@
+{"type":"View","props":{"width":750,"top":0,"runtime":"game/view/HomeView.js","right":0,"left":0,"height":1334,"bottom":0},"compId":2,"child":[{"type":"Button","props":{"y":1159,"x":311,"var":"startGameBtn","skin":"comp/button.png","name":"startGameBtn","label":"label"},"compId":62}],"loadList":["comp/button.png"],"loadList3D":[]}
