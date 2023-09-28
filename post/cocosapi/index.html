@@ -1,0 +1,329 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CocosAPI | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="CocosAPI | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="
+其他组件
+
+    cc.Motionstreak 拖尾
+    cc.Animation 动画组件  cc.AnimationClip 动画剪辑
+
+
+资源类型
+
+    cc.AudioClip 音频资源
+    cc.SpriteFr..." />
+    <meta name="keywords" content="Cocos" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              CocosAPI
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-12-28 10:54 AM
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/-kekcKgOE/" class="post-tag">
+                  # Cocos
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <ul>
+<li>其他组件</li>
+</ul>
+<pre><code>    cc.Motionstreak 拖尾
+    cc.Animation 动画组件  cc.AnimationClip 动画剪辑
+</code></pre>
+<ul>
+<li>资源类型</li>
+</ul>
+<pre><code>    cc.AudioClip 音频资源
+    cc.SpriteFrame 图片资源
+   cc.SpriteFrameAtlas 图集资源
+   cc.AnimathonClip 动画剪辑资源
+   cc.Prefab  预制件
+</code></pre>
+<ul>
+<li>单例模式</li>
+</ul>
+<pre><code>cc.director 
+    preloadScene() 预加载创景
+    loadScene()切换场景
+    pause()暂停游戏逻辑，不会禁用触摸事件
+    
+cc.loader
+    loadRes()  动态加载本地资源  resources 文件下面
+    load()  远程加载资源
+cc.audioEngine 
+    play()
+    playMusic()
+    playEffect()//音效  
+ cc.Button()按钮组件
+     过度类型：颜色，图片，缩放
+     四种状态：normal,hover,pressed,cancel
+     回调函数的绑定
+     禁用  interactable
+ cc.ProgressBar
+     progress 进度
+ cc.SrollView滚动视图
+     isAutoScrolling()是否在移动
+     this.scrollNode.stopAutoScroll();
+ cc.Layout  布局
+ cc.Widget 对其组件（做适配）
+ cc.Canvas 画布 屏幕适配方案    
+ cc.ToggleContainer 单选按钮
+</code></pre>
+<ul>
+<li>渲染组件</li>
+</ul>
+<pre><code> cc.Sprite 精灵
+     九宫格精灵的使用
+     填充精灵的使用
+     混合模式的使用
+     动态切换精灵的图片
+ cc.Label 文本的使用
+     内容的设置 .string、
+     文本的适配与对其
+     字体的使用
+     富文本的使用
+ cc.ParticalSystem 粒子系统
+</code></pre>
+<ul>
+<li>碰撞组件</li>
+</ul>
+<pre><code>  cc.Collider 
+      boxCollider
+      circleCollider
+      PolygonCollider
+      分组设置
+      组别配对
+      碰撞回调
+      碰撞管理器  
+</code></pre>
+<p>add 2020.01.03</p>
+<pre><code>director
+获取视图打下
+cc.director.getWinSize()
+=&gt; cc.winSize
+获取屏幕的物理分辨率
+cc.view.getFrameSize()
+获取当前场景
+cc.director.getScene() ==&gt;return this._scene;
+控制游戏帧率
+cc.game.setFrameRate();
+暂停动画
+cc.director.stopAnimation();
+game
+切入后台，切入前台
+cc.game.EVENT_HIDE
+cc.game.EVENT_SHOW
+常驻节点的添加
+cc.game.addPersistRootNode();
+cc.game.removePersistRootNode();
+cc.game.isPersistRootNode();
+systemEvent
+cc.systemEvent.KEY_DOWN;
+cc.systemEvent.KEY_UP;
+cc.systemEvent.DEVICEMOTION;//重力感应
+view
+cc.view.resizeWithBrowserSize()//自适应浏览器尺寸
+cc.view.setOrientation()//设置屏幕朝向
+cc.view.enableAutoFullScreen()//移动端全屏
+cc.view.setCanvasSize(width,height)//web端设置尺寸
+
+关闭FPS显示
+cc.debug.setDisplayStats(false);
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/iis/">
+              <h3 class="post-title">
+                IIS
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

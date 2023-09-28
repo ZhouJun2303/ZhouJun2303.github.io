@@ -1,0 +1,241 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>hinge joint | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="hinge joint | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="文档
+
+hinge joint 须配合 rigidbody 使用
+属性中的 spring  和 motor 不能同时使用，会导致意想不到的问题
+配合rigidbody 中的mass 属性需要和主角的重量考虑
+
+在 rockCrawling中..." />
+    <meta name="keywords" content="Physics,Unity" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              hinge joint
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-04-29 13:58 PM
+              </span>
+              <span>
+                1 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/b2n0xfep7/" class="post-tag">
+                  # Physics
+                </a>
+              
+                <a href="https://zhoujun2303.github.io/tag/pz2bkmFLZ/" class="post-tag">
+                  # Unity
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p><a href="https://docs.unity.cn/cn/2019.4/Manual/class-HingeJoint.html">文档</a></p>
+<ul>
+<li>hinge joint 须配合 rigidbody 使用</li>
+<li>属性中的 spring  和 motor 不能同时使用，会导致意想不到的问题</li>
+<li>配合rigidbody 中的mass 属性需要和主角的重量考虑
+<ul>
+<li>在 rockCrawling中</li>
+<li>car mass 500 hinge joint 25</li>
+</ul>
+</li>
+<li>car body</li>
+<li>car wheel<br>
+<img src="https://zhoujun2303.github.io/post-images/1659765712852.jpg" alt="" loading="lazy"></li>
+<li>hingejoint rigidbofy<br>
+<img src="https://zhoujun2303.github.io/post-images/1659765716689.jpg" alt="" loading="lazy"></li>
+<li>hinge joint<br>
+<img src="https://zhoujun2303.github.io/post-images/1659765720978.jpg" alt="" loading="lazy"></li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/unity-xue-xi/">
+              <h3 class="post-title">
+                Unity 学习
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

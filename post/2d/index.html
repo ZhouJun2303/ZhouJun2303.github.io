@@ -1,0 +1,228 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>2D | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="2D | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="Sprite导入
+
+Single 将纹理作为单个精灵使用，通常用于显示单个图像或UI元素。
+Multiple 将纹理拆分成多个精灵，每个精灵对应纹理中的一个区域。通常用于制作动画、拼图和其他多个小图像的场景。
+Polygon 将纹理作为多边..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              2D
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-05 15:15 PM
+              </span>
+              <span>
+                1 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="sprite导入">Sprite导入</h2>
+<ul>
+<li>Single 将纹理作为单个精灵使用，通常用于显示单个图像或UI元素。</li>
+<li>Multiple 将纹理拆分成多个精灵，每个精灵对应纹理中的一个区域。通常用于制作动画、拼图和其他多个小图像的场景。</li>
+<li>Polygon 将纹理作为多边形精灵使用，可以手动指定多边形的顶点和边缘，通常用于制作带有复杂形状的2D物体。</li>
+</ul>
+<h2 id="texture-atlasing纹理集">Texture atlasing(纹理集)</h2>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#sprite%E5%AF%BC%E5%85%A5">Sprite导入</a></li>
+<li><a href="#texture-atlasing%E7%BA%B9%E7%90%86%E9%9B%86">Texture atlasing(纹理集)</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/wen-li-nei-cun-you-hua/">
+              <h3 class="post-title">
+                纹理内存优化
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

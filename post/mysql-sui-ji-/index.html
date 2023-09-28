@@ -1,0 +1,318 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MySql随记 | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="MySql随记 | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="
+创建数据库
+
+CREATE` SCHEMA `数据库名字` ;
+
+-- show databases
+-- 选择使用的数据库
+use qsz_database_20190703;
+-- 显示数据库下所有的表
+show tables;
+--..." />
+    <meta name="keywords" content="MySql" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              MySql随记
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-07-03 10:14 AM
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/k696wQVytz/" class="post-tag">
+                  # MySql
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <ul>
+<li>创建数据库</li>
+</ul>
+<pre><code>CREATE` SCHEMA `数据库名字` ;
+</code></pre>
+<pre><code>-- show databases
+-- 选择使用的数据库
+use qsz_database_20190703;
+-- 显示数据库下所有的表
+show tables;
+-- 查看表单结构
+describe userinfo;
+-- 向表中添加信息
+-- insert into userinfo(uniqueID,accountID,passworld,nickName) values(2,2,3,&quot;A&quot;);
+-- insert into userinfo(uniqueID,accountID,passworld,nickName) values( 3,2,3,&quot;B&quot;);
+-- insert into userinfo(uniqueID,accountID,passworld,nickName) values( 5,2,3,&quot;C&quot;);
+-- 显示表单内容
+-- select *from userinfo
+
+SET SQL_SAFE_UPDATES = 0;
+-- 删除玩家
+delete from userinfo where  nickName=&quot;A&quot;;
+-- 查找用户信息表
+-- select *from userinfo;
+
+-- 查找用户信息
+select *from userinfo where nickName=&quot;B&quot;;
+-- 修改指定用户的指定信息
+-- 一次修改一个人，可以修改多个值
+update  userinfo set passworld=6666,gameWon=10 where nickName=&quot;B&quot;;
+
+-- 查找表
+-- select *from userinfo_qsz;
+-- 清空表
+-- TRUNCATE TABLE userinfo_qsz;
+
+-- 查找表是否存在
+-- SELECT table_name FROM information_schema.TABLES WHERE table_name = &quot;userinfo&quot;;
+</code></pre>
+<h1 id="数据库的">数据库的</h1>
+<figure data-type="image" tabindex="1"><img src="https://zhoujun2303.github.io/post-images/1659752245956.jpg" alt="" loading="lazy"></figure>
+<ul>
+<li>创建数据表的操作指令</li>
+</ul>
+<pre><code>CREATE TABLE `qsz_database_20190703`.`userinfo` (
+  `uniqueID` INT NOT NULL,
+  `accountID` VARCHAR(45) NULL,
+  `passworld` VARCHAR(45) NULL,
+  `nickName` VARCHAR(45) NULL,
+  `avatarURL` VARCHAR(45) NULL,
+  `gameWon` INT UNSIGNED ZEROFILL NULL,
+  `gameLost` INT UNSIGNED ZEROFILL NULL,
+  PRIMARY KEY (`uniqueID`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+</code></pre>
+<p><a href="https://www.jianshu.com/p/c8eb6d2471f8">参考链接</a></p>
+<pre><code>ALTER USER 'root'@'localhost' IDENTIFIED BY '123456' PASSWORD EXPIRE NEVER;
+
+ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';  
+</code></pre>
+<pre><code>CREATE TABLE `数据库名`.`表名`(
+    
+)
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://zhoujun2303.github.io/post-images/1659752355662.jpg" alt="" loading="lazy"></figure>
+<ul>
+<li>数据库的查询<br>
+<img src="https://zhoujun2303.github.io/post-images/1659752379560.jpg" alt="" loading="lazy"></li>
+</ul>
+<pre><code>show databases;
+</code></pre>
+<ul>
+<li>注释</li>
+</ul>
+<pre><code>--  空格
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://zhoujun2303.github.io/post-images/1659752454143.jpg" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p>查看表单具体结构<br>
+<img src="https://zhoujun2303.github.io/post-images/1659752471099.jpg" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>表中添加 信息<br>
+<img src="https://zhoujun2303.github.io/post-images/1659752504465.jpg" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>非主键数据表数据删除<br>
+<img src="https://zhoujun2303.github.io/post-images/1659752528723.jpg" alt="" loading="lazy"></p>
+</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84">数据库的</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/nodejs-lian-jie-shu-ju-ku/">
+              <h3 class="post-title">
+                NodeJS连接数据库
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,259 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cocos Android环境搭建 | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Cocos Android环境搭建 | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="安卓环境搭建
+JDK：1.8 个人qq群里有jdk1.8版本
+下载AS
+*1，下载NKDR16版本
+2，下载SDK主流版本，22-29
+3，配置好NDK和SDK的环境变量
+4，cocos Creator中配置
+使用cocos creator..." />
+    <meta name="keywords" content="Android,Cocos" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Cocos Android环境搭建
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-01-30 11:15 AM
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/RROQah795/" class="post-tag">
+                  # Android
+                </a>
+              
+                <a href="https://zhoujun2303.github.io/tag/-kekcKgOE/" class="post-tag">
+                  # Cocos
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="安卓环境搭建">安卓环境搭建</h1>
+<p>JDK：1.8 个人qq群里有jdk1.8版本<br>
+下载AS<br>
+*1，下载NKDR16版本<br>
+2，下载SDK主流版本，22-29<br>
+3，配置好NDK和SDK的环境变量<br>
+4，cocos Creator中配置</p>
+<h1 id="使用cocos-creator构建项目">使用cocos creator构建项目*</h1>
+<p>并使用cocos creator导入构建好的项目<br>
+可能出现的问题<br>
+<img src="https://zhoujun2303.github.io/post-images/1659755923050.jpg" alt="" loading="lazy"></p>
+<pre><code>Manifest merger failed : uses-sdk:minSdkVersion 16 cannot be smaller than version 22 declared in library [:libcocos2dx] D:\tmyclient\build\jsb-default\frameworks\cocos2d-x\cocos\platform\android\libcocos2dx\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml as the library might be using APIs not available in 16
+	Suggestion: use a compatible library with a minSdk of at most 16,
+		or increase this project's minSdk version to at least 22,
+		or use tools:overrideLibrary=&quot;org.cocos2dx.lib&quot; to force usage (may lead to runtime failures)
+</code></pre>
+<p>sdk版本不一致导致的问题<br>
+解决办法 更改为最低需要的SDK版本</p>
+<h1 id="导入依赖的资源包">导入依赖的资源包</h1>
+<p>showInExport:打开资源路径<br>
+libs包引入成功<br>
+<img src="https://zhoujun2303.github.io/post-images/1659755991694.jpg" alt="" loading="lazy"><br>
+打开build.gradle，将所需的libs包引入<br>
+<img src="https://zhoujun2303.github.io/post-images/1659756019666.jpg" alt="" loading="lazy"><br>
+点击sync now：立即改变<br>
+打开appActivity<br>
+将需要用到的方法声明写入<br>
+<img src="https://zhoujun2303.github.io/post-images/1659756064938.jpg" alt="" loading="lazy"><br>
+<img src="https://zhoujun2303.github.io/post-images/1659756078819.jpg" alt="" loading="lazy"></p>
+<p>打包成功之后就是原生反射调用JAVA中的函数</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%AE%89%E5%8D%93%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA">安卓环境搭建</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8cocos-creator%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE">使用cocos creator构建项目*</a></li>
+<li><a href="#%E5%AF%BC%E5%85%A5%E4%BE%9D%E8%B5%96%E7%9A%84%E8%B5%84%E6%BA%90%E5%8C%85">导入依赖的资源包</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/lerp-yun-suan/">
+              <h3 class="post-title">
+                Lerp运算
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,290 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Unity RuntimeInitializeOnLoadMethod 吃人事件 | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Unity RuntimeInitializeOnLoadMethod 吃人事件 | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="问题
+使用 RuntimeInitializeOnLoadMethod 进行自动初始化一个常驻节点并添加一个挂载一个脚本
+[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.Su..." />
+    <meta name="keywords" content="UnityEngine" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Unity RuntimeInitializeOnLoadMethod 吃人事件
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-14 15:16 PM
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/szG58N8F94/" class="post-tag">
+                  # UnityEngine
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="问题">问题</h2>
+<p>使用 RuntimeInitializeOnLoadMethod 进行自动初始化一个常驻节点并添加一个挂载一个脚本</p>
+<pre><code>[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+static void Init()
+{
+    if (Instance == null)
+    {
+        Instance = EventGameObject.GetOrAddComponent&lt;StoreGiveCardEventCenter&gt;();
+    }
+}
+</code></pre>
+<p>在初始化Awake 注册了事件，在PC 能正常监听事件，在Android真机测试没有事件触发</p>
+<h2 id="测试解决方案">测试解决方案</h2>
+<p>经过Debug 测试</p>
+<h3 id="在应用程序注册之后">在应用程序注册之后</h3>
+<pre><code>[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+
+protected virtual void Awake()
+{
+    m_binder.Init(this);
+    Debug.Log(&quot;Event Test  Init &quot; + gameObject.name + &quot;  &quot; + this.GetType());
+}
+
+protected virtual void OnDestroy()
+{
+    m_binder.Dispose();
+    Debug.Log(&quot;Event Test  Dispose &quot; + gameObject.name + &quot;  &quot; + this.GetType());
+}
+</code></pre>
+<p>真机实测</p>
+<pre><code>2023-03-10 15:15:42.611 7303-7412/com.hg.heromaking D/sdk5Events: logEvent failed eventsTracker doesn't exist
+2023-03-10 15:15:42.669 7303-7303/com.hg.heromaking D/sdk5Events: logEvent failed eventsTracker doesn't exist
+2023-03-10 15:15:42.776 7303-7303/com.hg.heromaking D/sdk5Events: logEvent failed eventsTracker doesn't exist
+2023-03-10 15:15:42.776 7303-7303/com.hg.heromaking D/sdk5Events: logEvent failed eventsTracker doesn't exist
+2023-03-10 15:15:42.915 7303-7366/com.hg.heromaking I/Unity: Event Test  Init GameEventCenter  StoreGiveCardEventCenter
+    UnityEngine.Logger:Log(LogType, Object)
+    UnityEngine.GameObject:AddComponent()
+    StoreGiveCardEventCenter:Init()
+2023-03-10 15:15:43.525 7303-7528/com.hg.heromaking D/sdk5Events: logEvent failed eventsTracker doesn't exist
+2023-03-10 15:15:45.050 7303-7366/com.hg.heromaking I/Unity: Event Test  Dispose GameEventCenter  StoreGiveCardEventCenter
+    UnityEngine.Logger:Log(LogType, Object)
+</code></pre>
+<p>Event Test  Dispose 调用的销毁 离谱！分析的原因可能现在场景都没有，节点没处挂载。</p>
+<h3 id="在场景加载之后">在场景加载之后</h3>
+<pre><code>[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+
+一切正常
+</code></pre>
+<h3 id="直接挂载场景中的awake-和-这个runtimeinitializeonloadmethod-awake">直接挂载场景中的Awake 和 这个RuntimeInitializeOnLoadMethod Awake</h3>
+<h2 id="unity-编辑器">Unity 编辑器</h2>
+<ul>
+<li>[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]</li>
+<li>直接挂载在场景中的Awake</li>
+<li>[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]</li>
+</ul>
+<h2 id="android-平台">Android 平台</h2>
+<ul>
+<li>同编辑器平台</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+<li><a href="#%E6%B5%8B%E8%AF%95%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88">测试解决方案</a>
+<ul>
+<li><a href="#%E5%9C%A8%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E6%B3%A8%E5%86%8C%E4%B9%8B%E5%90%8E">在应用程序注册之后</a></li>
+<li><a href="#%E5%9C%A8%E5%9C%BA%E6%99%AF%E5%8A%A0%E8%BD%BD%E4%B9%8B%E5%90%8E">在场景加载之后</a></li>
+<li><a href="#%E7%9B%B4%E6%8E%A5%E6%8C%82%E8%BD%BD%E5%9C%BA%E6%99%AF%E4%B8%AD%E7%9A%84awake-%E5%92%8C-%E8%BF%99%E4%B8%AAruntimeinitializeonloadmethod-awake">直接挂载场景中的Awake 和 这个RuntimeInitializeOnLoadMethod Awake</a></li>
+</ul>
+</li>
+<li><a href="#unity-%E7%BC%96%E8%BE%91%E5%99%A8">Unity 编辑器</a></li>
+<li><a href="#android-%E5%B9%B3%E5%8F%B0">Android 平台</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/unity-fan-she-reflection/">
+              <h3 class="post-title">
+                Unity 反射（Reflection）
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

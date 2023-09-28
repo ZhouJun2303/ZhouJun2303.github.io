@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://zhoujun2303.github.io</id>
+    <title>长胖是个梦想</title>
+    <updated>2023-09-28T03:27:16.267Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://zhoujun2303.github.io"/>
+    <link rel="self" href="https://zhoujun2303.github.io/atom.xml"/>
+    <subtitle>10000小时定律</subtitle>
+    <logo>https://zhoujun2303.github.io/images/avatar.png</logo>
+    <icon>https://zhoujun2303.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2023, 长胖是个梦想</rights>
+    <entry>
+        <title type="html"><![CDATA[Unity With GooglePlay Split Application]]></title>
+        <id>https://zhoujun2303.github.io/post/unity-with-googleplay-split-application/</id>
+        <link href="https://zhoujun2303.github.io/post/unity-with-googleplay-split-application/">
+        </link>
+        <updated>2023-09-28T02:46:50.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="google-官方文档">Google <a href="https://developer.android.google.cn/guide/playcore/asset-delivery/integrate-native?hl=zh-cn">官方文档</a></h3>
+<h3 id="原理">原理</h3>
+<h4 id="u3d">U3D</h4>
+<p>开启分包之后 Unity的部分资源文件在android中独立成一个资源package模块</p>
+<h5 id="设置">设置</h5>
+<pre><code>// 切换Split Application Binary状态
+PlayerSettings.Android.useAPKExpansionFiles = BuildProjectWindows.GetShouldEnableSplitAPK();
+EditorUserBuildSettings.buildAppBundle = BuildProjectWindows.GetShouldEnableSplitAPK();
+</code></pre>
+<h4 id="android">android</h4>
+<h5 id="launcherbuildgradle">launcher/build.gradle</h5>
+<pre><code>old 
+@@ -53,8 +53,10 @@ android {
+        doNotStrip '*/armeabi-v7a/*.so'
+        doNotStrip '*/arm64-v8a/*.so'
+    }
+
+
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+
+new
+@@ -53,8 +53,10 @@ android {
+        doNotStrip '*/armeabi-v7a/*.so'
+        doNotStrip '*/arm64-v8a/*.so'
+    }
+
+    assetPacks = [&quot;:UnityDataAssetPack&quot;]
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+
+</code></pre>
+<h5 id="gradleproperties">gradle.properties</h5>
+<pre><code>old 
+@@ -1,4 +1,5 @@
+org.gradle.jvmargs=-Xmx2048M
+org.gradle.parallel=true
+android.enableR8=false
+unityStreamingAssets=.unity3d, UnityServicesProjectConfiguration.json
+
+new
+@@ -1,4 +1,5 @@
+org.gradle.jvmargs=-Xmx2048M
+org.gradle.parallel=true
+android.enableR8=false
+unityStreamingAssets=.unity3d
+android.bundle.enableUncompressedNativeLibs=false
+No newline at end of file
+</code></pre>
+<h5 id="settingsgradle">settings.gradle</h5>
+<pre><code>old
+@@ -1,1 +1,2 @@
+include ':launcher', ':unityLibrary'
+No newline at end of file
+
+new
+@@ -1,1 +1,2 @@
+include ':launcher', ':unityLibrary'
+include ':UnityDataAssetPack'
+No newline at end of file
+
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Unity GameGM 在不同平台上的统一处理方案]]></title>
+        <id>https://zhoujun2303.github.io/post/unity-gamegm-zai-bu-tong-ping-tai-shang-de-tong-yi-chu-li-fang-an/</id>
+        <link href="https://zhoujun2303.github.io/post/unity-gamegm-zai-bu-tong-ping-tai-shang-de-tong-yi-chu-li-fang-an/">
+        </link>
+        <updated>2023-07-20T07:57:18.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="设计思路-利用反射拿到自定一的特性值在不同平台上渲染的方案">设计思路 利用反射拿到自定一的特性值，在不同平台上渲染的方案</h2>
+<h2 id="code">code</h2>
+<h3 id="scriptableobject-文件">ScriptableObject 文件</h3>
+<pre><code>[GUIColor(&quot;@Color.red&quot;)]
+[GameGMRunTimeAttribute(&quot;设置版本号&quot;, true, true)]
+[Button(&quot;设置版本号&quot;, ButtonSizes.Medium)]
+[FoldoutGroup(&quot;通用功能&quot;)]
+public void SetTestGameVersion()
+{
+    if (!Application.isPlaying) return;
+    AdsCtrl.Instance.TestGameVersion = TempValue;
+}
+</code></pre>
+<h3 id="unityeditor的展示">UnityEditor的展示</h3>
+<p>实现基于Odin 的 <code>Button</code> 和 <code>FoldoutGroup</code> 特性在编辑器面板上展示.asset显示<br>
+Odin 的使用可参考 <a href="https://zhoujun2303.github.io/post/odin-inspector/">Odin Inspector</a>;</p>
+<h3 id="真机平台如何使用">真机平台如何使用</h3>
+<h4 id="必要知识-反射">必要知识 <a href="https://zhoujun2303.github.io/post/unity-fan-she-reflection/">反射</a></h4>
+<h4 id="gamegmruntimeattribute">GameGMRunTimeAttribute</h4>
+<pre><code>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
+
+
+[AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = true)]
+public class GameGMRunTimeAttribute : Attribute
+{
+    /// &lt;summary&gt;
+    /// 作用域
+    /// &lt;/summary&gt;
+    public static readonly BindingFlags EffectFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;
+
+    /// &lt;summary&gt;
+    /// 显示方法名
+    /// &lt;/summary&gt;
+    public string FunName { private set; get; }
+
+    /// &lt;summary&gt;
+    /// 是否使用参数
+    /// &lt;/summary&gt;
+    public bool UseParameter { private set; get; }
+
+    /// &lt;summary&gt;
+    /// 是否在移动端展示
+    /// &lt;/summary&gt;
+    public bool HideInMobile { private set; get; }
+
+    /// &lt;summary&gt;
+    /// GM runtime 特性
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;funName&quot;&gt;&lt;/param&gt;
+    public GameGMRunTimeAttribute(string funName)
+    {
+        FunName = funName;
+    }
+
+    /// &lt;summary&gt;
+    /// 在真机状态显示的方法名
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;funName&quot;&gt;方法名&lt;/param&gt;
+    /// &lt;param name=&quot;useParameter&quot;&gt;是否需要使用参数配合&lt;/param&gt;
+    public GameGMRunTimeAttribute(string funName, bool useParameter)
+    {
+        FunName = funName;
+        UseParameter = useParameter;
+    }
+
+    /// &lt;summary&gt;
+    ///  GM runtime 特性
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;funName&quot;&gt;方法名&lt;/param&gt;
+    /// &lt;param name=&quot;useParameter&quot;&gt;是否需要使用参数配合&lt;/param&gt;
+    /// &lt;param name=&quot;hideInMobile&quot;&gt;真机隐藏按钮&lt;/param&gt;
+    public GameGMRunTimeAttribute(string funName, bool useParameter, bool hideInMobile)
+    {
+        FunName = funName;
+        UseParameter = useParameter;
+        HideInMobile = hideInMobile;
+    }
+}
+</code></pre>
+<h4 id="核心代码">核心代码</h4>
+<pre><code>private void Init()
+{
+    if (GameGMSettingSo == null) return;
+    Type t = typeof(GameGMSettingSo);
+    _methods = t.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
+    for (int i = 0; i &lt; _methods.Length; i++)
+    {
+        var attribute = _methods[i].GetCustomAttribute&lt;GameGMRunTimeAttribute&gt;();
+        if (null == attribute) continue;
+        if (attribute.HideInMobile) continue;
+        string funcName = attribute.FunName;
+        GameObject go = GameObject.Instantiate(_tempButton.gameObject, _GMNode);
+        RunTimeGMItem runTimeGMItem = new RunTimeGMItem();
+        runTimeGMItem.OnShowNode(go, i, funcName, attribute.UseParameter, OnButtonClick);
+    }
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Unity 关于Google后台崩溃Crash批量解析工具]]></title>
+        <id>https://zhoujun2303.github.io/post/unity-guan-yu-google-hou-tai-beng-kui-crash-pi-liang-jie-xi-gong-ju/</id>
+        <link href="https://zhoujun2303.github.io/post/unity-guan-yu-google-hou-tai-beng-kui-crash-pi-liang-jie-xi-gong-ju/">
+        </link>
+        <updated>2023-07-20T07:56:06.000Z</updated>
+        <content type="html"><![CDATA[<p>//todo 链接至有道 暂未开放</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Unity 基于 Obfuscator的代码混淆]]></title>
+        <id>https://zhoujun2303.github.io/post/unity-ji-yu-obfuscator-de-dai-ma-hun-yao/</id>
+        <link href="https://zhoujun2303.github.io/post/unity-ji-yu-obfuscator-de-dai-ma-hun-yao/">
+        </link>
+        <updated>2023-07-20T07:54:40.000Z</updated>
+        <content type="html"><![CDATA[<p>//todo 链接至有道 暂未开放</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Android 构建自动命名APK、AAB包，自动拷贝符号表]]></title>
+        <id>https://zhoujun2303.github.io/post/android-gou-jian-zi-dong-ming-ming-apkaab-bao-zi-dong-kao-bei-fu-hao-biao/</id>
+        <link href="https://zhoujun2303.github.io/post/android-gou-jian-zi-dong-ming-ming-apkaab-bao-zi-dong-kao-bei-fu-hao-biao/">
+        </link>
+        <updated>2023-07-20T07:48:25.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="apk-aab的自动化命名">APK、AAB的自动化命名</h1>
+<h2 id="示例">示例</h2>
+<pre><code> defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 33
+        multiDexEnabled true
+        applicationId 'com.xx.xxx'
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
+        versionCode 178
+        versionName '1.7.8'
+        consumerProguardFiles 'proguard-unity.txt'
+        testInstrumentationRunner &quot;androidx.test.runner.AndroidJUnitRunner&quot;
+        setProperty(&quot;archivesBaseName&quot;, &quot;${getAppName()}_haiwai_v${versionCode}_${releaseTime()}&quot;)
+    }
+</code></pre>
+<h2 id="获取时间">获取时间</h2>
+<pre><code>//获取时间，添加到发布版本中
+static def releaseTime() {
+    return new Date().format(&quot;yyyy_MM_dd_HH_mm&quot;, TimeZone.getTimeZone(&quot;GMT+08:00&quot;))
+}
+</code></pre>
+<h2 id="获取appname">获取APPName</h2>
+<pre><code>// 获取AppName
+def getAppName() {
+    def stringsFile = android.sourceSets.main.res.sourceFiles.find { it.name.equals 'strings.xml' }
+    String s = new XmlParser().parse(stringsFile).string.find { it.@name.equals 'app_name' }.text();
+    return s.replaceAll(&quot;\&quot;&quot;, &quot;&quot;);
+}
+</code></pre>
+<h1 id="自动拷贝符号表">自动拷贝符号表</h1>
+<pre><code> applicationVariants.all { variant -&gt;
+        variant.outputs.all { output -&gt;
+            def currentVersion = defaultConfig.versionCode;
+                //
+            if (output.outputFile != null &amp;&amp; output.outputFile.name.endsWith('.apk')) {
+                output.assemble.doLast {
+                    println &quot;Root path of the project is: &quot; + rootDir
+                    copy {
+                        from &quot;$rootDir/unityLibrary/symbols&quot;
+                        into &quot;$rootDir/TempSymbols/${currentVersion}_${releaseTime()}&quot;
+//                        include output.outputFile.name
+                    }
+                }
+            }
+        }
+    }
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Unity Docs Key Words]]></title>
+        <id>https://zhoujun2303.github.io/post/unity-docs-key-world/</id>
+        <link href="https://zhoujun2303.github.io/post/unity-docs-key-world/">
+        </link>
+        <updated>2023-07-19T12:22:44.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="见识少的人才会极其自信">见识少的人才会极其自信</h1>
+<p><a href="https://docs.unity.cn/cn/2020.3/Manual/VisualStudioIntegration.html">官方文档2020.3.33</a></p>
+<h2 id="unity-editor">Unity Editor</h2>
+<h3 id="预设的覆盖预设的变体">预设的覆盖，预设的变体</h3>
+<h3 id="ipreprocessbuildwithreport-打包构建前的接口">IPreprocessBuildWithReport 打包构建前的接口</h3>
+<pre><code>using UnityEditor;
+using UnityEngine;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
+
+public class OnPreBuildProcessor : IPreprocessBuildWithReport
+{
+    public int callbackOrder { get { return 0; } }
+
+    public void OnPreprocessBuild(BuildReport report)
+    {
+        // 在打包之前执行的操作
+        Debug.Log(&quot;Pre-processing build...&quot;);
+        // 可以在这里添加任何你需要在打包之前执行的操作
+        //todo 加入构建Scene
+        //导表
+        ExportExcel.ExportExcels();
+    }
+}
+</code></pre>
+<h3 id="projectsettingeditornumbering-schemegame-object-naming">ProjectSetting/Editor/Numbering Scheme/Game Object Naming</h3>
+<ul>
+<li>编辑器快速Ctrl + D 创建Object 的名字设置</li>
+</ul>
+<h3 id="preferencesgeneralauto-refreshscript-changes-while-playing">Preferences/General/Auto Refresh+Script Changes While Playing</h3>
+<ul>
+<li>可以结合使用，在制作UI界面时，在VS和Unity端切换时，Unity不会自动编译，节省时间<br>
+但需要手动编译，快捷键 Ctrl + R (Unity 使用的是自己的C#编译器，实际上我们在代码时Visual Studio 已经在预编译，两者是独立的，既Unity端只有写完当前所有代码才需要编辑，实际上Auto Refresh 是可以关闭，改为手动关闭更快捷)</li>
+</ul>
+<h3 id="projectsettingscript-execution-order">ProjectSetting/Script Execution Order</h3>
+<ul>
+<li>此设置窗口中指定的执行顺序不会影响以 RuntimeInitializeOnLoadMethod 属性标记的函数的顺序</li>
+</ul>
+<h3 id="runtimeinitializeonloadmethodattribute">RuntimeInitializeOnLoadMethodAttribute</h3>
+<ul>
+<li>允许在运行时加载游戏时不通过用户操作 初始化一个运行时类方法。</li>
+<li>游戏加载后，将调用标记为 [RuntimeInitializeOnLoadMethod] 的 方法。这是在调用 Awake 方法后进行的。</li>
+<li>注意：标记为 [RuntimeInitializeOnLoadMethod] 的方法的执行顺序是不确定的</li>
+<li><a href="https://zhoujun2303.github.io/post/unity-runtimeinitializeonloadmethod-chi-ren-shi-jian/">RuntimeInitializeOnLoadMethod 吃人事件</a></li>
+</ul>
+<h3 id="renderdoc">RenderDoc</h3>
+<ul>
+<li>todo 后续应该单独研究</li>
+</ul>
+<h3 id="unityprofiler"><a href="https://zhoujun2303.github.io/post/unity-profiler/">UnityProfiler</a></h3>
+<h3 id="unity的垃圾回收"><a href="https://docs.unity.cn/cn/2020.3/Manual/performance-garbage-collector.html">Unity的垃圾回收</a></h3>
+<h3 id="unity中的优化">Unity中的优化</h3>
+<h4 id="资源优化">资源优化</h4>
+<ul>
+<li>使用AssetPostprocessor对导入的一些资源进行特殊规则设定</li>
+</ul>
+<pre><code>预处理资源导入器调用：
+OnPreprocessAsset
+OnPreprocessAnimation
+OnPreprocessAudio
+OnPreprocessModel
+OnPreprocessSpeedTree
+OnPreprocessTexture
+后处理资源导入器调用：
+
+OnAssignMaterialModel
+OnPostprocessAnimation
+OnPostprocessAssetbundleNameChanged
+OnPostprocessAudio
+OnPostprocessCubemap
+OnPostprocessGameObjectWithAnimatedUserProperties
+OnPostprocessGameObjectWithUserProperties
+OnPostprocessMaterial
+OnPostprocessMeshHierarchy
+OnPostprocessModel
+OnPostprocessSpeedTree
+OnPostprocessSprites
+OnPostprocessTexture
+所有导入完成后触发的最后一个后处理回调是 OnPostprocessAllAssets。
+</code></pre>
+<h4 id="纹理方面的优化"><a href="https://zhoujun2303.github.io/post/wen-li-nei-cun-you-hua/">纹理方面的优化</a></h4>
+<h4 id="字符串和文本的优化及其他官方优化"><a href="https://docs.unity.cn/cn/current/Manual/BestPracticeUnderstandingPerformanceInUnity5.html">字符串和文本的优化及其他官方优化</a>可以直接看官方文档</h4>
+<h3 id="特殊文件夹命名">特殊文件夹命名</h3>
+<ul>
+<li>Assets 资源主文件夹</li>
+<li>Editor 编辑器脚本，可以存在多个，构建之后里面一切资源都会剥离</li>
+<li>Editor Default Resources (Editor 脚本可以使用通过 EditorGUIUtility.Load 函数按需加载的资源文件。只能有一个 Editor Default Resources 文件夹，且必须将其放在项目的根目录中；直接位于 Assets 文件夹中。)</li>
+<li>Gizmos Gizmos.DrawIcon 函数在场景中放置一个图标<pre><code>void OnDrawGizmos()
+  {
+      // Draws the Light bulb icon at position of the object.
+      // Because we draw it inside OnDrawGizmos the icon is also pickable
+      // in the scene view.
+
+      Gizmos.DrawIcon(transform.position, &quot;Light Gizmo.tiff&quot;, true);
+  }
+</code></pre>
+</li>
+<li>Resources 动态加载的文件，可以有多个，但最好一个，如果位于Editor 中，则会从构建中剥离</li>
+<li>Standard Assets Unity官方标准资源包</li>
+<li>StreamingAssets 只读不写的文件夹，且打包之后资源文件保持原始格式，不会被压缩；脚本文件则不会参与编译</li>
+</ul>
+<h3 id="assetbundle">AssetBundle</h3>
+<ul>
+<li>todo详细文档</li>
+<li>先说几个注意点吧
+<ul>
+<li>ab包打包的时候尽量相互依赖的贴图，材质球，等打在同一个ab包里面，可以减少启动耗时</li>
+<li>举个例子，新手可能在游戏的前30会出现，30分钟之后就没有了，如果把ab包的资源混合在其他包里面，启动的时候通过依赖关系，所有的ab可能全都要加载，而不是用到才加载。</li>
+</ul>
+</li>
+</ul>
+<h2 id="unityengine">UnityEngine</h2>
+<h3 id="unity的协程满足一些幻想">Unity的协程（满足一些幻想）</h3>
+<ul>
+<li><a href="https://docs.unity.cn/cn/2020.3/Manual/CLIBatchmodeCoroutines.html">批处理模式和内置协程兼容性</a></li>
+<li>WaitUntil 非常有用</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Unity Spine 使用]]></title>
+        <id>https://zhoujun2303.github.io/post/unity-spine-shi-yong/</id>
+        <link href="https://zhoujun2303.github.io/post/unity-spine-shi-yong/">
+        </link>
+        <updated>2023-07-06T10:45:10.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="融合动画"><a href="https://zhoujun2303.github.io/post/unity-spine-rong-he-dong-hua/">融合动画</a></h1>
+<h1 id="皮肤切换-附件挂点切换">皮肤切换 附件挂点切换</h1>
+<ul>
+<li>GetNewAttachment 获取一个新的附件</li>
+</ul>
+<pre><code>//获取 Sprite资源
+ Sprite attachmentSprite = LoaderCtrl.LoadSprite(iconResPath);
+ //替换原附件图片，并拷贝新的附件
+ var newAttachment = oldAttachment.GetRemappedClone(attachmentSprite, oldAttachment.GetMaterial());
+</code></pre>
+<ul>
+<li>SkeletonAnimation的切换（3D）</li>
+</ul>
+<pre><code>原理，并非可直接使用
+//提取默认皮肤
+Skeleton activatedSkeleton = skeletonAnimation.Skeleton;
+activatedSkeleton.SetSkin(&quot;skin1&quot;);
+Spine.Skin activatedSkin = activatedSkeleton.Data.FindSkin(&quot;skin1&quot;);
+//克隆皮肤数据
+Spine.Skin collectedSkin = new Spine.Skin(&quot;CollectedSkin&quot;);
+activatedSkin.CopyTo(collectedSkin, true, true, true);
+//根据 挂点名字查找附件下标
+int slotIndex = activatedSkeleton.FindSlotIndex(slotName);
+string attachmentName = PathSpineBone.SoldierSlotToAttachmentMap[slotName];
+//此处的坑 如果角色存在多个皮肤，在部分皮肤上没有附件打孔，那么此时的oldAttachment获取可能为 null
+Attachment oldAttachment = skeletonAnimation.Skeleton.GetAttachment(slotIndex, attachmentName);
+//将图片转为附件
+string attachmentSpriteResPath = PathSpineBone.SoldierSlotToTextureDirMap[slotName] + iconName;
+//克隆一个新的附件
+var newAttachment = SpineCtrl.GetNewAttachment(oldAttachment, attachmentSpriteResPath);
+//设置或者替换成新的附件 将莫个武器节点隐藏实际上就是赋值为 null
+collectedSkin.SetAttachment(slotIndex, attachmentName, newAttachment);
+//合并贴图，需要清理缓存
+Material materialPropertySource = skeletonAnimation.SkeletonDataAsset.atlasAssets[0].PrimaryMaterial;//!!! 为了拷贝shader
+CachedSpineSkinData cachedSkinData = new CachedSpineSkinData();
+//生成一个新皮肤
+cachedSkinData.skin = collectedSkin.GetRepackedSkin(dicKey, materialPropertySource, out cachedSkinData.material, out cachedSkinData.atlas, maxAtlasSize: 1024, clearCache: true);
+activatedSkeleton.Skin = cachedSkinData.skin;
+
+</code></pre>
+<ul>
+<li>SkeletonGraphic的切换 (UI)</li>
+</ul>
+<pre><code>大致原理 同上
+var skeleton = skeletonGraphic.Skeleton;
+Material sourceMaterial = skeletonGraphic.SkeletonDataAsset.atlasAssets[0].PrimaryMaterial;
+Texture2D runtimeAtlas = null;
+Material runtimeMaterial = null;
+
+Skin customSkin = new Skin(&quot;custom skin&quot;);
+skeletonGraphic.Skeleton.SetSkin(&quot;skin1&quot;);
+var baseSkin = skeleton.Data.FindSkin(&quot;skin1&quot;);
+
+int slotIndex = skeleton.FindSlotIndex(slotName);
+Sprite attachmentSprite = LoaderCtrl.LoadSprite(PathSprite.Textures_clothes_common2_box_clear);
+Attachment baseAttachment = skeleton.GetAttachment(slotIndex, slotName);
+Attachment newAttachment = baseAttachment.GetRemappedClone(attachmentSprite, sourceMaterial);
+customSkin.SetAttachment(slotIndex, slotName, newAttachment);
+
+ var repackedSkin = new Skin(&quot;repacked skin&quot;);
+ //此处有个坑，当一个附件没有打在所有的皮肤上时，贴图会混乱
+ 1，让美术给每个皮肤都打上附件
+ 2，实例化的新皮肤，将需要所有挂点都依次替换，既下列方式
+ repackedSkin.AddAttachments(baseSkin);
+ repackedSkin.AddAttachments(customSkin);
+ repackedSkin = repackedSkin.GetRepackedSkin(dicKey, sourceMaterial, out runtimeMaterial, out runtimeAtlas, clearCache: true);
+ CachedSpineSkinData cachedSpineSkinData = new CachedSpineSkinData();
+ cachedSpineSkinData.skin = repackedSkin;
+ cachedSpineSkinData.atlas = runtimeAtlas;
+
+skeleton.SetSkin(repackedSkin);
+skeleton.SetToSetupPose();
+skeletonGraphic.Update(0);
+//This is used by the UI system to determine what to put in the MaterialPropertyBlock.
+skeletonGraphic.OverrideTexture = runtimeAtlas;
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[2D]]></title>
+        <id>https://zhoujun2303.github.io/post/2d/</id>
+        <link href="https://zhoujun2303.github.io/post/2d/">
+        </link>
+        <updated>2023-04-05T07:15:02.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="sprite导入">Sprite导入</h2>
+<ul>
+<li>Single 将纹理作为单个精灵使用，通常用于显示单个图像或UI元素。</li>
+<li>Multiple 将纹理拆分成多个精灵，每个精灵对应纹理中的一个区域。通常用于制作动画、拼图和其他多个小图像的场景。</li>
+<li>Polygon 将纹理作为多边形精灵使用，可以手动指定多边形的顶点和边缘，通常用于制作带有复杂形状的2D物体。</li>
+</ul>
+<h2 id="texture-atlasing纹理集">Texture atlasing(纹理集)</h2>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[纹理内存优化]]></title>
+        <id>https://zhoujun2303.github.io/post/wen-li-nei-cun-you-hua/</id>
+        <link href="https://zhoujun2303.github.io/post/wen-li-nei-cun-you-hua/">
+        </link>
+        <updated>2023-04-02T09:35:21.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="图片大小">图片大小</h2>
+<p>图片大小一般采用小于等于2的次方大小<br>
+在Unity 中，如果图片的大小不是2的次方，如<code>100*200</code>Unity会在导入之后将其缩放为128*256的纹理、如果是<code>129*256</code>的纹理大小，则导入之后为<code>256*256</code>的纹理大小</p>
+<h2 id="readwite-enable">Read/Wite Enable</h2>
+<p>开启<code>Read/Wite Enable</code>将允许自定义脚本访问，写入纹理数据。在运行时内存中会存储一份额外的贴图数据，使贴图大小翻倍，无特殊需要不要开启</p>
+<h2 id="不是渐变色图片处理">不是渐变色图片处理</h2>
+<p>在Ps中，对于用不到256色的图片，进行减色处理，减少图片大小</p>
+<h2 id="rgb24和rgba32">RGB24和RGBA32</h2>
+<p>RGB的24位纹理和RGBA的32位纹理都是常见的图像格式，它们之间的主要区别在于纹理中存储的每个像素的颜色信息的位数和类型。</p>
+<p>24位RGB纹理存储每个像素的颜色信息使用24个位，其中8个位分别用于存储红、绿和蓝三种颜色的分量。这种格式没有透明度信息，因此不支持透明度的效果。</p>
+<p>32位RGBA纹理存储每个像素的颜色信息使用32个位，其中24个位用于存储红、绿和蓝三种颜色的分量，另外8个位用于存储透明度信息。这种格式支持透明度效果，可以在渲染时使用混合（blending）技术来实现透明效果。 -- ChatGTP</p>
+<p>在游戏中选择使用哪种纹理格式通常取决于需要呈现的效果和资源的使用情况。如果需要呈现透明效果，或者需要在纹理中嵌入透明度信息，则应该使用32位RGBA纹理。如果不需要透明效果，则可以使用24位RGB纹理，这样可以减少资源占用，并提高渲染效率。</p>
+<h2 id="根据平台选择支持的纹理压缩格式">根据平台选择支持的纹理压缩格式</h2>
+<p>在对应平台上选择支持的压缩格式，如果是不支持的压缩格式，Unity会自动转换成RGBA32/RGB24格式，并且转换之前的内存也会保留，将消耗更多的时间， 内存<br>
+[//Todo 各个平台纹理压缩区别] (https://docs.unity3d.com/cn/current/Manual/class-TextureImporter.html)</p>
+<h2 id="generate-mip-maps">Generate Mip Maps</h2>
+<ul>
+<li>开启之后，可以让离摄像机较远的物体使用较小的纹理版本，但是运行时贴贴图大小将会变大。</li>
+<li>如果是图集开启了mipmap,图集中的图片必须应用于距离摄像机相近的位置，否则会增加每帧渲染所需的纹理大小，会导致DC降了，但是渲染速度反而变慢了</li>
+</ul>
+<h2 id="调整图集大小">调整图集大小</h2>
+<p>图集通过9宫格调整大小，调整较小的图片，如<code>1024*2048</code>但是只超了一点点，可以通过编辑器工具或者手动优化成<code>1024*1024</code></p>
+<h2 id="纹理压缩">纹理压缩</h2>
+<p><code>Android</code> 首选  <code>RGBA Compressed ETC2 8 bits</code><br>
+<code>iOS</code>首选 <code>RGB(A) Compressed AST  4x4 block</code></p>
+<p><a href="https://zhuanlan.zhihu.com/p/125100817">参考于</a><br>
+<a href="https://github.com/vinjn/pkg-doctor">包体分析工具</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Unity Profiler]]></title>
+        <id>https://zhoujun2303.github.io/post/unity-profiler/</id>
+        <link href="https://zhoujun2303.github.io/post/unity-profiler/">
+        </link>
+        <updated>2023-03-25T10:08:02.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="stats面板">Stats面板</h2>
+<figure data-type="image" tabindex="1"><img src="https://zhoujun2303.github.io/post-images/1680420126719.jpg" alt="" loading="lazy"></figure>
+<ul>
+<li>Render thread 渲染线程，渲染一帧需要多少ms</li>
+<li>Batches 批次，需要分几个批次提交给GPU</li>
+<li>Saved by batching  有多少物体是同一批次提交给GPU（合批数量）</li>
+<li>Tris: 三角形数（面数）</li>
+<li>Verts:顶点数</li>
+<li>Screen：屏幕分辨率大小，越大内存消耗越高</li>
+<li>SetPassCalls 一次完整的渲染流程切换Shader的次数</li>
+<li>Shadow casters 阴影开销</li>
+<li>Visible skinned meshes: 可见骨骼meshs数量，可见蒙皮骨骼</li>
+</ul>
+<h2 id="profiler">Profiler</h2>
+<p><a href="https://www.bilibili.com/video/BV1Rd4y1q7jt/?spm_id_from=333.788.top_right_bar_window_history.content.click&amp;vd_source=6f81433b8f1dda2a8d9fd1f770a72ef3">Up主讲解</a><br>
+Profiler(Standalone Process) 单独开启一个线程进行分析，对现有游戏影响较小<br>
+<img src="https://zhoujun2303.github.io/post-images/1680423428267.jpg" alt="" loading="lazy"><br>
+使用一个循环来伪造有问题的代码</p>
+<pre><code>using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+using Unity.Profiling;
+using UnityEngine;
+using UnityEngine.Profiling;
+
+public class ProfilerTest : MonoBehaviour
+{
+    // Start is called before the first frame update
+    private int _loopCount = 50000;
+    private StringBuilder _stringBuilder = new StringBuilder();
+    void Start()
+    {
+        ProfilerMarker test1 = new ProfilerMarker(&quot;Test1&quot;);
+        test1.Begin();
+        //test1
+        for (int i = 0; i &lt; _loopCount; i++)
+        {
+            Debug.Log(i+&quot;Test&quot;);
+        }
+        test1.End();
+        //
+        Profiler.BeginSample(&quot;TTT&quot;);
+        Profiler.EndSample();
+        //test2
+        StartCoroutine(DelayShowLoop());
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+       
+    }
+
+    IEnumerator DelayShowLoop()
+    {
+       for(int i = 0; i &lt; 100000; i++)
+        {
+            yield return new WaitForFixedUpdate();
+            _stringBuilder.Clear();
+            _stringBuilder.Append(i);
+            Debug.Log($&quot;{_stringBuilder}&quot;);
+        }
+    }
+}
+
+</code></pre>
+<ul>
+<li>通过Hierarchy面板可以观察到在游戏开始的时候 Scripts处于异常状态，因为在一帧内做了50000次循环</li>
+<li>通过<code>ProfilerMarker</code>的<code>Begin</code>和<code>End</code> 来定位有问题的代码开销</li>
+<li>在Profiler Start看到自定义的ProfilerMarker Test1占用了87.2%的开销，其中最耗内存的是<code> LogStringToConsole</code></li>
+<li>在协程中的打印看到几乎没有什么波动</li>
+</ul>
+<h2 id="真机调试定位">真机调试定位</h2>
+<ul>
+<li>通过打出Debug包进行观察，在莫个时候非常卡的时候，可以快速定位或者录制</li>
+<li>一般定位出某一时间段波动幅度非常到，如果是Script颜色占比非常高，大概率是莫个方法性能开销</li>
+<li>如果是Rendering 则要考虑，同屏渲染是否开销过大，或者某个物体定点面数是否过于精细</li>
+</ul>
+]]></content>
+    </entry>
+</feed>

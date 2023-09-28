@@ -1,0 +1,270 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>位运算（愉快的周末从写博客开始） | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="位运算（愉快的周末从写博客开始） | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="运算符(&amp;)位与
+规则：两个数二进制所有位依次比较都为1则结果位为1
+3 00000011
+1 00000001
+00000001&amp;00000011 = 00000001
+输出 1
+
+运算符(|)位或
+规则：两个数二进制所有..." />
+    <meta name="keywords" content="随口说" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              位运算（愉快的周末从写博客开始）
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-09-17 10:47 AM
+              </span>
+              <span>
+                1 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/qpNhKOLii/" class="post-tag">
+                  # 随口说
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h3 id="运算符位与">运算符(&amp;)位与</h3>
+<p>规则：两个数二进制所有位依次比较都为1则结果位为1</p>
+<pre><code>3 00000011
+1 00000001
+00000001&amp;00000011 = 00000001
+输出 1
+</code></pre>
+<h3 id="运算符位或">运算符(|)位或</h3>
+<p>规则：两个数二进制所有位依次比较一个数为1则结果位为1</p>
+<pre><code>3 00000011
+1 00000001
+00000001|00000011 = 00000011
+输出 3
+</code></pre>
+<h3 id="运算符异或">运算符(^)异或</h3>
+<p>规则：两个数二进制所有位依次比较两个数不同则结果位为1</p>
+<pre><code>3 00000011
+5 00000101
+00000101^00000011 = 00000110
+输出 6
+</code></pre>
+<h3 id="运算符左移">运算符(&lt;&lt;)左移</h3>
+<p>规则：换成二进制后所有位向左移，右边补0</p>
+<pre><code>3 00000011
+3&lt;&lt;2 = 00001100 = 12 = 3*2*2
+输出 12
+</code></pre>
+<h3 id="运算符右移">运算符(&gt;&gt;)右移</h3>
+<p>规则：换成二进制后所有位向右移，左边边补0</p>
+<pre><code>7 00000111
+7&gt;&gt;2 = 00000001 = 1 = 7/2/2(没有小数位，取整)
+输出 1
+</code></pre>
+<p>看到同事分享的数据加密，不得不复习一下，不然忘干净了🤶</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BD%8D%E4%B8%8E">运算符(&amp;)位与</a></li>
+<li><a href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BD%8D%E6%88%96">运算符(|)位或</a></li>
+<li><a href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E5%BC%82%E6%88%96">运算符(^)异或</a></li>
+<li><a href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E5%B7%A6%E7%A7%BB">运算符(&lt;&lt;)左移</a></li>
+<li><a href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E5%8F%B3%E7%A7%BB">运算符(&gt;&gt;)右移</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/unity-bian-ji-tuo-zhan-ui-tuo-zhuai-shi-shi-ye/">
+              <h3 class="post-title">
+                Unity 编辑拓展(UI拖拽师失业)
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

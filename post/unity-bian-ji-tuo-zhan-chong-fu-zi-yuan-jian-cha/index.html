@@ -1,0 +1,393 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Unity 编辑拓展(重复资源检查) | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Unity 编辑拓展(重复资源检查) | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="用于解决项目中重复的资源
+Code
+using System.Collections;
+using UnityEngine;
+using UnityEditor;
+using System.Security.Cryptography;
+us..." />
+    <meta name="keywords" content="UnityEditor,Unity" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Unity 编辑拓展(重复资源检查)
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-08-18 09:28 AM
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/DwKakt8ro/" class="post-tag">
+                  # UnityEditor
+                </a>
+              
+                <a href="https://zhoujun2303.github.io/tag/pz2bkmFLZ/" class="post-tag">
+                  # Unity
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p><strong>用于解决项目中重复的资源</strong></p>
+<h2 id="code">Code</h2>
+<pre><code>using System.Collections;
+using UnityEngine;
+using UnityEditor;
+using System.Security.Cryptography;
+using System;
+using System.IO;
+using System.Collections.Generic;
+
+namespace MLSpace.Editor
+{
+    //纯原生写法 不基于Ordin
+    public sealed class DuplicateResourceWindows : EditorWindow
+    {
+        [MenuItem(&quot;Tools/Report/DuplicateResourceWindows&quot;, false, 12)]
+        public static void DuplicateWindows()
+        {
+            DuplicateResourceWindows window = GetWindow&lt;DuplicateResourceWindows&gt;(&quot;Duplicate Resource&quot;, true);
+#if UNITY_2019_3_OR_NEWER
+            window.minSize = new Vector2(800f, 640f);
+#else
+            window.minSize = new Vector2(800f, 600f);
+#endif
+        }
+
+        public static bool NeedRefresh = false;
+        private Dictionary&lt;string, List&lt;string&gt;&gt; Duplicates = new Dictionary&lt;string, List&lt;string&gt;&gt;();
+
+        private void OnGUI()
+        {
+            //GetDuplicateResource();
+            EditorGUILayout.BeginVertical(GUILayout.Width(position.width), GUILayout.Height(position.height));
+            {
+                GUILayout.Space(5f);
+                EditorGUILayout.LabelField(&quot;重复资源列表&quot;, EditorStyles.boldLabel);
+                foreach (var key in Duplicates.Keys)
+                {
+                    EditorGUILayout.BeginVertical(&quot;box&quot;);
+                    {
+                        EditorGUILayout.BeginHorizontal();
+                        {
+                            EditorGUILayout.LabelField(key, GUILayout.Width(position.width - 200f));
+                            if (GUILayout.Button(&quot;Select&quot;, GUILayout.Width(80f)))
+                            {
+                                SelectFile(key);
+                            }
+                            GUILayout.Space(5f);
+                            if (GUILayout.Button(&quot;Delete&quot;, GUILayout.Width(80f)))
+                            {
+                                DeleteFile(key);
+                            }
+                        }
+                        EditorGUILayout.EndHorizontal();
+                        foreach (var vkey in Duplicates[key])
+                        {
+                            EditorGUILayout.BeginHorizontal();
+                            {
+                                EditorGUILayout.LabelField(vkey, GUILayout.Width(position.width - 200f));
+                                if (GUILayout.Button(&quot;Select&quot;, GUILayout.Width(80f)))
+                                {
+                                    SelectFile(key);
+                                }
+                                GUILayout.Space(5f);
+                                if (GUILayout.Button(&quot;Delete&quot;, GUILayout.Width(80)))
+                                {
+                                    DeleteFile(vkey);
+                                }
+                            }
+                            EditorGUILayout.EndHorizontal();
+                        }
+                    }
+                    EditorGUILayout.EndVertical();
+                    GUILayout.Space(10f);
+                }
+
+            }
+        }
+
+        private void SelectFile(string path)
+        {
+            Selection.activeObject = AssetDatabase.LoadAssetAtPath&lt;UnityEngine.Object&gt;(path);
+        }
+
+        private void DeleteFile(string path)
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+        }
+
+        private void OnEnable()
+        {
+            GetDuplicateResource();
+        }
+
+        private void Update()
+        {
+            if (NeedRefresh)
+            {
+                NeedRefresh = false;
+                GetDuplicateResource();
+            }
+        }
+
+        private void GetDuplicateResource()
+        {
+            Duplicates.Clear();
+            Dictionary&lt;string, string&gt; md5dic = new Dictionary&lt;string, string&gt;();
+            string[] paths = AssetDatabase.FindAssets(
+                &quot;t:Scene t:Prefab t:Shader t:Model t:Material t:Texture t:AudioClip t:AnimationClip t:AnimatorController t:Font t:TextAsset t:ScriptableObject&quot;,
+                new string[] { &quot;Assets&quot; });
+
+            foreach (var prefabGuid in paths)
+            {
+                string prefabAssetPath = AssetDatabase.GUIDToAssetPath(prefabGuid);
+                string[] depend = AssetDatabase.GetDependencies(prefabAssetPath, true);
+                for (int i = 0; i &lt; depend.Length; i++)
+                {
+                    string assetPath = depend[i];
+                    AssetImporter importer = AssetImporter.GetAtPath(assetPath);
+                    //满足贴图和模型资源
+                    if (importer is TextureImporter || importer is ModelImporter || importer is AudioImporter)
+                    {
+                        string md5 = DuplicateResourceTools.GetMD5Hash(Path.Combine(Directory.GetCurrentDirectory(), assetPath));
+                        string path;
+                        if (!md5dic.TryGetValue(md5, out path))
+                        {
+                            md5dic[md5] = assetPath;
+                        }
+                        else
+                        {
+                            if (path != assetPath)
+                            {
+                                InitDuplcates(path);
+                                Duplicates[path].Add(assetPath);
+                            }
+                        }
+                    }
+                }
+            }
+            //Debug.Log(Duplicates);
+        }
+
+        private void InitDuplcates(string path)
+        {
+            if (path == null) return;
+            if (!Duplicates.ContainsKey(path))
+            {
+                Duplicates[path] = new List&lt;string&gt;();
+            }
+        }
+    }
+}
+</code></pre>
+<h2 id="测试一下">测试一下</h2>
+<figure data-type="image" tabindex="1"><img src="https://zhoujun2303.github.io/post-images/1660787596237.jpg" alt="" loading="lazy"></figure>
+<h2 id="在需要打包之前或者上传git之前可以加上自动检测有重复资源自动打开页面">在需要打包之前或者上传Git之前可以加上自动检测，有重复资源自动打开页面</h2>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#code">Code</a></li>
+<li><a href="#%E6%B5%8B%E8%AF%95%E4%B8%80%E4%B8%8B">测试一下</a></li>
+<li><a href="#%E5%9C%A8%E9%9C%80%E8%A6%81%E6%89%93%E5%8C%85%E4%B9%8B%E5%89%8D%E6%88%96%E8%80%85%E4%B8%8A%E4%BC%A0git%E4%B9%8B%E5%89%8D%E5%8F%AF%E4%BB%A5%E5%8A%A0%E4%B8%8A%E8%87%AA%E5%8A%A8%E6%A3%80%E6%B5%8B%E6%9C%89%E9%87%8D%E5%A4%8D%E8%B5%84%E6%BA%90%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E9%A1%B5%E9%9D%A2">在需要打包之前或者上传Git之前可以加上自动检测，有重复资源自动打开页面</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/guan-yu-unitybuild-mo-ban-shi-yong/">
+              <h3 class="post-title">
+                关于UnityBuild 模板使用
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

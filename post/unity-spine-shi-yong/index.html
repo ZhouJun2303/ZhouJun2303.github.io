@@ -1,0 +1,299 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Unity Spine 使用 | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Unity Spine 使用 | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="融合动画
+皮肤切换 附件挂点切换
+
+GetNewAttachment 获取一个新的附件
+
+//获取 Sprite资源
+ Sprite attachmentSprite = LoaderCtrl.LoadSprite(iconResPath)..." />
+    <meta name="keywords" content="Spine" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Unity Spine 使用
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-07-06 18:45 PM
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/ub-RrB6t4/" class="post-tag">
+                  # Spine
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="融合动画"><a href="https://zhoujun2303.github.io/post/unity-spine-rong-he-dong-hua/">融合动画</a></h1>
+<h1 id="皮肤切换-附件挂点切换">皮肤切换 附件挂点切换</h1>
+<ul>
+<li>GetNewAttachment 获取一个新的附件</li>
+</ul>
+<pre><code>//获取 Sprite资源
+ Sprite attachmentSprite = LoaderCtrl.LoadSprite(iconResPath);
+ //替换原附件图片，并拷贝新的附件
+ var newAttachment = oldAttachment.GetRemappedClone(attachmentSprite, oldAttachment.GetMaterial());
+</code></pre>
+<ul>
+<li>SkeletonAnimation的切换（3D）</li>
+</ul>
+<pre><code>原理，并非可直接使用
+//提取默认皮肤
+Skeleton activatedSkeleton = skeletonAnimation.Skeleton;
+activatedSkeleton.SetSkin(&quot;skin1&quot;);
+Spine.Skin activatedSkin = activatedSkeleton.Data.FindSkin(&quot;skin1&quot;);
+//克隆皮肤数据
+Spine.Skin collectedSkin = new Spine.Skin(&quot;CollectedSkin&quot;);
+activatedSkin.CopyTo(collectedSkin, true, true, true);
+//根据 挂点名字查找附件下标
+int slotIndex = activatedSkeleton.FindSlotIndex(slotName);
+string attachmentName = PathSpineBone.SoldierSlotToAttachmentMap[slotName];
+//此处的坑 如果角色存在多个皮肤，在部分皮肤上没有附件打孔，那么此时的oldAttachment获取可能为 null
+Attachment oldAttachment = skeletonAnimation.Skeleton.GetAttachment(slotIndex, attachmentName);
+//将图片转为附件
+string attachmentSpriteResPath = PathSpineBone.SoldierSlotToTextureDirMap[slotName] + iconName;
+//克隆一个新的附件
+var newAttachment = SpineCtrl.GetNewAttachment(oldAttachment, attachmentSpriteResPath);
+//设置或者替换成新的附件 将莫个武器节点隐藏实际上就是赋值为 null
+collectedSkin.SetAttachment(slotIndex, attachmentName, newAttachment);
+//合并贴图，需要清理缓存
+Material materialPropertySource = skeletonAnimation.SkeletonDataAsset.atlasAssets[0].PrimaryMaterial;//!!! 为了拷贝shader
+CachedSpineSkinData cachedSkinData = new CachedSpineSkinData();
+//生成一个新皮肤
+cachedSkinData.skin = collectedSkin.GetRepackedSkin(dicKey, materialPropertySource, out cachedSkinData.material, out cachedSkinData.atlas, maxAtlasSize: 1024, clearCache: true);
+activatedSkeleton.Skin = cachedSkinData.skin;
+
+</code></pre>
+<ul>
+<li>SkeletonGraphic的切换 (UI)</li>
+</ul>
+<pre><code>大致原理 同上
+var skeleton = skeletonGraphic.Skeleton;
+Material sourceMaterial = skeletonGraphic.SkeletonDataAsset.atlasAssets[0].PrimaryMaterial;
+Texture2D runtimeAtlas = null;
+Material runtimeMaterial = null;
+
+Skin customSkin = new Skin(&quot;custom skin&quot;);
+skeletonGraphic.Skeleton.SetSkin(&quot;skin1&quot;);
+var baseSkin = skeleton.Data.FindSkin(&quot;skin1&quot;);
+
+int slotIndex = skeleton.FindSlotIndex(slotName);
+Sprite attachmentSprite = LoaderCtrl.LoadSprite(PathSprite.Textures_clothes_common2_box_clear);
+Attachment baseAttachment = skeleton.GetAttachment(slotIndex, slotName);
+Attachment newAttachment = baseAttachment.GetRemappedClone(attachmentSprite, sourceMaterial);
+customSkin.SetAttachment(slotIndex, slotName, newAttachment);
+
+ var repackedSkin = new Skin(&quot;repacked skin&quot;);
+ //此处有个坑，当一个附件没有打在所有的皮肤上时，贴图会混乱
+ 1，让美术给每个皮肤都打上附件
+ 2，实例化的新皮肤，将需要所有挂点都依次替换，既下列方式
+ repackedSkin.AddAttachments(baseSkin);
+ repackedSkin.AddAttachments(customSkin);
+ repackedSkin = repackedSkin.GetRepackedSkin(dicKey, sourceMaterial, out runtimeMaterial, out runtimeAtlas, clearCache: true);
+ CachedSpineSkinData cachedSpineSkinData = new CachedSpineSkinData();
+ cachedSpineSkinData.skin = repackedSkin;
+ cachedSpineSkinData.atlas = runtimeAtlas;
+
+skeleton.SetSkin(repackedSkin);
+skeleton.SetToSetupPose();
+skeletonGraphic.Update(0);
+//This is used by the UI system to determine what to put in the MaterialPropertyBlock.
+skeletonGraphic.OverrideTexture = runtimeAtlas;
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E8%9E%8D%E5%90%88%E5%8A%A8%E7%94%BB">融合动画</a></li>
+<li><a href="#%E7%9A%AE%E8%82%A4%E5%88%87%E6%8D%A2-%E9%99%84%E4%BB%B6%E6%8C%82%E7%82%B9%E5%88%87%E6%8D%A2">皮肤切换 附件挂点切换</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/2d/">
+              <h3 class="post-title">
+                2D
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

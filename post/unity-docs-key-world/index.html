@@ -1,0 +1,377 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Unity Docs Key Words | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Unity Docs Key Words | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="见识少的人才会极其自信
+官方文档2020.3.33
+Unity Editor
+预设的覆盖，预设的变体
+IPreprocessBuildWithReport 打包构建前的接口
+using UnityEditor;
+using UnityEng..." />
+    <meta name="keywords" content="keyword,UnityEditor,UnityEngine" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Unity Docs Key Words
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-07-19 20:22 PM
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/eR1H5eAmI/" class="post-tag">
+                  # keyword
+                </a>
+              
+                <a href="https://zhoujun2303.github.io/tag/DwKakt8ro/" class="post-tag">
+                  # UnityEditor
+                </a>
+              
+                <a href="https://zhoujun2303.github.io/tag/szG58N8F94/" class="post-tag">
+                  # UnityEngine
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="见识少的人才会极其自信">见识少的人才会极其自信</h1>
+<p><a href="https://docs.unity.cn/cn/2020.3/Manual/VisualStudioIntegration.html">官方文档2020.3.33</a></p>
+<h2 id="unity-editor">Unity Editor</h2>
+<h3 id="预设的覆盖预设的变体">预设的覆盖，预设的变体</h3>
+<h3 id="ipreprocessbuildwithreport-打包构建前的接口">IPreprocessBuildWithReport 打包构建前的接口</h3>
+<pre><code>using UnityEditor;
+using UnityEngine;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
+
+public class OnPreBuildProcessor : IPreprocessBuildWithReport
+{
+    public int callbackOrder { get { return 0; } }
+
+    public void OnPreprocessBuild(BuildReport report)
+    {
+        // 在打包之前执行的操作
+        Debug.Log(&quot;Pre-processing build...&quot;);
+        // 可以在这里添加任何你需要在打包之前执行的操作
+        //todo 加入构建Scene
+        //导表
+        ExportExcel.ExportExcels();
+    }
+}
+</code></pre>
+<h3 id="projectsettingeditornumbering-schemegame-object-naming">ProjectSetting/Editor/Numbering Scheme/Game Object Naming</h3>
+<ul>
+<li>编辑器快速Ctrl + D 创建Object 的名字设置</li>
+</ul>
+<h3 id="preferencesgeneralauto-refreshscript-changes-while-playing">Preferences/General/Auto Refresh+Script Changes While Playing</h3>
+<ul>
+<li>可以结合使用，在制作UI界面时，在VS和Unity端切换时，Unity不会自动编译，节省时间<br>
+但需要手动编译，快捷键 Ctrl + R (Unity 使用的是自己的C#编译器，实际上我们在代码时Visual Studio 已经在预编译，两者是独立的，既Unity端只有写完当前所有代码才需要编辑，实际上Auto Refresh 是可以关闭，改为手动关闭更快捷)</li>
+</ul>
+<h3 id="projectsettingscript-execution-order">ProjectSetting/Script Execution Order</h3>
+<ul>
+<li>此设置窗口中指定的执行顺序不会影响以 RuntimeInitializeOnLoadMethod 属性标记的函数的顺序</li>
+</ul>
+<h3 id="runtimeinitializeonloadmethodattribute">RuntimeInitializeOnLoadMethodAttribute</h3>
+<ul>
+<li>允许在运行时加载游戏时不通过用户操作 初始化一个运行时类方法。</li>
+<li>游戏加载后，将调用标记为 [RuntimeInitializeOnLoadMethod] 的 方法。这是在调用 Awake 方法后进行的。</li>
+<li>注意：标记为 [RuntimeInitializeOnLoadMethod] 的方法的执行顺序是不确定的</li>
+<li><a href="https://zhoujun2303.github.io/post/unity-runtimeinitializeonloadmethod-chi-ren-shi-jian/">RuntimeInitializeOnLoadMethod 吃人事件</a></li>
+</ul>
+<h3 id="renderdoc">RenderDoc</h3>
+<ul>
+<li>todo 后续应该单独研究</li>
+</ul>
+<h3 id="unityprofiler"><a href="https://zhoujun2303.github.io/post/unity-profiler/">UnityProfiler</a></h3>
+<h3 id="unity的垃圾回收"><a href="https://docs.unity.cn/cn/2020.3/Manual/performance-garbage-collector.html">Unity的垃圾回收</a></h3>
+<h3 id="unity中的优化">Unity中的优化</h3>
+<h4 id="资源优化">资源优化</h4>
+<ul>
+<li>使用AssetPostprocessor对导入的一些资源进行特殊规则设定</li>
+</ul>
+<pre><code>预处理资源导入器调用：
+OnPreprocessAsset
+OnPreprocessAnimation
+OnPreprocessAudio
+OnPreprocessModel
+OnPreprocessSpeedTree
+OnPreprocessTexture
+后处理资源导入器调用：
+
+OnAssignMaterialModel
+OnPostprocessAnimation
+OnPostprocessAssetbundleNameChanged
+OnPostprocessAudio
+OnPostprocessCubemap
+OnPostprocessGameObjectWithAnimatedUserProperties
+OnPostprocessGameObjectWithUserProperties
+OnPostprocessMaterial
+OnPostprocessMeshHierarchy
+OnPostprocessModel
+OnPostprocessSpeedTree
+OnPostprocessSprites
+OnPostprocessTexture
+所有导入完成后触发的最后一个后处理回调是 OnPostprocessAllAssets。
+</code></pre>
+<h4 id="纹理方面的优化"><a href="https://zhoujun2303.github.io/post/wen-li-nei-cun-you-hua/">纹理方面的优化</a></h4>
+<h4 id="字符串和文本的优化及其他官方优化"><a href="https://docs.unity.cn/cn/current/Manual/BestPracticeUnderstandingPerformanceInUnity5.html">字符串和文本的优化及其他官方优化</a>可以直接看官方文档</h4>
+<h3 id="特殊文件夹命名">特殊文件夹命名</h3>
+<ul>
+<li>Assets 资源主文件夹</li>
+<li>Editor 编辑器脚本，可以存在多个，构建之后里面一切资源都会剥离</li>
+<li>Editor Default Resources (Editor 脚本可以使用通过 EditorGUIUtility.Load 函数按需加载的资源文件。只能有一个 Editor Default Resources 文件夹，且必须将其放在项目的根目录中；直接位于 Assets 文件夹中。)</li>
+<li>Gizmos Gizmos.DrawIcon 函数在场景中放置一个图标<pre><code>void OnDrawGizmos()
+  {
+      // Draws the Light bulb icon at position of the object.
+      // Because we draw it inside OnDrawGizmos the icon is also pickable
+      // in the scene view.
+
+      Gizmos.DrawIcon(transform.position, &quot;Light Gizmo.tiff&quot;, true);
+  }
+</code></pre>
+</li>
+<li>Resources 动态加载的文件，可以有多个，但最好一个，如果位于Editor 中，则会从构建中剥离</li>
+<li>Standard Assets Unity官方标准资源包</li>
+<li>StreamingAssets 只读不写的文件夹，且打包之后资源文件保持原始格式，不会被压缩；脚本文件则不会参与编译</li>
+</ul>
+<h3 id="assetbundle">AssetBundle</h3>
+<ul>
+<li>todo详细文档</li>
+<li>先说几个注意点吧
+<ul>
+<li>ab包打包的时候尽量相互依赖的贴图，材质球，等打在同一个ab包里面，可以减少启动耗时</li>
+<li>举个例子，新手可能在游戏的前30会出现，30分钟之后就没有了，如果把ab包的资源混合在其他包里面，启动的时候通过依赖关系，所有的ab可能全都要加载，而不是用到才加载。</li>
+</ul>
+</li>
+</ul>
+<h2 id="unityengine">UnityEngine</h2>
+<h3 id="unity的协程满足一些幻想">Unity的协程（满足一些幻想）</h3>
+<ul>
+<li><a href="https://docs.unity.cn/cn/2020.3/Manual/CLIBatchmodeCoroutines.html">批处理模式和内置协程兼容性</a></li>
+<li>WaitUntil 非常有用</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E8%A7%81%E8%AF%86%E5%B0%91%E7%9A%84%E4%BA%BA%E6%89%8D%E4%BC%9A%E6%9E%81%E5%85%B6%E8%87%AA%E4%BF%A1">见识少的人才会极其自信</a>
+<ul>
+<li><a href="#unity-editor">Unity Editor</a>
+<ul>
+<li><a href="#%E9%A2%84%E8%AE%BE%E7%9A%84%E8%A6%86%E7%9B%96%E9%A2%84%E8%AE%BE%E7%9A%84%E5%8F%98%E4%BD%93">预设的覆盖，预设的变体</a></li>
+<li><a href="#ipreprocessbuildwithreport-%E6%89%93%E5%8C%85%E6%9E%84%E5%BB%BA%E5%89%8D%E7%9A%84%E6%8E%A5%E5%8F%A3">IPreprocessBuildWithReport 打包构建前的接口</a></li>
+<li><a href="#projectsettingeditornumbering-schemegame-object-naming">ProjectSetting/Editor/Numbering Scheme/Game Object Naming</a></li>
+<li><a href="#preferencesgeneralauto-refreshscript-changes-while-playing">Preferences/General/Auto Refresh+Script Changes While Playing</a></li>
+<li><a href="#projectsettingscript-execution-order">ProjectSetting/Script Execution Order</a></li>
+<li><a href="#runtimeinitializeonloadmethodattribute">RuntimeInitializeOnLoadMethodAttribute</a></li>
+<li><a href="#renderdoc">RenderDoc</a></li>
+<li><a href="#unityprofiler">UnityProfiler</a></li>
+<li><a href="#unity%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6">Unity的垃圾回收</a></li>
+<li><a href="#unity%E4%B8%AD%E7%9A%84%E4%BC%98%E5%8C%96">Unity中的优化</a>
+<ul>
+<li><a href="#%E8%B5%84%E6%BA%90%E4%BC%98%E5%8C%96">资源优化</a></li>
+<li><a href="#%E7%BA%B9%E7%90%86%E6%96%B9%E9%9D%A2%E7%9A%84%E4%BC%98%E5%8C%96">纹理方面的优化</a></li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E6%96%87%E6%9C%AC%E7%9A%84%E4%BC%98%E5%8C%96%E5%8F%8A%E5%85%B6%E4%BB%96%E5%AE%98%E6%96%B9%E4%BC%98%E5%8C%96">字符串和文本的优化及其他官方优化</a></li>
+</ul>
+</li>
+<li><a href="#%E7%89%B9%E6%AE%8A%E6%96%87%E4%BB%B6%E5%A4%B9%E5%91%BD%E5%90%8D">特殊文件夹命名</a></li>
+<li><a href="#assetbundle">AssetBundle</a></li>
+</ul>
+</li>
+<li><a href="#unityengine">UnityEngine</a>
+<ul>
+<li><a href="#unity%E7%9A%84%E5%8D%8F%E7%A8%8B%E6%BB%A1%E8%B6%B3%E4%B8%80%E4%BA%9B%E5%B9%BB%E6%83%B3">Unity的协程（满足一些幻想）</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/unity-spine-shi-yong/">
+              <h3 class="post-title">
+                Unity Spine 使用
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

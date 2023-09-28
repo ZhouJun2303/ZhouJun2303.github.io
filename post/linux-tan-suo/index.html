@@ -1,0 +1,339 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Linux 探索 | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Linux 探索 | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="搭建
+node.js环境服务器
+安装mysql
+wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz
+
+n..." />
+    <meta name="keywords" content="Linux" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Linux 探索
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-07-22 11:26 AM
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/DtZN1URLN/" class="post-tag">
+                  # Linux
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="搭建">搭建</h1>
+<h2 id="nodejs环境服务器">node.js环境服务器</h2>
+<h2 id="安装mysql">安装mysql</h2>
+<pre><code>wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz
+</code></pre>
+<p><a href="https://www.cnblogs.com/yybrhr/p/11413035.html">nginx配置APK</a><br>
+<a href="https://www.jianshu.com/p/276d59cbc529">参考链接</a></p>
+<ul>
+<li>linux配置图片</li>
+</ul>
+<pre><code> location ~ .*\.(gif|jpg|jpeg|png)$ {  
+            expires 24h;  
+            root /home/pic/;#指定图片存放路径  
+            access_log  /home/nginx/logs/images.log;#图片 日志路径  
+            proxy_store on;  
+        }
+</code></pre>
+<ul>
+<li>linux配置文件夹浏览</li>
+</ul>
+<pre><code> server {
+        listen       9002;
+        server_name  localhost;
+
+        location ~ ^/(img|data|js|css|html|templates)/ {
+            root  /Hot;
+        }
+
+        location ~ ^/customizedtraffic {
+            fastcgi_pass   0.0.0.0:9091;
+            fastcgi_param  QUERY_TYPE        traffic;
+            include        fastcgi_params;
+        }
+
+        location ~ ^/agentserver {
+            proxy_pass_header Server;
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Scheme $scheme;
+            proxy_pass http://100.69.195.166:7143;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+
+
+    server {
+        listen       9002;
+        server_name  localhost;
+
+        location / {
+            autoindex on;
+            autoindex_exact_size off;
+            root   /Hot;
+        }
+</code></pre>
+<ul>
+<li>nginx重启</li>
+</ul>
+<pre><code>cd /usr/local/nginx/sbin
+./nginx -s reload
+</code></pre>
+<ul>
+<li>pm2 常驻管理自动重启</li>
+</ul>
+<pre><code>重启所有： pm2 restart all 
+ 清楚日志 # pm2 flush              #Empty all log file
+nginx
+重启：./nginx  -s reload  //此命令在Sbin目录下执行
+</code></pre>
+<ul>
+<li>lrzsz替代ftp上传和下载文件</li>
+</ul>
+<pre><code>// 首先安装lrzsz 
+# yum -y install lrzsz 
+// 上传文件，执行命令rz，会跳出文件选择窗口，选择好文件，点击确认即可。
+# rz
+
+// 下载文件，执行命令sz
+# sz
+</code></pre>
+<pre><code>空目录  opt  //主要操作目录
+安装文件目录 mnt //安装应用程序
+</code></pre>
+<ul>
+<li>网页配置demo</li>
+</ul>
+<pre><code>server {
+        listen       8889;
+        server_name  localhost;
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        location / {
+            root  /webgame/web-mobile;
+            index  index.html index.htm;
+        }
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E6%90%AD%E5%BB%BA">搭建</a>
+<ul>
+<li><a href="#nodejs%E7%8E%AF%E5%A2%83%E6%9C%8D%E5%8A%A1%E5%99%A8">node.js环境服务器</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85mysql">安装mysql</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/laya-chang-jian-wen-ti-/">
+              <h3 class="post-title">
+                Laya 常见问题
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

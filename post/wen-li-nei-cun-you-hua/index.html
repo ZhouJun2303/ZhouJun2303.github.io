@@ -1,0 +1,257 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>纹理内存优化 | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="纹理内存优化 | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="图片大小
+图片大小一般采用小于等于2的次方大小
+在Unity 中，如果图片的大小不是2的次方，如100*200Unity会在导入之后将其缩放为128*256的纹理、如果是129*256的纹理大小，则导入之后为256*256的纹理大小
+Rea..." />
+    <meta name="keywords" content="U3D性能优化" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              纹理内存优化
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-04-02 17:35 PM
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/JFgC1cADY/" class="post-tag">
+                  # U3D性能优化
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="图片大小">图片大小</h2>
+<p>图片大小一般采用小于等于2的次方大小<br>
+在Unity 中，如果图片的大小不是2的次方，如<code>100*200</code>Unity会在导入之后将其缩放为128*256的纹理、如果是<code>129*256</code>的纹理大小，则导入之后为<code>256*256</code>的纹理大小</p>
+<h2 id="readwite-enable">Read/Wite Enable</h2>
+<p>开启<code>Read/Wite Enable</code>将允许自定义脚本访问，写入纹理数据。在运行时内存中会存储一份额外的贴图数据，使贴图大小翻倍，无特殊需要不要开启</p>
+<h2 id="不是渐变色图片处理">不是渐变色图片处理</h2>
+<p>在Ps中，对于用不到256色的图片，进行减色处理，减少图片大小</p>
+<h2 id="rgb24和rgba32">RGB24和RGBA32</h2>
+<p>RGB的24位纹理和RGBA的32位纹理都是常见的图像格式，它们之间的主要区别在于纹理中存储的每个像素的颜色信息的位数和类型。</p>
+<p>24位RGB纹理存储每个像素的颜色信息使用24个位，其中8个位分别用于存储红、绿和蓝三种颜色的分量。这种格式没有透明度信息，因此不支持透明度的效果。</p>
+<p>32位RGBA纹理存储每个像素的颜色信息使用32个位，其中24个位用于存储红、绿和蓝三种颜色的分量，另外8个位用于存储透明度信息。这种格式支持透明度效果，可以在渲染时使用混合（blending）技术来实现透明效果。 -- ChatGTP</p>
+<p>在游戏中选择使用哪种纹理格式通常取决于需要呈现的效果和资源的使用情况。如果需要呈现透明效果，或者需要在纹理中嵌入透明度信息，则应该使用32位RGBA纹理。如果不需要透明效果，则可以使用24位RGB纹理，这样可以减少资源占用，并提高渲染效率。</p>
+<h2 id="根据平台选择支持的纹理压缩格式">根据平台选择支持的纹理压缩格式</h2>
+<p>在对应平台上选择支持的压缩格式，如果是不支持的压缩格式，Unity会自动转换成RGBA32/RGB24格式，并且转换之前的内存也会保留，将消耗更多的时间， 内存<br>
+[//Todo 各个平台纹理压缩区别] (https://docs.unity3d.com/cn/current/Manual/class-TextureImporter.html)</p>
+<h2 id="generate-mip-maps">Generate Mip Maps</h2>
+<ul>
+<li>开启之后，可以让离摄像机较远的物体使用较小的纹理版本，但是运行时贴贴图大小将会变大。</li>
+<li>如果是图集开启了mipmap,图集中的图片必须应用于距离摄像机相近的位置，否则会增加每帧渲染所需的纹理大小，会导致DC降了，但是渲染速度反而变慢了</li>
+</ul>
+<h2 id="调整图集大小">调整图集大小</h2>
+<p>图集通过9宫格调整大小，调整较小的图片，如<code>1024*2048</code>但是只超了一点点，可以通过编辑器工具或者手动优化成<code>1024*1024</code></p>
+<h2 id="纹理压缩">纹理压缩</h2>
+<p><code>Android</code> 首选  <code>RGBA Compressed ETC2 8 bits</code><br>
+<code>iOS</code>首选 <code>RGB(A) Compressed AST  4x4 block</code></p>
+<p><a href="https://zhuanlan.zhihu.com/p/125100817">参考于</a><br>
+<a href="https://github.com/vinjn/pkg-doctor">包体分析工具</a></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%9B%BE%E7%89%87%E5%A4%A7%E5%B0%8F">图片大小</a></li>
+<li><a href="#readwite-enable">Read/Wite Enable</a></li>
+<li><a href="#%E4%B8%8D%E6%98%AF%E6%B8%90%E5%8F%98%E8%89%B2%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86">不是渐变色图片处理</a></li>
+<li><a href="#rgb24%E5%92%8Crgba32">RGB24和RGBA32</a></li>
+<li><a href="#%E6%A0%B9%E6%8D%AE%E5%B9%B3%E5%8F%B0%E9%80%89%E6%8B%A9%E6%94%AF%E6%8C%81%E7%9A%84%E7%BA%B9%E7%90%86%E5%8E%8B%E7%BC%A9%E6%A0%BC%E5%BC%8F">根据平台选择支持的纹理压缩格式</a></li>
+<li><a href="#generate-mip-maps">Generate Mip Maps</a></li>
+<li><a href="#%E8%B0%83%E6%95%B4%E5%9B%BE%E9%9B%86%E5%A4%A7%E5%B0%8F">调整图集大小</a></li>
+<li><a href="#%E7%BA%B9%E7%90%86%E5%8E%8B%E7%BC%A9">纹理压缩</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/unity-profiler/">
+              <h3 class="post-title">
+                Unity Profiler
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

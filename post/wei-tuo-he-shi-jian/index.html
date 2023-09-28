@@ -1,0 +1,424 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>委托和事件 | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="委托和事件 | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="委托
+
+使用delegate关键字来声明
+委托是一个函数指针数组，运行时保存一个或多个方式引用，可以为null
+委托是独立的，不依赖于事件
+包含Combine()和Remove()方法，用于将方法添加到调用类表
+可以作为方法参数传递
+=用于..." />
+    <meta name="keywords" content="UnityEngine,C#" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              委托和事件
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-03-25 14:38 PM
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/szG58N8F94/" class="post-tag">
+                  # UnityEngine
+                </a>
+              
+                <a href="https://zhoujun2303.github.io/tag/cPp_1OaTH/" class="post-tag">
+                  # C#
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="委托">委托</h2>
+<ul>
+<li>使用<code>delegate</code>关键字来声明</li>
+<li>委托是一个函数指针数组，运行时保存一个或多个方式引用，可以为null</li>
+<li>委托是独立的，不依赖于事件</li>
+<li>包含<code>Combine()</code>和<code>Remove()</code>方法，用于将方法添加到调用类表</li>
+<li>可以作为方法参数传递</li>
+<li>=用于分配单个方法，+=分配多个方法<br>
+多播委托</li>
+</ul>
+<pre><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Main : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        //create Game
+        MainGame mainGame = new MainGame();
+        //create Player
+        List&lt;Player&gt; cachedPlayers = new List&lt;Player&gt;();
+        for (int i = 0; i &lt; 10; i++)
+        {
+            //Player player = new Player(mainGame.OnGameOverDelegate);
+            Player player = new Player();
+            cachedPlayers.Add(player);
+        }
+        //call MainGame GameOver
+        mainGame.GameOver();
+        //log
+
+        //relesePlayer
+        for (int i = 0; i &lt; cachedPlayers.Count; i++)
+        {
+            cachedPlayers[i]?.Dispose();
+            cachedPlayers[i] = null;
+        }
+        cachedPlayers.Clear();
+
+        //call MainGame GameOver
+        mainGame.GameOver();
+
+        //可以直接赋值置空
+        MainGame.OnGameOverDelegate = null;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+
+}
+
+public delegate void OnGameOverDelegate();
+public class MainGame
+{
+    public static OnGameOverDelegate OnGameOverDelegate = null;
+
+    public void GameOver()
+    {
+        OnGameOverDelegate?.Invoke();
+    }
+}
+
+public class Player
+{
+    public static int PlayerIndex = 0;
+
+    private int _playerIndex;
+    public Player()
+    {
+        ++PlayerIndex;
+        _playerIndex = PlayerIndex;
+        MainGame.OnGameOverDelegate += OnGameOver;
+    }
+
+    public void Dispose()
+    {
+        MainGame.OnGameOverDelegate -= OnGameOver;
+    }
+
+    ~Player()
+    {
+
+    }
+
+    private void OnGameOver()
+    {
+        Debug.Log($&quot;player {_playerIndex} game over&quot;);
+    }
+}
+
+</code></pre>
+<h2 id="事件">事件</h2>
+<ul>
+<li>使用<code>event</code>关键字来声明</li>
+<li>依赖于委托的通知机制</li>
+<li>依赖于委托，没有委托就无法创建，只允许添加或者移除目标</li>
+<li>通过<code>AddEventHandler()</code>和<code>RemoveEventHandler()</code>向调用类表添加或者移除方法</li>
+<li>事件被引发，不能作为方法参数传递</li>
+<li>=运算符不能应用于事件</li>
+</ul>
+<pre><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MainEvent : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        //create Game
+        MainGame1 mainGame = new MainGame1();
+        //create Player
+        List&lt;Player&gt; cachedPlayers = new List&lt;Player&gt;();
+        for (int i = 0; i &lt; 10; i++)
+        {
+            //Player player = new Player(mainGame.OnGameOverDelegate);
+            Player player = new Player();
+            cachedPlayers.Add(player);
+        }
+        //call MainGame GameOver
+        mainGame.GameOver();
+        //log
+
+        //relesePlayer
+        for (int i = 0; i &lt; cachedPlayers.Count; i++)
+        {
+            cachedPlayers[i]?.Dispose();
+            cachedPlayers[i] = null;
+        }
+        cachedPlayers.Clear();
+
+        //call MainGame GameOver
+        mainGame.GameOver();
+
+        //不能直接赋值
+        MainGame1.OnGameOverDelegateEvent = null;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+
+}
+
+public class MainGame1
+{
+    public static event OnGameOverDelegate OnGameOverDelegateEvent;
+    public void GameOver()
+    {
+        OnGameOverDelegateEvent?.Invoke();
+    }
+}
+
+public class Player1
+{
+    public static int PlayerIndex = 0;
+
+    private int _playerIndex;
+    public Player1()
+    {
+        ++PlayerIndex;
+        _playerIndex = PlayerIndex;
+        MainGame1.OnGameOverDelegateEvent += OnGameOver;
+
+    }
+
+    public void Dispose()
+    {
+        MainGame1.OnGameOverDelegateEvent -= OnGameOver;
+    }
+
+    ~Player1()
+    {
+
+    }
+
+    private void OnGameOver()
+    {
+        Debug.Log($&quot;player {_playerIndex} game over&quot;);
+    }
+}
+
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%A7%94%E6%89%98">委托</a></li>
+<li><a href="#%E4%BA%8B%E4%BB%B6">事件</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/android-pai-chu-yin-yong-bao-chong-tu/">
+              <h3 class="post-title">
+                Android 排除引用包冲突
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

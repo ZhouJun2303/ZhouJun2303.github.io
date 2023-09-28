@@ -1,0 +1,386 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cocos随记 | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Cocos随记 | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="
+富文本使用
+
+this.win.string='&lt;color=#00ff00&gt;'+'游戏'+'&lt;/c&gt;&lt;color=#0fffff&gt;'+'完结&lt;/c&gt;';
+
+
+取两位字符
+
+substrin..." />
+    <meta name="keywords" content="Cocos" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Cocos随记
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-06-29 10:03 AM
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/-kekcKgOE/" class="post-tag">
+                  # Cocos
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <ul>
+<li>富文本使用</li>
+</ul>
+<pre><code>this.win.string='&lt;color=#00ff00&gt;'+'游戏'+'&lt;/c&gt;&lt;color=#0fffff&gt;'+'完结&lt;/c&gt;';
+</code></pre>
+<ul>
+<li>取两位字符</li>
+</ul>
+<pre><code>substring
+</code></pre>
+<pre><code>前后补字符
+padStart  //   padEnd
+Js判断转boolean类型为false的6种情况
+Boolean(0);
+Boolean('');
+Boolean(false);
+Boolean(NaN);
+Boolean(undefined);
+Boolean(null)
+</code></pre>
+<pre><code>prompt(&quot;&quot;);接受外部的数据
+var age= parseInt(prompt(&quot;请输入年龄&quot;))；
+instanceof()//判断莫一个对象那个是否属于一个对象
+</code></pre>
+<ul>
+<li>数据类型</li>
+</ul>
+<pre><code>Array
+String
+Number
+Object
+JSON
+Date
+Math
+</code></pre>
+<pre><code>hasOwnProperty
+var str=&quot;sad9a9d90sa9578fa922f9a&quot;;
+console.log(str.match(/\d+/g).length);//正则表达式
+console.log(str.match(/\d+/g));//求数字的长度和个数
+
+Math.ceil();//向上取整
+Math.floor();//向下取整
+Math.round();//四舍五入取整
+parseInt();//向下取整
+</code></pre>
+<pre><code>换行：&lt;br&gt;  \n
+取整：parseInt
+输入： prompt
+输出： console.log()   document.write()  alert(&quot;弹窗&quot;)
+内置函数：
+</code></pre>
+<pre><code>parseInt():转整形
+parseFloat():转浮点型
+isNaN():
+isFinite():判断一个数值是否有限
+eval():求字符串中表达式的值
+</code></pre>
+<pre><code>空格:&amp;nbsp
+函数体内定义全局变量，如果不使用var关键字，就是定义的全局变量
+</code></pre>
+<ul>
+<li>API</li>
+</ul>
+<pre><code>To:绝对动作(坐标)，相对于最开始的状态所做的动作；
+By:相对动作(坐标)，相对于当前的状态所做的动作;
+
+
+移动
+moveTo(time,x,y)
+moveBy(time,cc.P(x,y))
+
+
+缩放
+图片对象.scale=0.3：缩小三倍
+
+旋转
+rotateTo(时间，绕x轴旋转坐标，绕y轴旋转坐标)
+rotateBy
+
+倾斜
+skewTo(时间，绕x轴旋转度数，绕y轴旋转度数)
+skewBy
+
+跳跃
+jumpTo
+//以坐标原点为原点，移动到目标坐标
+//参数: (时间duration，目标坐标point(x, y)， 每次跳跃高度height， 跳跃次数count)
+var jumpTo = cc.jumpTo(duration, cc.p(size.width / 2, size.height / 2), 50, 10);
+sprite.runAction(jumpTo);
+
+
+透明度
+对象.opacity=200(最大值为255)
+
+
+淡入淡出
+fadeTo
+//第二个参数为透明度,透明区间(0, 1)
+var fadeTo = cc.fadeTo(duration, 0.5);
+sprite.runAction(fadeTo);
+
+fadeIn同上
+fadeOut
+
+
+闪烁效果
+blink
+//闪烁效果
+//第二个参数为duration时间内闪烁次数
+var blink = cc.blink(duration, 5);
+sprite.runAction(blink);
+
+
+色调的改变
+tintTo
+//改变色调效果
+var tintTo = cc.tintTo(duration, 255, 127.5, 0);
+sprite.runAction(tintTo);
+
+
+
+延迟执行
+delay Time
+var delaytime=cc.delayTime(时间)
+用于组合动作中
+
+
+顺序执行
+sequence
+//顺序执行当前添加的所有动作
+var sequence = cc.sequence(moveby, moveto, scaleTo, scaleBy, fadeTo, 
+fadeOut, fadeIn, blink, tintTo,rotateTo, rotateBy, skewBy, skewTo, 
+jumpBy, jumpTo, bezierTo, bezierBy);
+
+sprite.runAction(sequence);
+
+
+
+重复执行
+repeat/repeatforever
+//重复执行
+//参数: (action，执行次数)
+var repeat = cc.repeat(sequence, 3);
+sprite.runAction(repeat);
+
+
+//无限重复
+var repeatForever = cc.repeatForever(sequence);
+sprite.runAction(repeatForever);
+
+
+
+同时执行
+spawn
+//spawn 同时执行
+var spawn = cc.spawn(moveby, scaleTo, blink, tintTo);
+sprite.runAction(spawn);
+
+
+反向执行 reverse
+
+
+//坐标转换
+pos=this.convertToNodeSpace(pos);
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/js-bi-ji/">
+              <h3 class="post-title">
+                JS笔记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

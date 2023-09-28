@@ -1,0 +1,555 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Unity 编辑拓展(UI拖拽师失业) | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Unity 编辑拓展(UI拖拽师失业) | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="
+先来看看效果
+
+
+
+设计思路
+
+找到子gameObject身上的组件
+找到父gameObject的位置
+生成父类
+写入内存
+
+CreateMember.cs
+using UnityEngine;
+using UnityEditor;
+us..." />
+    <meta name="keywords" content="UnityEditor,Unity" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Unity 编辑拓展(UI拖拽师失业)
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-08-18 09:54 AM
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/DwKakt8ro/" class="post-tag">
+                  # UnityEditor
+                </a>
+              
+                <a href="https://zhoujun2303.github.io/tag/pz2bkmFLZ/" class="post-tag">
+                  # Unity
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <!-- more -->
+<h2 id="先来看看效果"><strong>先来看看效果</strong></h2>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://zhoujun2303.github.io/post-images/1660790489890.gif" alt="" loading="lazy"></figure>
+<!-- more -->
+<h2 id="设计思路"><strong>设计思路</strong></h2>
+<ul>
+<li>找到子gameObject身上的组件</li>
+<li>找到父gameObject的位置</li>
+<li>生成父类</li>
+<li>写入内存</li>
+</ul>
+<h2 id="createmembercs"><strong>CreateMember.cs</strong></h2>
+<pre><code>using UnityEngine;
+using UnityEditor;
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace MLSpace.Editor
+{
+    public class CreateMember
+    {
+        private const string BR = &quot;\n&quot;;
+        private const string YH = &quot;\&quot;&quot;;
+        private const string publicMember = &quot;_b&quot;;
+        private const string privateMember = &quot;_i&quot;;
+        private const string protectedMember = &quot;_o&quot;;
+
+        private static List&lt;string&gt; _memberNames = new List&lt;string&gt;();
+        private static readonly string[] regularName = new string[] { &quot;Image&quot; };
+        private const string TempTextPath = &quot;CreateMember/Editor/MemberTemp.txt&quot;;
+        private static bool _getChildByChild = false;
+
+        [MenuItem(&quot;GameObject/CreateChildMember&quot;, priority = 0)]
+        private static void CreateChildMember()
+        {
+            _getChildByChild = false;
+            //找组件
+            GameObject gameObject = (GameObject)Selection.activeObject;
+            if (!gameObject)
+            {
+                Debug.LogWarning(&quot;Selection activeObject is empty!&quot;);
+                return;
+            }
+            Component[] comps = gameObject.GetComponents&lt;MonoBehaviour&gt;();
+            if (comps.Length == 0)
+            {
+                Debug.LogWarning(gameObject.name + &quot; no component expand MonoBehaviour!&quot;);
+                return;
+            }
+            GenerateCode(gameObject);
+        }
+
+        [MenuItem(&quot;GameObject/CreateChildByChildMember&quot;, priority = 0)]
+        private static void CreateChildByChildMember()
+        {
+            _getChildByChild = true;
+            //找组件
+            GameObject gameObject = (GameObject)Selection.activeObject;
+            if (!gameObject)
+            {
+                Debug.LogWarning(&quot;Selection activeObject is empty!&quot;);
+                return;
+            }
+            Component[] comps = gameObject.GetComponents&lt;MonoBehaviour&gt;();
+            if (comps.Length == 0)
+            {
+                Debug.LogWarning(gameObject.name + &quot; no component expand MonoBehaviour!&quot;);
+                return;
+            }
+            GenerateCode(gameObject);
+        }
+
+        private static void GenerateCode(GameObject gameObject)
+        {
+            //脚本位置
+            string CodePath = GetPath(GetBriefComponentName(gameObject));
+            if (CodePath == &quot;&quot;)
+            {
+                Debug.Log(&quot;找不到脚本位置&quot;);
+                return;
+            }
+            Debug.Log(CodePath);
+            if (CodePath.IndexOf(&quot;Packages/com&quot;) != -1)
+            {
+                Debug.LogWarning(CodePath + &quot; is system folder&quot;);
+                return;
+            }
+            //生成分类
+            string newCodePath = CodePath.Remove(CodePath.Length - 2) + &quot;Member.cs&quot;;
+            string templatePath = Path.Combine(Application.dataPath, TempTextPath);
+            string codePath = newCodePath;
+            string templateContents = File.ReadAllText(templatePath);
+            string result = &quot;&quot;;
+            using (TextReader reader = new StringReader(templateContents))
+            {
+                while (reader.Peek() != -1)
+                {
+                    string line = reader.ReadLine();
+                    if (line.Contains(&quot;__DATA_TABLE_CREATE_TIME__&quot;))
+                    {
+                        line = line.Replace(&quot;__DATA_TABLE_CREATE_TIME__&quot;, DateTime.UtcNow.ToLocalTime().ToString(&quot;yyyy-MM-dd HH:mm:ss.fff&quot;));
+                    }
+                    if (line.Contains(&quot;__CLASSNAME__&quot;))
+                    {
+                        line = line.Replace(&quot;__CLASSNAME__&quot;, GetBriefComponentName(gameObject));
+                    }
+                    if (line.Trim().Equals(&quot;__MEMBERNAME__&quot;))
+                    {
+                        result += GetMemberNameStr(gameObject);
+                        continue;
+                    }
+                    if (line.Trim().Equals(&quot;__GETCOMPONENT__&quot;))
+                    {
+                        result += GetGetComponentStr(gameObject);
+                        continue;
+                    }
+                    result += line + &quot;\n&quot;;
+                }
+                reader.Close();
+            }
+            File.WriteAllText(codePath, result);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log(newCodePath + &quot;create success&quot;);
+        }
+
+        /// &lt;summary&gt;
+        /// 获取成员str
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;go&quot;&gt;&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        private static string GetMemberNameStr(GameObject go)
+        {
+            string str = &quot;&quot;;
+            _memberNames.Clear();
+            Transform[] childs = _getChildByChild ? GetChildsByChild(go) : GetChilds(go);
+            for (int i = 0; i &lt; childs.Length; i++)
+            {
+                if (childs[i].name.StartsWith(publicMember))
+                {
+                    string memberName = InitialsCapitalize(childs[i].name);
+                    _memberNames.Add(memberName);
+                    str += &quot;&quot; +
+                        &quot;        public &quot; + GetBriefComponentName(childs[i].gameObject) + &quot; &quot; + memberName + &quot;;&quot; + BR;
+                }
+                if (childs[i].name.StartsWith(privateMember))
+                {
+                    string memberName = InitialsLowercase(childs[i].name);
+                    _memberNames.Add(memberName);
+                    str += &quot;&quot; +
+                        &quot;        private &quot; + GetBriefComponentName(childs[i].gameObject) + &quot; &quot; + memberName + &quot;; &quot; + BR;
+                }
+                if (childs[i].name.StartsWith(protectedMember))
+                {
+                    string memberName = InitialsCapitalize(childs[i].name);
+                    _memberNames.Add(memberName);
+                    str += &quot;&quot; +
+                        &quot;        protected &quot; + GetBriefComponentName(childs[i].gameObject) + &quot; &quot; + memberName + &quot;; &quot; + BR;
+                }
+            }
+            return str;
+        }
+
+        /// &lt;summary&gt;
+        /// 方法体内
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;go&quot;&gt;&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        private static string GetGetComponentStr(GameObject go)
+        {
+            string str = &quot;&quot;;
+            int index = 0;
+            Transform[] childs = _getChildByChild ? GetChildsByChild(go) : GetChilds(go);
+            for (int i = 0; i &lt; childs.Length; i++)
+            {
+                if (childs[i].name.StartsWith(publicMember)
+                    || childs[i].name.StartsWith(privateMember)
+                    || childs[i].name.StartsWith(protectedMember))
+                {
+                    str += &quot;&quot; +
+                        &quot;            &quot; + _memberNames[index] + &quot; = &quot; +
+                        &quot;transform.FindChildByChild(&quot; + YH + childs[i].name + YH + &quot;).&quot; +
+                        &quot;GetComponent&lt;&quot; + GetBriefComponentName(childs[i].gameObject) + &quot;&gt;();&quot; + BR;
+                    index++;
+                }
+            }
+            return str;
+        }
+
+        private static Transform[] GetChilds(GameObject go)
+        {
+            Transform[] ts = new Transform[go.transform.childCount];
+            for (int i = 0; i &lt; ts.Length; i++)
+            {
+                ts[i] = go.transform.GetChild(i);
+            }
+            return ts;
+        }
+
+        private static Transform[] GetChildsByChild(GameObject go)
+        {
+            Transform[] ts = go.transform.GetComponentsInChildren&lt;Transform&gt;();
+            return ts;
+        }
+
+        #region Tools
+        //大写
+        private static string InitialsCapitalize(string str)
+        {
+            string newStr = CropCharTwo(str);
+            return newStr.First().ToString().ToUpper() + newStr.Substring(1);
+        }
+        //小写
+        private static string InitialsLowercase(string str)
+        {
+            string newStr = CropCharTwo(str);
+            return &quot;_&quot; + newStr.First().ToString().ToLower() + newStr.Substring(1);
+        }
+        //裁剪
+        private static string CropCharTwo(string str)
+        {
+            return str.Remove(0, 2);
+        }
+        /// &lt;summary&gt;
+        /// 获取组件名字(包含命名空间)
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;go&quot;&gt;&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        private static string GetComponentName(GameObject go)
+        {
+            Component[] comps = go.GetComponents&lt;MonoBehaviour&gt;();
+            if (comps.Length == 0)
+            {
+                Debug.LogWarning(go.name + &quot; no component expand MonoBehaviour!&quot;);
+                return &quot;Transform&quot;;
+            }
+            return comps[comps.Length - 1].GetType().ToString();
+        }
+
+        /// &lt;summary&gt;
+        /// 获取组件简单名字
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;go&quot;&gt;&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        private static string GetBriefComponentName(GameObject go)
+        {
+            string name = GetComponentName(go);
+            string[] newNames = name.Split('.');
+            string BriefName = newNames[newNames.Length - 1];
+            return BriefName;
+        }
+
+        /// &lt;summary&gt;
+        /// 获取脚本路径
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;_scriptName&quot;&gt;&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        static string GetPath(string _scriptName)
+        {
+            Debug.Log(&quot;scriptName &quot; + _scriptName);
+            for (int i = 0; i &lt; regularName.Length; i++)
+            {
+                if (regularName[i] == _scriptName) return &quot;&quot;;
+            }
+            string[] newPath = _scriptName.Split('.');
+            string[] path = UnityEditor.AssetDatabase.FindAssets(newPath[newPath.Length - 1]);
+            for (int i = 0; i &lt; path.Length; i++)
+            {
+                string _path = AssetDatabase.GUIDToAssetPath(path[i]);
+                string[] names = _path.Split('/');
+                if (names[names.Length - 1].Equals(string.Format(&quot;{0}.cs&quot;, _scriptName)))
+                {
+                    if (File.Exists(_path) &amp;&amp; _path.EndsWith(&quot;.cs&quot;))
+                    {
+                        return _path;
+                    }
+                }
+            }
+            return &quot;&quot;;
+        }
+        #endregion
+    }
+}
+</code></pre>
+<h2 id="membertemptxt"><strong>MemberTemp.txt</strong></h2>
+<pre><code>
+using System;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityGameFramework.Runtime;
+//------------------------------------------------------------
+// 此文件由工具自动生成，请勿直接修改。
+// 生成时间：__DATA_TABLE_CREATE_TIME__
+//------------------------------------------------------------
+namespace MLSpace
+{
+    public partial class __CLASSNAME__
+    {
+
+        __MEMBERNAME__
+
+        protected virtual void InitMember()
+        {
+            __GETCOMPONENT__
+        }
+    }
+}
+</code></pre>
+<p>编辑器拓展真有意思！🤡</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%85%88%E6%9D%A5%E7%9C%8B%E7%9C%8B%E6%95%88%E6%9E%9C"><strong>先来看看效果</strong></a></li>
+<li><a href="#%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF"><strong>设计思路</strong></a></li>
+<li><a href="#createmembercs"><strong>CreateMember.cs</strong></a></li>
+<li><a href="#membertemptxt"><strong>MemberTemp.txt</strong></a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/unity-bian-ji-tuo-zhan-chong-fu-zi-yuan-jian-cha/">
+              <h3 class="post-title">
+                Unity 编辑拓展(重复资源检查)
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,486 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cocos集成高德定位 | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Cocos集成高德定位 | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="Key
+d7be719a0580ae65f050b3ec85e75f57  key
+
+// Learn cc.Class:
+//  - [Chinese] https://docs.cocos.com/creator/manual/zh/s..." />
+    <meta name="keywords" content="定位,Cocos" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Cocos集成高德定位
+            </h2>
+            <div class="post-info">
+              <span>
+                2019-07-30 10:35 AM
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/Ut6IdaN8p/" class="post-tag">
+                  # 定位
+                </a>
+              
+                <a href="https://zhoujun2303.github.io/tag/-kekcKgOE/" class="post-tag">
+                  # Cocos
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>Key</p>
+<pre><code>d7be719a0580ae65f050b3ec85e75f57  key
+</code></pre>
+<pre><code>// Learn cc.Class:
+//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/class.html
+//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/class.html
+// Learn Attribute:
+//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
+//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/reference/attributes.html
+// Learn life-cycle callbacks:
+//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
+//  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
+
+cc.Class({
+    extends: cc.Component,
+
+    properties: {
+        // foo: {
+        //     // ATTRIBUTES:
+        //     default: null,        // The default value will be used only when the component attaching
+        //                           // to a node for the first time
+        //     type: cc.SpriteFrame, // optional, default is typeof default
+        //     serializable: true,   // optional, default is true
+        // },
+        // bar: {
+        //     get () {
+        //         return this._bar;
+        //     },
+        //     set (value) {
+        //         this._bar = value;
+        //     }
+        // },
+    },
+
+    // LIFE-CYCLE CALLBACKS:
+
+    onLoad() {
+        
+    },
+
+    getlocation(){
+        var map = new AMap.Map('container', {
+            resizeEnable: true, //是否监控地图容器尺寸变化
+            zoom: 11, //初始化地图层级
+            center: [116.397428, 39.90923] //初始化地图中心点
+        });
+        console.log(map);
+        map.on(&quot;complete&quot;, function () {
+            log.success(&quot;地图加载完成！&quot;);
+        });
+
+        //定位
+        map.plugin('AMap.Geolocation', function () {
+            var geolocation = new AMap.Geolocation({
+                // 是否使用高精度定位，默认：true
+                enableHighAccuracy: true,
+                // 设置定位超时时间，默认：无穷大
+                timeout: 10000,
+                // 定位按钮的停靠位置的偏移量，默认：Pixel(10, 20)
+                buttonOffset: new AMap.Pixel(10, 20),
+                //  定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                zoomToAccuracy: true,
+                //  定位按钮的排放位置,  RB表示右下
+                buttonPosition: 'RB'
+            })
+
+            geolocation.getCurrentPosition()
+            AMap.event.addListener(geolocation, 'complete', onComplete)
+            AMap.event.addListener(geolocation, 'error', onError)
+
+            function onComplete(data) {
+                // data是具体的定位信息
+                console.log(&quot;定位成功！&quot;);
+                console.log(data);
+            }
+
+            function onError(data) {
+                // 定位出错
+                console.log(&quot;定位出错!&quot;);
+                console.log(data);
+            }
+        })
+
+
+        AMap.plugin('AMap.CitySearch', function () {
+            var citySearch = new AMap.CitySearch()
+            citySearch.getLocalCity(function (status, result) {
+              if (status === 'complete' &amp;&amp; result.info === 'OK') {
+                // 查询成功，result即为当前所在城市信息
+                console.log(result);
+              }
+            })
+          })
+    },
+
+
+
+
+    //
+
+
+    start() {
+        this.getlocation();
+    },
+
+    // update (dt) {},
+});
+</code></pre>
+<pre><code>// Learn cc.Class:
+//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/class.html
+//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/class.html
+// Learn Attribute:
+//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
+//  - [English] http://docs.cocos2d-x.org/creator/manual/en/scripting/reference/attributes.html
+// Learn life-cycle callbacks:
+//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
+//  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
+
+cc.Class({
+    extends: cc.Component,
+
+    properties: {
+        // foo: {
+        //     // ATTRIBUTES:
+        //     default: null,        // The default value will be used only when the component attaching
+        //                           // to a node for the first time
+        //     type: cc.SpriteFrame, // optional, default is typeof default
+        //     serializable: true,   // optional, default is true
+        // },
+        // bar: {
+        //     get () {
+        //         return this._bar;
+        //     },
+        //     set (value) {
+        //         this._bar = value;
+        //     }
+        // },
+    },
+
+    // LIFE-CYCLE CALLBACKS:
+
+    onLoad() {
+        
+    },
+
+    getlocation(){
+        var map = new AMap.Map('container', {
+            resizeEnable: true, //是否监控地图容器尺寸变化
+            zoom: 11, //初始化地图层级
+            center: [116.397428, 39.90923] //初始化地图中心点
+        });
+        console.log(map);
+        map.on(&quot;complete&quot;, function () {
+            log.success(&quot;地图加载完成！&quot;);
+        });
+
+        //定位
+        map.plugin('AMap.Geolocation', function () {
+            var geolocation = new AMap.Geolocation({
+                // 是否使用高精度定位，默认：true
+                enableHighAccuracy: true,
+                // 设置定位超时时间，默认：无穷大
+                timeout: 10000,
+                // 定位按钮的停靠位置的偏移量，默认：Pixel(10, 20)
+                buttonOffset: new AMap.Pixel(10, 20),
+                //  定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                zoomToAccuracy: true,
+                //  定位按钮的排放位置,  RB表示右下
+                buttonPosition: 'RB'
+            })
+
+            geolocation.getCurrentPosition()
+            AMap.event.addListener(geolocation, 'complete', onComplete)
+            AMap.event.addListener(geolocation, 'error', onError)
+
+            // function onComplete(data) {
+            //     // data是具体的定位信息
+            //     console.log(&quot;定位成功！&quot;);
+            //     console.log(data);
+            // }
+
+            // function onError(data) {
+            //     // 定位出错
+            //     console.log(&quot;定位出错!&quot;);
+            //     console.log(data);
+            // }
+        })
+
+
+        AMap.plugin('AMap.CitySearch', function () {
+            var citySearch = new AMap.CitySearch()
+            citySearch.getLocalCity(function (status, result) {
+              if (status === 'complete' &amp;&amp; result.info === 'OK') {
+                // 查询成功，result即为当前所在城市信息
+                console.log(result.city);
+                console.log(result);
+                console.log(result.bounds.kc);
+              }
+            })
+          })
+    },
+
+
+
+
+    //搜索地名查出经纬度
+   geoCode() {
+        AMap.plugin('AMap.Geocoder', function() {
+            var geocoder = new AMap.Geocoder({
+                // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
+            })
+            // var address  = document.getElementById('tipinput').value;
+            var address = '武汉';
+            geocoder.getLocation(address, function(status, result) {
+                if (status === 'complete' &amp;&amp; result.info === 'OK') {
+                    var lnglat = result.geocodes[0].location.toString();
+                    var lnglatArray = lnglat.split(&quot;,&quot;);
+                    $(&quot;#lonNum&quot;).val(lnglatArray[0]);
+                    $(&quot;#latNum&quot;).val(lnglatArray[1]);
+                    var map = new AMap.Map(&quot;container&quot;, {
+                    });
+                    var marker = new AMap.Marker({
+                        icon: &quot;//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png&quot;,
+                        position: new AMap.LngLat(lnglatArray[0],lnglatArray[1]),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+                        offset: new AMap.Pixel(-13, -30)
+                    });
+                   
+                    console.log(marker);
+                    console.log(marker.bounds.kc);
+                }
+            })
+     
+        })
+    },
+
+    //搜索
+    search(){
+        AMap.plugin('AMap.Autocomplete', function(){
+            // 实例化Autocomplete
+            var autoOptions = {
+              //city 限定城市，默认全国
+              city: '全国'
+            }
+            var autoComplete= new AMap.Autocomplete(autoOptions);
+            autoComplete.search('广州', function(status, result) {
+              // 搜索成功时，result即是对应的匹配数据
+              console.log(&quot;搜索成功&quot;);
+              console.log(result);
+              console.log(result.tips[0].location);
+            })
+          })
+    },
+    
+   
+
+
+    start() {
+        this.getlocation();
+        // this.geoCode();
+        this.search();
+    },
+
+    // update (dt) {},
+});
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/mysql-sui-ji-/">
+              <h3 class="post-title">
+                MySql随记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

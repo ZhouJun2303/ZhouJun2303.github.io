@@ -1,0 +1,457 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GameFramework使用(Runtime) | 长胖是个梦想</title>
+<link rel="shortcut icon" href="https://zhoujun2303.github.io/favicon.ico?v=1695871631810">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://zhoujun2303.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="GameFramework使用(Runtime) | 长胖是个梦想 - Atom Feed" href="https://zhoujun2303.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-241589831-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-241589831-1');
+</script>
+
+
+    <meta name="description" content="GameEntry
+整个框架的启动入口
+Builtin:内置组件
+config
+Config 配置表位于Assets/GameMain/Configs/DefaultConfig
+//int类型值获取
+int c1 = GameEntry...." />
+    <meta name="keywords" content="GameFramework,Unity" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://zhoujun2303.github.io">
+  <img class="avatar" src="https://zhoujun2303.github.io/images/avatar.png?v=1695871631810" alt="">
+  </a>
+  <h1 class="site-title">
+    长胖是个梦想
+  </h1>
+  <p class="site-description">
+    10000小时定律
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://zhoujun2303.github.io/post/keyword" class="menu">
+          Key words
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/ZhouJun2303" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              GameFramework使用(Runtime)
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-09-17 12:23 PM
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://zhoujun2303.github.io/tag/V3VerJ2LU/" class="post-tag">
+                  # GameFramework
+                </a>
+              
+                <a href="https://zhoujun2303.github.io/tag/pz2bkmFLZ/" class="post-tag">
+                  # Unity
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="gameentry">GameEntry</h1>
+<p>整个框架的启动入口</p>
+<h2 id="builtin内置组件">Builtin:内置组件</h2>
+<h3 id="config">config</h3>
+<p>Config 配置表位于Assets/GameMain/Configs/DefaultConfig</p>
+<pre><code>//int类型值获取
+int c1 = GameEntry.Config.GetInt(&quot;configName&quot;);
+//float
+float c2 = GameEntry.Config.GetFloat(&quot;configName&quot;);
+//string
+string c3 = GameEntry.Config.GetString(&quot;configName&quot;);
+//bool
+bool c4 = GameEntry.Config.GetBool(&quot;configName&quot;);
+</code></pre>
+<h3 id="datanode-todo">DataNode TODO</h3>
+<h3 id="datatable-配置表位于assetsgamemaindatatables">DataTable 配置表位于Assets/GameMain/DataTables</h3>
+<pre><code>//获取实体表
+IDataTable&lt;DREntity&gt; table = GameEntry.DataTable.GetDataTable&lt;DREntity&gt;();
+//获取单行数据 请确认ID存在 
+int id = 1001;
+DREntity dataRow = table.GetDataRow(id);
+if (null == dataRow) UnityGameFramework.Runtime.Log.Error(&quot;实体表 编号{0} 不存在&quot;, id);
+//获取所有表行数据
+DREntity[] dREntities = table.GetAllDataRows();
+//获取单行中数据
+var tableRowData1 = dataRow.AssetName;
+</code></pre>
+<h3 id="debugger-调试组件">Debugger 调试组件</h3>
+<pre><code>//在开发阶段用于真机调试查看日志
+GameEntry.Debugger.ActiveWindow = true;
+</code></pre>
+<h3 id="download-todo">Download TODO</h3>
+<h3 id="entity-实体模块">Entity 实体模块</h3>
+<pre><code>//显示实体  为异步操作 这里做了一层封装
+string entityGroup = &quot;Default&quot;;
+GameEntry.Entity.ShowDefaultEntity&lt;PlayerEntity&gt;(new PlayerEntityData(dataRow.Id), entityGroup);
+//&quot;Player&quot;为一个实体分组 增加或删除分组见Entity Inspector面板设置
+/*
+ * 如Default分组
+ * Name 分组名称
+ * Auto Release Interval 自动销毁时间
+ * Capaclity 最大缓存数量
+ * Expire Time 失效时间
+ * */
+//销毁实体
+int childEntityID = 0;
+int parentEntityID = 1;
+GameEntry.Entity.HideEntity(childEntityID);
+//附加实体
+GameEntry.Entity.AttachEntity(childEntityID, parentEntityID);
+//移除附加实体
+GameEntry.Entity.DetachChildEntities(parentEntityID);
+GameEntry.Entity.DetachEntity(childEntityID);
+//隐藏莫个分组所有实体
+GameEntry.Entity.HideAllLoadedEntities(&quot;entityGroup&quot;);
+//隐藏全部实体
+GameEntry.Entity.HideAllLoadedEntities();
+GameEntry.Entity.HideAllLoadingEntities();
+</code></pre>
+<h3 id="event">Event</h3>
+<pre><code>//订阅事件
+//先定义事件类
+GameEntry.Event.Subscribe(TempEvent.EventId, OnTempEvent);
+//发送事件
+GameEntry.Event.Fire(this, new TempEvent());//下一帧
+GameEntry.Event.FireNow(this, new TempEvent());//立即
+//取消订阅
+GameEntry.Event.Unsubscribe(TempEvent.EventId, OnTempEvent);
+</code></pre>
+<pre><code>protected virtual void OnTempEvent(object sender, GameEventArgs e)
+{
+        TempEvent tempEvent = (TempEvent)e;
+        //如果传了参数可以拿到
+}
+public class TempEvent : GameEventArgs
+{
+    public static readonly int EventId = typeof(TempEvent).GetHashCode();
+    public override int Id { get { return EventId; } }
+    public TempEvent() { }
+    public TempEvent(int param1) { }
+    public TempEvent(string parem1) { }
+    public override void Clear() { }
+}
+</code></pre>
+<h3 id="filesystem-todo">FileSystem TODO</h3>
+<h3 id="fsm-todo">Fsm TODO</h3>
+<h3 id="localization-本地化">Localization 本地化</h3>
+<pre><code>//全局配置位于Assets/GameMain/Configs/DefaultDictionary
+//一份语言对应一份 xml配置文件(Assets/GameMain/Localization)
+//增加一种语种 需要在 Recourse Editor中增加一个变体目录
+GameEntry.Localization.GetString(&quot;languageKey&quot;);
+//TODO 封装支持动态切换语言
+</code></pre>
+<h3 id="network-todo">Network TODO</h3>
+<h3 id="objectpool">ObjectPool</h3>
+<pre><code>//创建引用池
+var tempTestObjectPoolItem = new TestItem();
+IObjectPool&lt;TestObjectPoolItem&gt; _itemObjectPool = GameEntry.ObjectPoolCreateSingleSpawnObjectPool&lt;TestObjectPoolItem&gt;(&quot;Test&quot;, 16);
+//创建对象
+TestObjectPoolItem itemObject = _itemObjectPool.Spawn();
+if (itemObject != null)
+{
+    itemObject = (TestObjectPoolItem)itemObject.Target;
+}
+else
+{
+    itemObject = UnityEngine.Object.Instantiate(tempTestObjectPoolItem);
+    _itemObjectPool.Register(TestObjectPoolItem.Create(itemObject), true);
+}
+//回收对象
+_itemObjectPool.Unspawn(itemObject);
+</code></pre>
+<pre><code>public class TestObjectPoolItem : ObjectBase
+{
+    public static TestObjectPoolItem Create(object target)
+    {
+        TestObjectPoolItem itemObject = ReferencePool.Acquire&lt;TestObjectPoolItem&gt;();
+        itemObject.Initialize(target);
+        return itemObject;
+    }
+    protected override void Release(bool isShutdown)
+    {
+        TestItem item = (TestItem)Target;
+        if (item == null)
+        {
+            return;
+        }
+        Object.Destroy(item.gameObject);
+    }
+}
+public class TestItem : MonoBehaviour
+{
+}
+</code></pre>
+<h3 id="procedure-流程模块-todo">Procedure 流程模块 TODO</h3>
+<h3 id="resource-资源模块-加载图片为例">Resource 资源模块 加载图片为例</h3>
+<pre><code>string path = &quot;TestPath&quot;;
+Image obj = new GameObject().AddComponent&lt;Image&gt;();
+GameEntry.Resource.LoadAsset(path, Constant.AssetPriority.SpriteAsset, newLoadAssetCallbacks(LoadSuccessWhithNativeSize), obj);
+</code></pre>
+<h3 id="scene">Scene</h3>
+<pre><code>//加载场景
+GameEntry.Scene.LoadScene(&quot;Path&quot;);
+//卸载场景
+GameEntry.Scene.UnloadScene(&quot;Path&quot;);
+/**
+ *  UnityGameFramework.Runtime.LoadSceneSuccessEventArgs.EventId    加载成功
+    UnityGameFramework.Runtime.LoadSceneFailureEventArgs.EventId    加载失败
+    UnityGameFramework.Runtime.UnloadSceneFailureEventArgs.EventId  卸载成功
+    UnityGameFramework.Runtime.UnloadSceneSuccessEventArgs.EventId  卸载失败
+    UnityGameFramework.Runtime.LoadSceneUpdateEventArgs.EventId     加载进度
+    具体 监听参考 Event 模块
+ * */
+</code></pre>
+<h3 id="setting-存储模块">Setting 存储模块</h3>
+<pre><code>//存储 Key + Object
+GameEntry.Setting.SetObject(&quot;UserData&quot;, null);
+/*
+ *  GameEntry.Setting.SetBool();
+ *  GameEntry.Setting.SetFloat();
+ *  GameEntry.Setting.SetInt();
+ *  GameEntry.Setting.SetString();
+ *  建议不同的数据存储类型不一样，方便于数据清理
+ * **/
+//获取同上Get
+</code></pre>
+<h3 id="sound-声音模块-配置表位于assetsgamemaindatatables">Sound 声音模块 配置表位于Assets/GameMain/DataTables</h3>
+<pre><code>//播放音效 封装过
+GameEntry.Sound.PlaySound(1001);
+//TODO 封装音效循环 封装相同音效只允许存在单个
+</code></pre>
+<h3 id="ui-ui模块-配置表位于assetsgamemaindatatables">UI UI模块 配置表位于Assets/GameMain/DataTables</h3>
+<pre><code>//打开
+int gameFormId = (int)GameEntry.UI.OpenUIForm(UIFormId.GameForm);
+//关闭
+GameEntry.UI.CloseUIForm(gameFormId);
+//关闭所有
+GameEntry.UI.CloseAllLoadedUIForms();
+GameEntry.UI.CloseAllLoadingUIForms();
+</code></pre>
+<h3 id="webrequest-todo">WebRequest TODO</h3>
+<h2 id="customs自定义组件">Customs:自定义组件</h2>
+<h3 id="如native">如Native</h3>
+<pre><code>脚本  NativeComponent : GameFrameworkComponent 并挂载于GF节点下
+//GameEntry获取
+NativeComponent Native = UnityGameFramework.Runtime.GameEntryGetComponent&lt;NativeComponent&gt;();
+//全局使用
+GameEntry.Native.Vibrate(50);
+//其他同
+</code></pre>
+<h1 id="传送门">传送门</h1>
+<h3 id="gameframework官网"><a href="https://gameframework.cn/">GameFramework官网</a></h3>
+<h3 id="gameframework仓库"><a href="https://github.com/EllanJiang/GameFramework">GameFramework仓库</a></h3>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#gameentry">GameEntry</a>
+<ul>
+<li><a href="#builtin%E5%86%85%E7%BD%AE%E7%BB%84%E4%BB%B6">Builtin:内置组件</a>
+<ul>
+<li><a href="#config">config</a></li>
+<li><a href="#datanode-todo">DataNode TODO</a></li>
+<li><a href="#datatable-%E9%85%8D%E7%BD%AE%E8%A1%A8%E4%BD%8D%E4%BA%8Eassetsgamemaindatatables">DataTable 配置表位于Assets/GameMain/DataTables</a></li>
+<li><a href="#debugger-%E8%B0%83%E8%AF%95%E7%BB%84%E4%BB%B6">Debugger 调试组件</a></li>
+<li><a href="#download-todo">Download TODO</a></li>
+<li><a href="#entity-%E5%AE%9E%E4%BD%93%E6%A8%A1%E5%9D%97">Entity 实体模块</a></li>
+<li><a href="#event">Event</a></li>
+<li><a href="#filesystem-todo">FileSystem TODO</a></li>
+<li><a href="#fsm-todo">Fsm TODO</a></li>
+<li><a href="#localization-%E6%9C%AC%E5%9C%B0%E5%8C%96">Localization 本地化</a></li>
+<li><a href="#network-todo">Network TODO</a></li>
+<li><a href="#objectpool">ObjectPool</a></li>
+<li><a href="#procedure-%E6%B5%81%E7%A8%8B%E6%A8%A1%E5%9D%97-todo">Procedure 流程模块 TODO</a></li>
+<li><a href="#resource-%E8%B5%84%E6%BA%90%E6%A8%A1%E5%9D%97-%E5%8A%A0%E8%BD%BD%E5%9B%BE%E7%89%87%E4%B8%BA%E4%BE%8B">Resource 资源模块 加载图片为例</a></li>
+<li><a href="#scene">Scene</a></li>
+<li><a href="#setting-%E5%AD%98%E5%82%A8%E6%A8%A1%E5%9D%97">Setting 存储模块</a></li>
+<li><a href="#sound-%E5%A3%B0%E9%9F%B3%E6%A8%A1%E5%9D%97-%E9%85%8D%E7%BD%AE%E8%A1%A8%E4%BD%8D%E4%BA%8Eassetsgamemaindatatables">Sound 声音模块 配置表位于Assets/GameMain/DataTables</a></li>
+<li><a href="#ui-ui%E6%A8%A1%E5%9D%97-%E9%85%8D%E7%BD%AE%E8%A1%A8%E4%BD%8D%E4%BA%8Eassetsgamemaindatatables">UI UI模块 配置表位于Assets/GameMain/DataTables</a></li>
+<li><a href="#webrequest-todo">WebRequest TODO</a></li>
+</ul>
+</li>
+<li><a href="#customs%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6">Customs:自定义组件</a>
+<ul>
+<li><a href="#%E5%A6%82native">如Native</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%BC%A0%E9%80%81%E9%97%A8">传送门</a><br>
+*
+<ul>
+<li><a href="#gameframework%E5%AE%98%E7%BD%91">GameFramework官网</a></li>
+<li><a href="#gameframework%E4%BB%93%E5%BA%93">GameFramework仓库</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://zhoujun2303.github.io/post/wei-yun-suan/">
+              <h3 class="post-title">
+                位运算（愉快的周末从写博客开始）
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'ca79a66585e72af3bff6',
+    clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+    repo: 'zhoujun2303.github.io',
+    owner: 'zhoujun2303',
+    admin: ['zhoujun2303'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+  <a class="rss" href="https://zhoujun2303.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
