@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="/styles/main.min.css">
+
+
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+
+
+<style>:root { --heatmap-color: #39d353; }</style>
+
+
+
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('flavor-theme');
+      var theme = saved || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+      }
+    } catch (e) { }
+  })();
+</script>
+  <meta name="generator" content="Gridea Pro 1.2.2">
+  <title>Unity 开发高级/资深技能总览 | 长胖是个梦想</title>
+  
+<meta property="og:title" content="Unity 开发高级/资深技能总览" />
+<meta property="og:type" content="article" />
+
+<meta property="og:image" content="/post-images/unity-senior-developer-skill-map.svg" />
+
+
+<meta name="description" content="“开发高级/资深”不是只负责写最难的代码，而是负责把 Unity 项目的技术方向、模块边界、性能质量、发版稳定性和团队交付串起来。本文采用“总分”结构：本文件是总览入口，下面的分文档展开每个方向的具体技能点。 阅读方式 总览&amp;hellip;">
+<link rel="canonical" href="https://zhoujun2303.github.io/post/unity-senior-developer-skills/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 开发高级/资深技能总览","url":"https://zhoujun2303.github.io/post/unity-senior-developer-skills/","description":"“开发高级/资深”不是只负责写最难的代码，而是负责把 Unity 项目的技术方向、模块边界、性能质量、发版稳定性和团队交付串起来。本文采用“总分”结构：本文件是总览入口，下面的分文档展开每个方向的具体技能点。 阅读方式 总览\u0026hellip;","image":"/post-images/unity-senior-developer-skill-map.svg","datePublished":"2026-06-10T21:50:00+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-senior-developer-skills/","name":"Unity 开发高级/资深技能总览","position":2}]}</script>
+<meta property="og:title" content="Unity 开发高级/资深技能总览">
+<meta property="og:description" content="“开发高级/资深”不是只负责写最难的代码，而是负责把 Unity 项目的技术方向、模块边界、性能质量、发版稳定性和团队交付串起来。本文采用“总分”结构：本文件是总览入口，下面的分文档展开每个方向的具体技能点。 阅读方式 总览&amp;hellip;">
+<meta property="og:url" content="https://zhoujun2303.github.io/post/unity-senior-developer-skills/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="长胖是个梦想">
+<meta property="og:image" content="/post-images/unity-senior-developer-skill-map.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-senior-developer-skills/">
+<meta name="twitter:title" content="Unity 开发高级/资深技能总览">
+<meta name="twitter:description" content="“开发高级/资深”不是只负责写最难的代码，而是负责把 Unity 项目的技术方向、模块边界、性能质量、发版稳定性和团队交付串起来。本文采用“总分”结构：本文件是总览入口，下面的分文档展开每个方向的具体技能点。 阅读方式 总览&amp;hellip;">
+<meta name="twitter:image" content="/post-images/unity-senior-developer-skill-map.svg">
+</head>
+<body class="flavor-theme">
+
+  <header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <div class="top-bar">
+
+      
+      <div class="top-bar__left">
+        
+        <a href="https://zhoujun2303.github.io" class="site-avatar-link" aria-label="返回首页">
+          <img class="site-avatar" src="/images/avatar.png" alt="长胖是个梦想" />
+        </a>
+        
+        <a href="https://zhoujun2303.github.io" class="site-name-link">长胖是个梦想</a>
+      </div>
+
+      
+      <nav class="top-bar__nav" id="sectionBar">
+        
+        
+        <a class="nav-item" href="/">首页</a>
+        
+        <a class="nav-item" href="/post">博客</a>
+        
+        <a class="nav-item" href="/memos">闪念</a>
+        
+        <a class="nav-item" href="/archives">归档</a>
+        
+        <a class="nav-item" href="/tags">标签</a>
+        
+        <a class="nav-item" href="/links">友链</a>
+        
+        <a class="nav-item" href="/post/about">关于</a>
+        
+        
+      </nav>
+
+      
+      <div class="top-bar__right">
+        <button class="btn-icon btn-search search-btn" id="btnSearch" type="button" aria-label="搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-sun" id="themeToggleSun" type="button"
+          aria-label="切换到浅色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1C12.5523 1 13 1.44772 13 2V4C13 4.55228 12.5523 5 12 5C11.4477 5 11 4.55228 11 4V2C11 1.44772 11.4477 1 12 1Z"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z"></path>
+            <path d="M13 20C13 19.4477 12.5523 19 12 19C11.4477 19 11 19.4477 11 20V22C11 22.5523 11.4477 23 12 23C12.5523 23 13 22.5523 13 22V20Z"></path>
+            <path d="M4.22282 4.22289C4.61335 3.83236 5.24651 3.83236 5.63704 4.22289L7.04704 5.63289C7.43756 6.02341 7.43756 6.65658 7.04704 7.0471C6.65651 7.43762 6.02335 7.43762 5.63283 7.0471L4.22282 5.6371C3.8323 5.24658 3.8323 4.61341 4.22282 4.22289Z"></path>
+            <path d="M18.367 16.9529C17.9765 16.5623 17.3433 16.5623 16.9528 16.9529C16.5623 17.3434 16.5623 17.9766 16.9528 18.3671L18.3628 19.7771C18.7533 20.1676 19.3865 20.1676 19.777 19.7771C20.1675 19.3866 20.1675 18.7534 19.777 18.3629L18.367 16.9529Z"></path>
+            <path d="M1 12C1 11.4477 1.44772 11 2 11H4C4.55228 11 5 11.4477 5 12C5 12.5523 4.55228 13 4 13H2C1.44772 13 1 12.5523 1 12Z"></path>
+            <path d="M20 11C19.4477 11 19 11.4477 19 12C19 12.5523 19.4477 13 20 13H22C22.5523 13 23 12.5523 23 12C23 11.4477 22.5523 11 22 11H20Z"></path>
+            <path d="M7.04704 16.9529C7.43756 17.3434 7.43756 17.9766 7.04704 18.3671L5.63704 19.7771C5.24651 20.1676 4.61335 20.1676 4.22282 19.7771C3.8323 19.3866 3.8323 18.7534 4.22283 18.3629L5.63283 16.9529C6.02335 16.5623 6.65651 16.5623 7.04704 16.9529Z"></path>
+            <path d="M19.777 5.6371C20.1675 5.24657 20.1675 4.61341 19.777 4.22289C19.3865 3.83236 18.7533 3.83236 18.3628 4.22289L16.9528 5.63289C16.5623 6.02341 16.5623 6.65658 16.9528 7.0471C17.3433 7.43762 17.9765 7.43762 18.367 7.0471L19.777 5.6371Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-moon" id="themeToggleMoon" type="button"
+          aria-label="切换到深色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C10.0222 2 8.08879 2.58649 6.4443 3.6853C4.79981 4.78412 3.51809 6.3459 2.76121 8.17317C2.00433 10.0004 1.8063 12.0111 2.19215 13.9509C2.578 15.8907 3.53041 17.6725 4.92894 19.0711C6.32746 20.4696 8.10929 21.422 10.0491 21.8079C11.9889 22.1937 13.9996 21.9957 15.8268 21.2388C17.6541 20.4819 19.2159 19.2002 20.3147 17.5557C21.4135 15.9112 22 13.9778 22 12C22 11.5955 21.7564 11.2309 21.3827 11.0761C21.009 10.9213 20.5789 11.0069 20.2929 11.2929C19.287 12.2988 17.9226 12.864 16.5 12.864C15.0774 12.864 13.713 12.2988 12.7071 11.2929C11.7012 10.287 11.136 8.92261 11.136 7.5C11.136 6.07739 11.7012 4.71304 12.7071 3.70711C12.9931 3.42111 13.0787 2.99099 12.9239 2.61732C12.7691 2.24364 12.4045 2 12 2ZM7.55544 5.34824C8.27036 4.87055 9.05353 4.51389 9.87357 4.28778C9.39271 5.27979 9.13604 6.37666 9.13604 7.5C9.13604 9.45304 9.91189 11.3261 11.2929 12.7071C12.6739 14.0881 14.547 14.864 16.5 14.864C17.6233 14.864 18.7202 14.6073 19.7122 14.1264C19.4861 14.9465 19.1295 15.7296 18.6518 16.4446C17.7727 17.7602 16.5233 18.7855 15.0615 19.391C13.5997 19.9965 11.9911 20.155 10.4393 19.8463C8.88743 19.5376 7.46197 18.7757 6.34315 17.6569C5.21447 16.538 4.4624 15.1126 4.15372 13.5607C3.84504 12.0089 4.00347 10.4003 4.60897 8.93853C5.21447 7.47672 6.23985 6.22729 7.55544 5.34824Z"></path>
+            <path d="M19 2C19.5523 2 20 2.44772 20 3V4H21C21.5523 4 22 4.44772 22 5C22 5.55228 21.5523 6 21 6H20V7C20 7.55228 19.5523 8 19 8C18.4477 8 18 7.55228 18 7V6H17C16.4477 6 16 5.55228 16 5C16 4.44772 16.4477 4 17 4H18V3C18 2.44772 18.4477 2 19 2Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon btn-nav-toggle mobile-only" id="btnNavToggle" type="button" aria-label="切换导航">
+          <div class="hamburger" id="hamburger">
+            <span class="hamburger__line hamburger__line--top"></span>
+            <span class="hamburger__line hamburger__line--bottom"></span>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+
+<div class="header-spacer"></div>
+
+<script>
+(function(){
+  var btn = document.getElementById('btnNavToggle');
+  var nav = document.getElementById('sectionBar');
+  var hamburger = document.getElementById('hamburger');
+  if (btn && nav) {
+    btn.addEventListener('click', function(){
+      nav.classList.toggle('top-bar__nav--open');
+      if (hamburger) hamburger.classList.toggle('is-active');
+    });
+    nav.querySelectorAll('.nav-item').forEach(function(item){
+      item.addEventListener('click', function(){
+        nav.classList.remove('top-bar__nav--open');
+        if (hamburger) hamburger.classList.remove('is-active');
+      });
+    });
+  }
+
+  var root = document.documentElement;
+  var applyTheme = function(theme, persist){
+    if (theme === 'light') {
+      root.classList.add('theme-light');
+    } else {
+      root.classList.remove('theme-light');
+    }
+    if (persist) {
+      try { localStorage.setItem('flavor-theme', theme); } catch (e) {}
+    }
+  };
+  document.querySelectorAll('.theme-toggle').forEach(function(el){
+    el.addEventListener('click', function(){
+      applyTheme(root.classList.contains('theme-light') ? 'dark' : 'light', true);
+    });
+  });
+})();
+</script>
+
+  <main class="site-main" role="main">
+    
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">Unity 开发高级/资深技能总览</h1>
+    <div class="article-meta">
+      
+      <span class="article-meta__item">2026-06-10</span>
+      
+      <span class="article-meta__sep">·</span>
+      <span class="article-meta__item">30 分钟阅读</span>
+      
+    </div>
+    
+    <div class="article-header__tags">
+      
+      <a href="/tag/unity/" class="tag-pill tag-pill--sm">Unity</a>
+      
+      <a href="/tag/kai-fa-gao-ji-zi-shen/" class="tag-pill tag-pill--sm">开发高级/资深</a>
+      
+      <a href="/tag/ke-hu-duan-jia-gou/" class="tag-pill tag-pill--sm">客户端架构</a>
+      
+      <a href="/tag/xing-neng-you-hua/" class="tag-pill tag-pill--sm">性能优化</a>
+      
+    </div>
+    
+  </header>
+
+  
+  <div class="article-feature">
+    <img src="/post-images/unity-senior-developer-skill-map.svg" alt="Unity 开发高级/资深技能总览" />
+  </div>
+  
+
+  <div class="article-content">
+    <blockquote>
+<p>“开发高级/资深”不是只负责写最难的代码，而是负责把 Unity 项目的技术方向、模块边界、性能质量、发版稳定性和团队交付串起来。本文采用“总分”结构：本文件是总览入口，下面的分文档展开每个方向的具体技能点。</p>
+</blockquote>
+<p><img src="/post-images/unity-senior-developer-skill-map.svg" alt="Unity 开发高级/资深技能地图" /></p>
+<h2 id="heading">阅读方式</h2>
+<ul>
+<li>总览入口：当前文档负责列出全部方向、能力地图、学习路线和自检清单。</li>
+<li>分文档：每个专题都有独立 Markdown，适合继续补充案例、代码片段和项目复盘。</li>
+<li>细分方式：每个分文档内继续按小方向拆分；如果某个方向后续需要更深案例，可以在同目录下继续新增专题文档。</li>
+<li>可跳转：目录表中的方向名都可以直接跳到对应分文档或分文档内的小节。</li>
+<li>工具要求：每个方向都列出了开发高级/资深需要掌握或至少能判断适用边界的工具。</li>
+<li>图片资源：本专题图片都放在 <code>LocalBK/post-images/</code> 下，正文统一使用 <code>/post-images/...</code> 引用。</li>
+</ul>
+<h2 id="heading-1">分文档导航</h2>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>分文档</th>
+<th>覆盖方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-01-engine-csharp-architecture/">引擎、C# 与客户端架构</a></td>
+<td>Unity 基础、C#、架构分层、启动流程、模块边界</td>
+</tr>
+<tr>
+<td>02</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-02-engineering-maintainability/">工程规范与可维护性</a></td>
+<td>代码规范、目录规范、Review、技术债、文档</td>
+</tr>
+<tr>
+<td>03</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-03-assets-hot-update/">资源管理与热更新</a></td>
+<td>Addressables、AssetBundle、资源生命周期、热更、Shader Variant</td>
+</tr>
+<tr>
+<td>04</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-04-ui-interaction-input/">UI、交互与输入</a></td>
+<td>UI 框架、红点、适配、输入、场景交互</td>
+</tr>
+<tr>
+<td>05</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-05-network-sync/">网络通信与多人同步</a></td>
+<td>协议、长连接、弱网、AOI、移动同步、断线重连</td>
+</tr>
+<tr>
+<td>06</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-06-gameplay-combat-animation/">玩法、战斗与动画</a></td>
+<td>技能、Buff、属性、状态机、Timeline、IK</td>
+</tr>
+<tr>
+<td>07</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-07-rendering-shader-ta/">渲染、Shader 与 TA 协作</a></td>
+<td>渲染管线、Shader、光照、特效、美术预算</td>
+</tr>
+<tr>
+<td>08</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/">性能、内存与包体</a></td>
+<td>性能预算、CPU/GPU/UI/动画/物理优化、内存泄漏、包体加载、回归看板</td>
+</tr>
+<tr>
+<td>09</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-09-editor-config-local-data/">编辑器工具、配置与本地数据</a></td>
+<td>Editor 工具、导表、配置校验、存档、本地缓存</td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-10-build-release-cicd-sdk/">构建发布、CI/CD 与 SDK</a></td>
+<td>自动化构建、多平台发版、渠道包、登录支付 SDK</td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-11-testing-observability-security/">测试、监控、线上排障与安全</a></td>
+<td>自动化测试、日志、崩溃、线上开关、反作弊</td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-12-cross-platform-localization-audio-ai-physics/">跨平台、本地化、音视频、AI 与物理</a></td>
+<td>平台差异、多语言、音视频、寻路、物理碰撞</td>
+</tr>
+<tr>
+<td>13</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-13-tech-leadership-project-communication/">技术领导力、项目管理与表达</a></td>
+<td>任务拆解、风险控制、团队协作、方案评审、复盘</td>
+</tr>
+</tbody>
+</table>
+<h2 id="heading-2">全部方向清单</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>方向</th>
+<th>开发高级/资深需要掌握的核心问题</th>
+<th>跳转</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Unity 引擎基础</td>
+<td>生命周期、序列化、场景、Prefab、PlayerLoop、编辑器与运行时边界</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-01-engine-csharp-architecture/#unity-engine">查看</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>C# 与代码基本功</td>
+<td>泛型、委托、事件、集合、GC、异步、线程、IL2CPP/AOT</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-01-engine-csharp-architecture/#csharp">查看</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>客户端架构设计</td>
+<td>分层、模块边界、启动流程、服务注册、异步流程、状态机</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-01-engine-csharp-architecture/#client-architecture">查看</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>工程规范与可维护性</td>
+<td>目录、命名、Review、错误处理、可测试性、技术债治理</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-02-engineering-maintainability/#engineering-standards">查看</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td>资源管理</td>
+<td>资源分组、依赖、引用计数、预加载、卸载、缓存</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-03-assets-hot-update/#asset-management">查看</a></td>
+</tr>
+<tr>
+<td>6</td>
+<td>热更新</td>
+<td>资源热更、脚本热更、版本匹配、补丁、回滚、兼容</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-03-assets-hot-update/#hot-update">查看</a></td>
+</tr>
+<tr>
+<td>7</td>
+<td>UI 框架</td>
+<td>面板生命周期、层级、返回栈、红点、适配、虚拟列表</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-04-ui-interaction-input/#ui-framework">查看</a></td>
+</tr>
+<tr>
+<td>8</td>
+<td>交互与输入</td>
+<td>点击、射线、手势、键鼠、手柄、交互距离、防误触</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-04-ui-interaction-input/#interaction-input">查看</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td>网络通信</td>
+<td>TCP/UDP/HTTP/WebSocket/KCP、协议、心跳、重连、弱网</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-05-network-sync/#network">查看</a></td>
+</tr>
+<tr>
+<td>10</td>
+<td>多人同步与 AOI</td>
+<td>位置、动作、外观、兴趣管理、插值、纠偏、分线</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-05-network-sync/#multiplayer-aoi">查看</a></td>
+</tr>
+<tr>
+<td>11</td>
+<td>战斗系统</td>
+<td>技能、Buff、属性、伤害、碰撞、服务器权威、回放</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-06-gameplay-combat-animation/#combat">查看</a></td>
+</tr>
+<tr>
+<td>12</td>
+<td>玩法系统</td>
+<td>任务、背包、活动、奖励、红点、条件、通用业务框架</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-06-gameplay-combat-animation/#gameplay">查看</a></td>
+</tr>
+<tr>
+<td>13</td>
+<td>动画与演出</td>
+<td>Animator、Blend Tree、Playable、Timeline、IK、挂点、动作打断</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-06-gameplay-combat-animation/#animation">查看</a></td>
+</tr>
+<tr>
+<td>14</td>
+<td>渲染管线与 Shader</td>
+<td>URP/HDRP、Batch、Pass、Keyword、光照、后处理、Shader Variant</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-07-rendering-shader-ta/#rendering">查看</a></td>
+</tr>
+<tr>
+<td>15</td>
+<td>TA 与美术管线</td>
+<td>资源预算、导入规范、特效规范、材质规范、验收工具</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-07-rendering-shader-ta/#technical-art">查看</a></td>
+</tr>
+<tr>
+<td>16</td>
+<td>性能优化</td>
+<td>性能预算、采样规范、CPU/GPU/UI/动画/物理、加载卡顿、回归监控</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/#performance">查看</a></td>
+</tr>
+<tr>
+<td>17</td>
+<td>内存控制</td>
+<td>托管堆、原生内存、显存、资源泄漏、快照、低内存策略</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/#memory">查看</a></td>
+</tr>
+<tr>
+<td>18</td>
+<td>包体与加载</td>
+<td>首包、分包、DLC、压缩、异步加载、Shader 预热、Loading</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/#package-loading">查看</a></td>
+</tr>
+<tr>
+<td>19</td>
+<td>编辑器工具</td>
+<td>EditorWindow、CustomEditor、批处理、Gizmos、导入规则</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-09-editor-config-local-data/#editor-tools">查看</a></td>
+</tr>
+<tr>
+<td>20</td>
+<td>配置数据系统</td>
+<td>导表、索引、校验、公式、多语言、热更、兼容</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-09-editor-config-local-data/#config-data">查看</a></td>
+</tr>
+<tr>
+<td>21</td>
+<td>存档与本地数据</td>
+<td>PlayerPrefs、JSON、SQLite、加密、迁移、缓存、账号切换</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-09-editor-config-local-data/#local-save">查看</a></td>
+</tr>
+<tr>
+<td>22</td>
+<td>构建发布与 CI/CD</td>
+<td>Unity Build Pipeline、渠道包、符号、产物归档、灰度、回滚</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-10-build-release-cicd-sdk/#build-release">查看</a></td>
+</tr>
+<tr>
+<td>23</td>
+<td>平台与 SDK 接入</td>
+<td>Android/iOS 桥接、登录、支付、广告、推送、隐私合规</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-10-build-release-cicd-sdk/#platform-sdk">查看</a></td>
+</tr>
+<tr>
+<td>24</td>
+<td>测试与质量保障</td>
+<td>单元测试、PlayMode、资源巡检、冒烟测试、长稳测试</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-11-testing-observability-security/#testing">查看</a></td>
+</tr>
+<tr>
+<td>25</td>
+<td>日志监控与线上排障</td>
+<td>崩溃、ANR、符号解析、埋点、线上开关、事故复盘</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-11-testing-observability-security/#observability">查看</a></td>
+</tr>
+<tr>
+<td>26</td>
+<td>安全与反作弊</td>
+<td>客户端不可信、协议签名、重放保护、支付校验、风控日志</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-11-testing-observability-security/#security">查看</a></td>
+</tr>
+<tr>
+<td>27</td>
+<td>跨平台适配</td>
+<td>屏幕、安全区、图形 API、文件路径、权限、平台宏隔离</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-12-cross-platform-localization-audio-ai-physics/#cross-platform">查看</a></td>
+</tr>
+<tr>
+<td>28</td>
+<td>多语言与本地化</td>
+<td>文本、字体、图片、语音、时区、数字格式、敏感词</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-12-cross-platform-localization-audio-ai-physics/#localization">查看</a></td>
+</tr>
+<tr>
+<td>29</td>
+<td>音频与视频</td>
+<td>AudioMixer、3D 音效、音频压缩、视频播放、字幕、平台兼容</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-12-cross-platform-localization-audio-ai-physics/#audio-video">查看</a></td>
+</tr>
+<tr>
+<td>30</td>
+<td>AI、寻路与物理</td>
+<td>NavMesh、行为树、状态机、碰撞、Trigger、FixedUpdate、调试</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-12-cross-platform-localization-audio-ai-physics/#ai-physics">查看</a></td>
+</tr>
+<tr>
+<td>31</td>
+<td>团队管理与技术领导力</td>
+<td>拆任务、带人、跨岗位沟通、技术评审、事故止血</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-13-tech-leadership-project-communication/#leadership">查看</a></td>
+</tr>
+<tr>
+<td>32</td>
+<td>项目管理与风险控制</td>
+<td>里程碑、关键路径、风险清单、降级方案、技术债清单</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-13-tech-leadership-project-communication/#project-risk">查看</a></td>
+</tr>
+<tr>
+<td>33</td>
+<td>文档与表达能力</td>
+<td>技术方案、接口文档、流程图、复盘、非技术沟通</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-13-tech-leadership-project-communication/#communication">查看</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="heading-3">具体交付物索引</h2>
+<p>这张表用来避免文档空泛。开发高级/资深掌握一个方向，最终应该能交付可运行、可验证、可维护的结果。</p>
+<table>
+<thead>
+<tr>
+<th>方向</th>
+<th>具体交付物</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unity 引擎基础</td>
+<td>项目启动流程图、生命周期规范、Prefab/Scene 使用规范、Unity 版本升级风险清单</td>
+</tr>
+<tr>
+<td>C# 与代码基本功</td>
+<td>代码规范、GC 零分配示例、异步取消模板、IL2CPP/AOT 问题处理记录</td>
+</tr>
+<tr>
+<td>客户端架构设计</td>
+<td>模块依赖图、启动状态机、全局服务注册表、异步加载和失败恢复流程</td>
+</tr>
+<tr>
+<td>工程规范与可维护性</td>
+<td>目录规范、Review Checklist、错误码规范、模块 README、技术债清单</td>
+</tr>
+<tr>
+<td>资源管理</td>
+<td>Addressables/Bundle 分组表、引用计数规则、资源释放规范、重复资源报告</td>
+</tr>
+<tr>
+<td>热更新</td>
+<td>资源清单、版本匹配规则、下载失败恢复流程、灰度和回滚方案</td>
+</tr>
+<tr>
+<td>UI 框架</td>
+<td>UI 层级规范、面板生命周期、返回栈规则、红点树、虚拟列表组件</td>
+</tr>
+<tr>
+<td>交互与输入</td>
+<td>输入抽象层、UI/场景射线隔离规则、手势规范、手柄焦点导航规则</td>
+</tr>
+<tr>
+<td>网络通信</td>
+<td>协议封装层、心跳和重连状态机、请求超时规则、协议日志和抓包说明</td>
+</tr>
+<tr>
+<td>多人同步与 AOI</td>
+<td>AOI 可视化调试、实体生命周期表、移动插值和纠偏规则、同步频率预算</td>
+</tr>
+<tr>
+<td>战斗系统</td>
+<td>技能释放流程、Buff 生命周期、属性公式表、回放/战报调试工具</td>
+</tr>
+<tr>
+<td>玩法系统</td>
+<td>任务/活动/奖励配置规范、条件系统、GM 调试入口、玩法埋点表</td>
+</tr>
+<tr>
+<td>动画与演出</td>
+<td>Animator 规范、Timeline 接入模板、挂点规范、动画压缩和降级规则</td>
+</tr>
+<tr>
+<td>渲染管线与 Shader</td>
+<td>URP/HDRP 配置、Shader 规范、光照方案、RenderDoc/Frame Debugger 分析记录</td>
+</tr>
+<tr>
+<td>TA 与美术管线</td>
+<td>美术资源预算、导入规则、资源扫描报告、材质和特效验收标准</td>
+</tr>
+<tr>
+<td>性能优化</td>
+<td>性能预算表、真机采样脚本、Profiler 对比报告、卡顿问题复盘、性能回归看板</td>
+</tr>
+<tr>
+<td>内存控制</td>
+<td>Memory Profiler 对比报告、资源引用链分析、低内存设备策略、泄漏修复记录</td>
+</tr>
+<tr>
+<td>包体与加载</td>
+<td>Build Report 差异报告、包体拆分方案、Loading 阶段耗时表、下载失败处理流程</td>
+</tr>
+<tr>
+<td>编辑器工具</td>
+<td>EditorWindow 工具、批处理脚本、Gizmos 可视化、工具使用说明和错误报告</td>
+</tr>
+<tr>
+<td>配置数据系统</td>
+<td>导表流程、强类型配置访问、配置校验报告、配置版本兼容规则</td>
+</tr>
+<tr>
+<td>存档与本地数据</td>
+<td>本地数据结构、加密和校验方案、版本迁移脚本、账号切换和清缓存流程</td>
+</tr>
+<tr>
+<td>构建发布与 CI/CD</td>
+<td>一键构建脚本、CI 流水线、产物归档、符号上传、发版 Checklist</td>
+</tr>
+<tr>
+<td>平台与 SDK 接入</td>
+<td>Android/iOS 桥接层、SDK 初始化流程、支付补单流程、隐私权限说明</td>
+</tr>
+<tr>
+<td>测试与质量保障</td>
+<td>单元测试、PlayMode 测试、资源巡检、冒烟测试脚本、长稳测试报告</td>
+</tr>
+<tr>
+<td>日志监控与线上排障</td>
+<td>日志字段规范、崩溃符号解析流程、线上开关后台、事故复盘模板</td>
+</tr>
+<tr>
+<td>安全与反作弊</td>
+<td>协议签名规则、支付验签流程、风控日志字段、作弊行为检测规则</td>
+</tr>
+<tr>
+<td>跨平台适配</td>
+<td>平台能力封装、安全区适配、权限处理、图形 API 兼容表、机型黑名单</td>
+</tr>
+<tr>
+<td>多语言与本地化</td>
+<td>文本表规范、字体回退方案、伪本地化测试、缺 Key/缺字扫描报告</td>
+</tr>
+<tr>
+<td>音频与视频</td>
+<td>AudioMixer 分组、音频加载策略、视频播放兼容方案、后台音频策略</td>
+</tr>
+<tr>
+<td>AI、寻路与物理</td>
+<td>NavMesh 烘焙规范、AI 调试视图、碰撞矩阵、路径连通性巡检</td>
+</tr>
+<tr>
+<td>团队管理与技术领导力</td>
+<td>任务拆解模板、技术评审模板、Review 规则、带教计划、事故响应流程</td>
+</tr>
+<tr>
+<td>项目管理与风险控制</td>
+<td>里程碑计划、关键路径、风险清单、降级方案、灰度和回滚预案</td>
+</tr>
+<tr>
+<td>文档与表达能力</td>
+<td>技术方案、接口文档、流程图、状态图、排障文档、版本复盘</td>
+</tr>
+</tbody>
+</table>
+<h2 id="heading-4">工具速查总览</h2>
+<p><img src="/post-images/unity-senior-developer-toolchain-map.svg" alt="Unity 开发高级/资深工具链地图" /></p>
+<table>
+<thead>
+<tr>
+<th>方向</th>
+<th>需要掌握的工具</th>
+<th>跳转</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unity 引擎基础</td>
+<td>Unity Editor、Package Manager、Project Settings、Profiler、Frame Debugger、Scripting API</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-01-engine-csharp-architecture/#unity-engine">查看</a></td>
+</tr>
+<tr>
+<td>C# 与代码基本功</td>
+<td>Rider/Visual Studio、Roslyn Analyzer、dotTrace/dotMemory、ILSpy/dnSpy、Unit Test Runner</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-01-engine-csharp-architecture/#csharp">查看</a></td>
+</tr>
+<tr>
+<td>客户端架构设计</td>
+<td>Assembly Definition、UML/PlantUML/Mermaid、draw.io、Notion/Confluence、Unity Profiler</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-01-engine-csharp-architecture/#client-architecture">查看</a></td>
+</tr>
+<tr>
+<td>工程规范与可维护性</td>
+<td>Git、GitHub/GitLab、UnityYAMLMerge、EditorConfig、StyleCop/Roslyn、Jira/TAPD</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-02-engineering-maintainability/#engineering-standards">查看</a></td>
+</tr>
+<tr>
+<td>资源管理</td>
+<td>Addressables、AssetBundle Browser、Build Layout Report、Memory Profiler、Texture Importer</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-03-assets-hot-update/#asset-management">查看</a></td>
+</tr>
+<tr>
+<td>热更新</td>
+<td>Addressables Content Update、HybridCLR/xLua、CDN、hash 校验工具、灰度后台</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-03-assets-hot-update/#hot-update">查看</a></td>
+</tr>
+<tr>
+<td>UI 框架</td>
+<td>UGUI、UI Toolkit、TextMeshPro、PSD/Sketch/Figma 标注、Canvas Profiler、FairyGUI 可选</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-04-ui-interaction-input/#ui-framework">查看</a></td>
+</tr>
+<tr>
+<td>交互与输入</td>
+<td>Input System、EventSystem、Physics Raycaster、Cinemachine、Device Simulator</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-04-ui-interaction-input/#interaction-input">查看</a></td>
+</tr>
+<tr>
+<td>网络通信</td>
+<td>Protobuf、Postman/Apifox、Wireshark、Charles、tcpdump、Network Link Conditioner</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-05-network-sync/#network">查看</a></td>
+</tr>
+<tr>
+<td>多人同步与 AOI</td>
+<td>Unity Multiplayer Tools、Netcode/Mirror 参考、Gizmos、网络模拟器、Replay 工具</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-05-network-sync/#multiplayer-aoi">查看</a></td>
+</tr>
+<tr>
+<td>战斗系统</td>
+<td>Timeline、Cinemachine、技能编辑器、Excel/Google Sheets、帧同步/回放调试器</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-06-gameplay-combat-animation/#combat">查看</a></td>
+</tr>
+<tr>
+<td>玩法系统</td>
+<td>配置导表工具、GM 后台、活动后台、状态机调试器、埋点看板</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-06-gameplay-combat-animation/#gameplay">查看</a></td>
+</tr>
+<tr>
+<td>动画与演出</td>
+<td>Animator、Timeline、Playable Graph Visualizer、Animation Rigging、Spine/Live2D 可选</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-06-gameplay-combat-animation/#animation">查看</a></td>
+</tr>
+<tr>
+<td>渲染管线与 Shader</td>
+<td>URP/HDRP、Shader Graph、Frame Debugger、RenderDoc、Xcode GPU Frame Capture</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-07-rendering-shader-ta/#rendering">查看</a></td>
+</tr>
+<tr>
+<td>TA 与美术管线</td>
+<td>DCC 工具、TexturePacker、Substance、资源扫描器、Shader Variant 工具</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-07-rendering-shader-ta/#technical-art">查看</a></td>
+</tr>
+<tr>
+<td>性能优化</td>
+<td>Unity Profiler、Profile Analyzer、Frame Debugger、RenderDoc、Android Studio Profiler</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/#performance">查看</a></td>
+</tr>
+<tr>
+<td>内存控制</td>
+<td>Memory Profiler、Xcode Instruments、Android Studio Profiler、ADB、引用链分析工具</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/#memory">查看</a></td>
+</tr>
+<tr>
+<td>包体与加载</td>
+<td>Build Report Inspector、Addressables Analyze、AssetStudio、Texture/Audio Importer、CDN 日志</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/#package-loading">查看</a></td>
+</tr>
+<tr>
+<td>编辑器工具</td>
+<td>EditorWindow、CustomEditor、PropertyDrawer、AssetPostprocessor、Odin Inspector 可选</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-09-editor-config-local-data/#editor-tools">查看</a></td>
+</tr>
+<tr>
+<td>配置数据系统</td>
+<td>Excel/Google Sheets、导表脚本、JSON/Protobuf、SQLite、配置校验器</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-09-editor-config-local-data/#config-data">查看</a></td>
+</tr>
+<tr>
+<td>存档与本地数据</td>
+<td>PlayerPrefs、SQLite、File API、Keychain/Keystore、加密和迁移工具</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-09-editor-config-local-data/#local-save">查看</a></td>
+</tr>
+<tr>
+<td>构建发布与 CI/CD</td>
+<td>Unity Batchmode、Jenkins/GitHub Actions、Fastlane、Gradle、Xcodebuild、符号上传工具</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-10-build-release-cicd-sdk/#build-release">查看</a></td>
+</tr>
+<tr>
+<td>平台与 SDK 接入</td>
+<td>Android Studio、Xcode、Gradle、CocoaPods、ADB、Logcat、Device Console</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-10-build-release-cicd-sdk/#platform-sdk">查看</a></td>
+</tr>
+<tr>
+<td>测试与质量保障</td>
+<td>Unity Test Framework、AltTester、Airtest/Poco、资源巡检脚本、设备农场</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-11-testing-observability-security/#testing">查看</a></td>
+</tr>
+<tr>
+<td>日志监控与线上排障</td>
+<td>Firebase/Crashlytics、Bugly、Sentry、ELK/Grafana、符号解析、Logcat/Xcode Logs</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-11-testing-observability-security/#observability">查看</a></td>
+</tr>
+<tr>
+<td>安全与反作弊</td>
+<td>HTTPS/TLS、签名工具、混淆工具、风控后台、支付验签工具、抓包和重放测试工具</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-11-testing-observability-security/#security">查看</a></td>
+</tr>
+<tr>
+<td>跨平台适配</td>
+<td>Device Simulator、Unity Remote、ADB、Xcode Devices、BrowserStack/云真机、平台宏检查</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-12-cross-platform-localization-audio-ai-physics/#cross-platform">查看</a></td>
+</tr>
+<tr>
+<td>多语言与本地化</td>
+<td>Unity Localization、TextMeshPro Font Asset Creator、伪本地化工具、LQA 表、缺字扫描</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-12-cross-platform-localization-audio-ai-physics/#localization">查看</a></td>
+</tr>
+<tr>
+<td>音频与视频</td>
+<td>Audio Mixer、FMOD/Wwise 可选、VideoPlayer、Audacity、平台视频编码工具</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-12-cross-platform-localization-audio-ai-physics/#audio-video">查看</a></td>
+</tr>
+<tr>
+<td>AI、寻路与物理</td>
+<td>NavMesh、AI Navigation、Physics Debugger、Gizmos、行为树编辑器、碰撞矩阵工具</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-12-cross-platform-localization-audio-ai-physics/#ai-physics">查看</a></td>
+</tr>
+<tr>
+<td>团队管理与技术领导力</td>
+<td>Jira/TAPD、GitHub Projects、Miro、Notion/Confluence、代码评审平台</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-13-tech-leadership-project-communication/#leadership">查看</a></td>
+</tr>
+<tr>
+<td>项目管理与风险控制</td>
+<td>甘特图/里程碑工具、风险清单、灰度后台、监控看板、事故复盘模板</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-13-tech-leadership-project-communication/#project-risk">查看</a></td>
+</tr>
+<tr>
+<td>文档与表达能力</td>
+<td>Markdown、Mermaid、PlantUML、draw.io、Notion/Confluence、PPT/Keynote</td>
+<td><a href="https://zhoujun2303.github.io/post/unity-senior-developer-13-tech-leadership-project-communication/#communication">查看</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="heading-5">能力分层图</h2>
+<p><img src="/post-images/unity-senior-developer-architecture-layers.svg" alt="开发高级/资深架构分层" /></p>
+<p>开发高级/资深能力可以按四层理解：</p>
+<ul>
+<li>基础层：Unity、C#、数据结构、生命周期、平台差异。</li>
+<li>框架层：资源、UI、网络、配置、事件、对象池、构建。</li>
+<li>质量层：性能、内存、测试、日志、监控、安全、稳定性。</li>
+<li>领导层：技术方案、风险控制、团队协作、发版节奏、线上复盘。</li>
+</ul>
+<h2 id="heading-6">交付闭环图</h2>
+<p><img src="/post-images/unity-senior-developer-delivery-loop.svg" alt="开发高级/资深交付闭环" /></p>
+<p>开发高级/资深的判断标准不是“我写完了”，而是闭环是否完整：</p>
+<ul>
+<li>需求能拆清楚。</li>
+<li>方案能评审。</li>
+<li>接口能对齐。</li>
+<li>开发能落地。</li>
+<li>测试能验证。</li>
+<li>构建能稳定产出。</li>
+<li>上线能监控。</li>
+<li>事故能回滚和复盘。</li>
+</ul>
+<h2 id="heading-7">推荐学习路线</h2>
+<p><img src="/post-images/unity-senior-developer-learning-roadmap.svg" alt="Unity 开发高级/资深学习路线" /></p>
+<ol>
+<li>第一阶段：Unity 基础、C# 基础、UGUI、资源加载、协程与异步。</li>
+<li>第二阶段：UI 框架、网络协议、配置系统、事件系统、对象池、状态机。</li>
+<li>第三阶段：AssetBundle/Addressables、热更新、构建发布、平台 SDK。</li>
+<li>第四阶段：Profiler、Frame Debugger、Memory Profiler、加载优化、包体优化。</li>
+<li>第五阶段：战斗、动画、渲染、Shader、TA 协作、复杂业务框架。</li>
+<li>第六阶段：线上监控、事故排查、自动化测试、风险管理、团队带教。</li>
+</ol>
+<h2 id="-checklist">开发高级/资深自检 Checklist</h2>
+<ul>
+<li>项目启动链路是否清晰，热更、登录、进场景失败时是否能定位具体阶段。</li>
+<li>核心模块是否有明确边界，是否存在严重循环依赖和跨模块乱调。</li>
+<li>资源加载、引用计数、卸载、版本、下载、回滚是否形成闭环。</li>
+<li>UI、网络、配置、红点、音频、对象池是否有统一框架和示例。</li>
+<li>性能预算是否明确，是否有版本级别的 CPU、GPU、内存、包体回归数据。</li>
+<li>构建是否自动化，是否能稳定产出不同平台、渠道和环境的包。</li>
+<li>崩溃、异常、卡顿、加载失败、资源缺失是否能在线上追踪。</li>
+<li>SDK、支付、隐私、权限、审核差异是否有平台级兜底方案。</li>
+<li>测试是否覆盖配置、资源、核心逻辑、冒烟流程和长稳场景。</li>
+<li>新人是否能通过文档、模板和示例快速接入项目。</li>
+<li>需求变更时，是否能说明影响范围、风险、工期和回滚方案。</li>
+<li>团队是否知道遇到问题该看日志、看工具、找文档还是找负责人。</li>
+</ul>
+<h2 id="heading-8">专题文件结构</h2>
+<pre><code class="language-text">LocalBK/posts/unity-senior-developer-skills.md
+LocalBK/posts/unity-senior-developer-01-engine-csharp-architecture.md
+LocalBK/posts/unity-senior-developer-02-engineering-maintainability.md
+LocalBK/posts/unity-senior-developer-03-assets-hot-update.md
+LocalBK/posts/unity-senior-developer-04-ui-interaction-input.md
+LocalBK/posts/unity-senior-developer-05-network-sync.md
+LocalBK/posts/unity-senior-developer-06-gameplay-combat-animation.md
+LocalBK/posts/unity-senior-developer-07-rendering-shader-ta.md
+LocalBK/posts/unity-senior-developer-08-performance-memory-package.md
+LocalBK/posts/unity-senior-developer-09-editor-config-local-data.md
+LocalBK/posts/unity-senior-developer-10-build-release-cicd-sdk.md
+LocalBK/posts/unity-senior-developer-11-testing-observability-security.md
+LocalBK/posts/unity-senior-developer-12-cross-platform-localization-audio-ai-physics.md
+LocalBK/posts/unity-senior-developer-13-tech-leadership-project-communication.md
+LocalBK/post-images/unity-senior-developer-skill-map.svg
+LocalBK/post-images/unity-senior-developer-toolchain-map.svg
+LocalBK/post-images/unity-senior-developer-architecture-layers.svg
+LocalBK/post-images/unity-senior-developer-delivery-loop.svg
+LocalBK/post-images/unity-senior-developer-learning-roadmap.svg
+</code></pre>
+
+  </div>
+
+  
+  <nav class="post-nav">
+    
+    <a href="/post/gridea-wen-dang-xie-zuo-gui-fan/" class="post-nav-card post-nav-card--prev">
+      
+      <div class="post-nav-card__img">
+        <img src="/post-images/unity-senior-developer-toolchain-map.svg" alt="Gridea 文档写作规范" loading="lazy" />
+      </div>
+      
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">上一篇</span>
+        <span class="post-nav-card__title">Gridea 文档写作规范</span>
+      </div>
+      <span class="post-nav-card__arrow">&larr;</span>
+    </a>
+    
+    
+    <a href="/post/unity-game-reverse-and-defense-tools/" class="post-nav-card post-nav-card--next">
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">下一篇</span>
+        <span class="post-nav-card__title">Unity 游戏逆向分析与防逆向加固工具教程</span>
+      </div>
+      
+      <span class="post-nav-card__arrow">&rarr;</span>
+    </a>
+    
+  </nav>
+
+  
+  
+
+
+  
+    <section class="comment-section">
+  <h2 class="comment-section__title">评论</h2>
+  <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    var gitalk = new Gitalk({
+      clientID: 'ca79a66585e72af3bff6',
+      clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+      repo: 'zhoujun2303.github.io',
+      owner: 'zhoujun2303',
+      admin: ['zhoujun2303'],
+      id: location.pathname,
+      distractionFreeMode: false
+    });
+    gitalk.render('gitalk-container');
+  </script>
+</section>
+
+  
+
+
+
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+
+    
+    
+    <nav class="footer-nav" aria-label="页脚导航">
+      
+      <a class="footer-nav__link" href="/">首页</a>
+      
+      <a class="footer-nav__link" href="/post">博客</a>
+      
+      <a class="footer-nav__link" href="/memos">闪念</a>
+      
+      <a class="footer-nav__link" href="/archives">归档</a>
+      
+      <a class="footer-nav__link" href="/tags">标签</a>
+      
+      <a class="footer-nav__link" href="/links">友链</a>
+      
+      <a class="footer-nav__link" href="/post/about">关于</a>
+      
+    </nav>
+    
+
+    
+    <div class="footer-social">
+      
+      
+      
+      <a class="footer-social__link" href="/feed.xml" aria-label="RSS">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6.18 15.64a2.18 2.18 0 110 4.36 2.18 2.18 0 010-4.36zM4 4.44A15.56 15.56 0 0119.56 20h-2.83A12.73 12.73 0 004 7.27V4.44zm0 5.66a9.9 9.9 0 019.9 9.9h-2.83A7.07 7.07 0 004 12.93V10.1z"/>
+        </svg>
+      </a>
+    </div>
+
+    
+    <div class="footer-copyright">
+      <p>&copy; 2026 长胖是个梦想. All rights reserved.</p>
+    </div>
+
+    
+    
+    <div class="footer-custom">
+      Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+    </div>
+    
+
+    
+    <div class="footer-powered">
+      <span>Powered by <a href="https://gridea.pro" target="_blank" rel="noopener noreferrer">Gridea Pro</a></span>
+    </div>
+
+  </div>
+</footer>
+
+  
+  <div class="search-overlay" id="searchOverlay" style="display:none;">
+  <div class="search-modal">
+    <div class="search-header">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索文章..." autocomplete="off" />
+      <span class="search-kbd">&#8984;K</span>
+      <button class="search-close" id="searchClose" type="button" aria-label="关闭搜索">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script src="/scripts/search.js"></script>
+  
+
+  
+
+  
+
+  
+
+<script>console.log("\n%c ✦ Gridea Pro v1.2.2 %c · Theme: flavor-theme v1.0.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="/styles/main.min.css">
+
+
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+
+
+<style>:root { --heatmap-color: #39d353; }</style>
+
+
+
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('flavor-theme');
+      var theme = saved || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+      }
+    } catch (e) { }
+  })();
+</script>
+  <meta name="generator" content="Gridea Pro 1.2.2">
+  <title>GameFramework使用(Runtime) | 长胖是个梦想</title>
+  
+<meta property="og:title" content="GameFramework使用(Runtime)" />
+<meta property="og:type" content="article" />
+
+
+<meta name="description" content="GameEntry 整个框架的启动入口 Builtin:内置组件 config Config 配置表位于Assets/GameMain/Configs/DefaultConfig //int类型值获取 int c1 = GameEntry.Config.GetInt(&amp;quot;configName&amp;quot;); //float float c2 = Game...">
+<link rel="canonical" href="https://zhoujun2303.github.io/post/gameframework-shi-yong-runtime/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"GameFramework使用(Runtime)","url":"https://zhoujun2303.github.io/post/gameframework-shi-yong-runtime/","description":"GameEntry 整个框架的启动入口 Builtin:内置组件 config Config 配置表位于Assets/GameMain/Configs/DefaultConfig //int类型值获取 int c1 = GameEntry.Config.GetInt(\u0026quot;configName\u0026quot;); //float float c2 = Game...","datePublished":"2022-09-17T12:23:54+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/gameframework-shi-yong-runtime/","name":"GameFramework使用(Runtime)","position":2}]}</script>
+<meta property="og:title" content="GameFramework使用(Runtime)">
+<meta property="og:description" content="GameEntry 整个框架的启动入口 Builtin:内置组件 config Config 配置表位于Assets/GameMain/Configs/DefaultConfig //int类型值获取 int c1 = GameEntry.Config.GetInt(&amp;quot;configName&amp;quot;); //float float c2 = Game...">
+<meta property="og:url" content="https://zhoujun2303.github.io/post/gameframework-shi-yong-runtime/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="长胖是个梦想">
+<meta property="og:image" content="/images/avatar.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://zhoujun2303.github.io/post/gameframework-shi-yong-runtime/">
+<meta name="twitter:title" content="GameFramework使用(Runtime)">
+<meta name="twitter:description" content="GameEntry 整个框架的启动入口 Builtin:内置组件 config Config 配置表位于Assets/GameMain/Configs/DefaultConfig //int类型值获取 int c1 = GameEntry.Config.GetInt(&amp;quot;configName&amp;quot;); //float float c2 = Game...">
+<meta name="twitter:image" content="/images/avatar.png">
+</head>
+<body class="flavor-theme">
+
+  <header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <div class="top-bar">
+
+      
+      <div class="top-bar__left">
+        
+        <a href="https://zhoujun2303.github.io" class="site-avatar-link" aria-label="返回首页">
+          <img class="site-avatar" src="/images/avatar.png" alt="长胖是个梦想" />
+        </a>
+        
+        <a href="https://zhoujun2303.github.io" class="site-name-link">长胖是个梦想</a>
+      </div>
+
+      
+      <nav class="top-bar__nav" id="sectionBar">
+        
+        
+        <a class="nav-item" href="/">首页</a>
+        
+        <a class="nav-item" href="/post">博客</a>
+        
+        <a class="nav-item" href="/memos">闪念</a>
+        
+        <a class="nav-item" href="/archives">归档</a>
+        
+        <a class="nav-item" href="/tags">标签</a>
+        
+        <a class="nav-item" href="/links">友链</a>
+        
+        <a class="nav-item" href="/post/about">关于</a>
+        
+        
+      </nav>
+
+      
+      <div class="top-bar__right">
+        <button class="btn-icon btn-search search-btn" id="btnSearch" type="button" aria-label="搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-sun" id="themeToggleSun" type="button"
+          aria-label="切换到浅色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1C12.5523 1 13 1.44772 13 2V4C13 4.55228 12.5523 5 12 5C11.4477 5 11 4.55228 11 4V2C11 1.44772 11.4477 1 12 1Z"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z"></path>
+            <path d="M13 20C13 19.4477 12.5523 19 12 19C11.4477 19 11 19.4477 11 20V22C11 22.5523 11.4477 23 12 23C12.5523 23 13 22.5523 13 22V20Z"></path>
+            <path d="M4.22282 4.22289C4.61335 3.83236 5.24651 3.83236 5.63704 4.22289L7.04704 5.63289C7.43756 6.02341 7.43756 6.65658 7.04704 7.0471C6.65651 7.43762 6.02335 7.43762 5.63283 7.0471L4.22282 5.6371C3.8323 5.24658 3.8323 4.61341 4.22282 4.22289Z"></path>
+            <path d="M18.367 16.9529C17.9765 16.5623 17.3433 16.5623 16.9528 16.9529C16.5623 17.3434 16.5623 17.9766 16.9528 18.3671L18.3628 19.7771C18.7533 20.1676 19.3865 20.1676 19.777 19.7771C20.1675 19.3866 20.1675 18.7534 19.777 18.3629L18.367 16.9529Z"></path>
+            <path d="M1 12C1 11.4477 1.44772 11 2 11H4C4.55228 11 5 11.4477 5 12C5 12.5523 4.55228 13 4 13H2C1.44772 13 1 12.5523 1 12Z"></path>
+            <path d="M20 11C19.4477 11 19 11.4477 19 12C19 12.5523 19.4477 13 20 13H22C22.5523 13 23 12.5523 23 12C23 11.4477 22.5523 11 22 11H20Z"></path>
+            <path d="M7.04704 16.9529C7.43756 17.3434 7.43756 17.9766 7.04704 18.3671L5.63704 19.7771C5.24651 20.1676 4.61335 20.1676 4.22282 19.7771C3.8323 19.3866 3.8323 18.7534 4.22283 18.3629L5.63283 16.9529C6.02335 16.5623 6.65651 16.5623 7.04704 16.9529Z"></path>
+            <path d="M19.777 5.6371C20.1675 5.24657 20.1675 4.61341 19.777 4.22289C19.3865 3.83236 18.7533 3.83236 18.3628 4.22289L16.9528 5.63289C16.5623 6.02341 16.5623 6.65658 16.9528 7.0471C17.3433 7.43762 17.9765 7.43762 18.367 7.0471L19.777 5.6371Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-moon" id="themeToggleMoon" type="button"
+          aria-label="切换到深色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C10.0222 2 8.08879 2.58649 6.4443 3.6853C4.79981 4.78412 3.51809 6.3459 2.76121 8.17317C2.00433 10.0004 1.8063 12.0111 2.19215 13.9509C2.578 15.8907 3.53041 17.6725 4.92894 19.0711C6.32746 20.4696 8.10929 21.422 10.0491 21.8079C11.9889 22.1937 13.9996 21.9957 15.8268 21.2388C17.6541 20.4819 19.2159 19.2002 20.3147 17.5557C21.4135 15.9112 22 13.9778 22 12C22 11.5955 21.7564 11.2309 21.3827 11.0761C21.009 10.9213 20.5789 11.0069 20.2929 11.2929C19.287 12.2988 17.9226 12.864 16.5 12.864C15.0774 12.864 13.713 12.2988 12.7071 11.2929C11.7012 10.287 11.136 8.92261 11.136 7.5C11.136 6.07739 11.7012 4.71304 12.7071 3.70711C12.9931 3.42111 13.0787 2.99099 12.9239 2.61732C12.7691 2.24364 12.4045 2 12 2ZM7.55544 5.34824C8.27036 4.87055 9.05353 4.51389 9.87357 4.28778C9.39271 5.27979 9.13604 6.37666 9.13604 7.5C9.13604 9.45304 9.91189 11.3261 11.2929 12.7071C12.6739 14.0881 14.547 14.864 16.5 14.864C17.6233 14.864 18.7202 14.6073 19.7122 14.1264C19.4861 14.9465 19.1295 15.7296 18.6518 16.4446C17.7727 17.7602 16.5233 18.7855 15.0615 19.391C13.5997 19.9965 11.9911 20.155 10.4393 19.8463C8.88743 19.5376 7.46197 18.7757 6.34315 17.6569C5.21447 16.538 4.4624 15.1126 4.15372 13.5607C3.84504 12.0089 4.00347 10.4003 4.60897 8.93853C5.21447 7.47672 6.23985 6.22729 7.55544 5.34824Z"></path>
+            <path d="M19 2C19.5523 2 20 2.44772 20 3V4H21C21.5523 4 22 4.44772 22 5C22 5.55228 21.5523 6 21 6H20V7C20 7.55228 19.5523 8 19 8C18.4477 8 18 7.55228 18 7V6H17C16.4477 6 16 5.55228 16 5C16 4.44772 16.4477 4 17 4H18V3C18 2.44772 18.4477 2 19 2Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon btn-nav-toggle mobile-only" id="btnNavToggle" type="button" aria-label="切换导航">
+          <div class="hamburger" id="hamburger">
+            <span class="hamburger__line hamburger__line--top"></span>
+            <span class="hamburger__line hamburger__line--bottom"></span>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+
+<div class="header-spacer"></div>
+
+<script>
+(function(){
+  var btn = document.getElementById('btnNavToggle');
+  var nav = document.getElementById('sectionBar');
+  var hamburger = document.getElementById('hamburger');
+  if (btn && nav) {
+    btn.addEventListener('click', function(){
+      nav.classList.toggle('top-bar__nav--open');
+      if (hamburger) hamburger.classList.toggle('is-active');
+    });
+    nav.querySelectorAll('.nav-item').forEach(function(item){
+      item.addEventListener('click', function(){
+        nav.classList.remove('top-bar__nav--open');
+        if (hamburger) hamburger.classList.remove('is-active');
+      });
+    });
+  }
+
+  var root = document.documentElement;
+  var applyTheme = function(theme, persist){
+    if (theme === 'light') {
+      root.classList.add('theme-light');
+    } else {
+      root.classList.remove('theme-light');
+    }
+    if (persist) {
+      try { localStorage.setItem('flavor-theme', theme); } catch (e) {}
+    }
+  };
+  document.querySelectorAll('.theme-toggle').forEach(function(el){
+    el.addEventListener('click', function(){
+      applyTheme(root.classList.contains('theme-light') ? 'dark' : 'light', true);
+    });
+  });
+})();
+</script>
+
+  <main class="site-main" role="main">
+    
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">GameFramework使用(Runtime)</h1>
+    <div class="article-meta">
+      
+      <span class="article-meta__item">2022-09-17</span>
+      
+      <span class="article-meta__sep">·</span>
+      <span class="article-meta__item">9 分钟阅读</span>
+      
+    </div>
+    
+    <div class="article-header__tags">
+      
+      <a href="/tag/unity/" class="tag-pill tag-pill--sm">Unity</a>
+      
+      <a href="/tag/gameframework/" class="tag-pill tag-pill--sm">GameFramework</a>
+      
+    </div>
+    
+  </header>
+
+  
+
+  <div class="article-content">
+    <h1 id="gameentry">GameEntry</h1>
+<p>整个框架的启动入口</p>
+<h2 id="builtin">Builtin:内置组件</h2>
+<h3 id="config">config</h3>
+<p>Config 配置表位于Assets/GameMain/Configs/DefaultConfig</p>
+<pre><code>//int类型值获取
+int c1 = GameEntry.Config.GetInt(&quot;configName&quot;);
+//float
+float c2 = GameEntry.Config.GetFloat(&quot;configName&quot;);
+//string
+string c3 = GameEntry.Config.GetString(&quot;configName&quot;);
+//bool
+bool c4 = GameEntry.Config.GetBool(&quot;configName&quot;);
+</code></pre>
+<h3 id="datanode-todo">DataNode TODO</h3>
+<h3 id="datatable-assetsgamemaindatatables">DataTable 配置表位于Assets/GameMain/DataTables</h3>
+<pre><code>//获取实体表
+IDataTable&lt;DREntity&gt; table = GameEntry.DataTable.GetDataTable&lt;DREntity&gt;();
+//获取单行数据 请确认ID存在 
+int id = 1001;
+DREntity dataRow = table.GetDataRow(id);
+if (null == dataRow) UnityGameFramework.Runtime.Log.Error(&quot;实体表 编号{0} 不存在&quot;, id);
+//获取所有表行数据
+DREntity[] dREntities = table.GetAllDataRows();
+//获取单行中数据
+var tableRowData1 = dataRow.AssetName;
+</code></pre>
+<h3 id="debugger-">Debugger 调试组件</h3>
+<pre><code>//在开发阶段用于真机调试查看日志
+GameEntry.Debugger.ActiveWindow = true;
+</code></pre>
+<h3 id="download-todo">Download TODO</h3>
+<h3 id="entity-">Entity 实体模块</h3>
+<pre><code>//显示实体  为异步操作 这里做了一层封装
+string entityGroup = &quot;Default&quot;;
+GameEntry.Entity.ShowDefaultEntity&lt;PlayerEntity&gt;(new PlayerEntityData(dataRow.Id), entityGroup);
+//&quot;Player&quot;为一个实体分组 增加或删除分组见Entity Inspector面板设置
+/*
+ * 如Default分组
+ * Name 分组名称
+ * Auto Release Interval 自动销毁时间
+ * Capaclity 最大缓存数量
+ * Expire Time 失效时间
+ * */
+//销毁实体
+int childEntityID = 0;
+int parentEntityID = 1;
+GameEntry.Entity.HideEntity(childEntityID);
+//附加实体
+GameEntry.Entity.AttachEntity(childEntityID, parentEntityID);
+//移除附加实体
+GameEntry.Entity.DetachChildEntities(parentEntityID);
+GameEntry.Entity.DetachEntity(childEntityID);
+//隐藏莫个分组所有实体
+GameEntry.Entity.HideAllLoadedEntities(&quot;entityGroup&quot;);
+//隐藏全部实体
+GameEntry.Entity.HideAllLoadedEntities();
+GameEntry.Entity.HideAllLoadingEntities();
+</code></pre>
+<h3 id="event">Event</h3>
+<pre><code>//订阅事件
+//先定义事件类
+GameEntry.Event.Subscribe(TempEvent.EventId, OnTempEvent);
+//发送事件
+GameEntry.Event.Fire(this, new TempEvent());//下一帧
+GameEntry.Event.FireNow(this, new TempEvent());//立即
+//取消订阅
+GameEntry.Event.Unsubscribe(TempEvent.EventId, OnTempEvent);
+</code></pre>
+<pre><code>protected virtual void OnTempEvent(object sender, GameEventArgs e)
+{
+        TempEvent tempEvent = (TempEvent)e;
+        //如果传了参数可以拿到
+}
+public class TempEvent : GameEventArgs
+{
+    public static readonly int EventId = typeof(TempEvent).GetHashCode();
+    public override int Id { get { return EventId; } }
+    public TempEvent() { }
+    public TempEvent(int param1) { }
+    public TempEvent(string parem1) { }
+    public override void Clear() { }
+}
+</code></pre>
+<h3 id="filesystem-todo">FileSystem TODO</h3>
+<h3 id="fsm-todo">Fsm TODO</h3>
+<h3 id="localization-">Localization 本地化</h3>
+<pre><code>//全局配置位于Assets/GameMain/Configs/DefaultDictionary
+//一份语言对应一份 xml配置文件(Assets/GameMain/Localization)
+//增加一种语种 需要在 Recourse Editor中增加一个变体目录
+GameEntry.Localization.GetString(&quot;languageKey&quot;);
+//TODO 封装支持动态切换语言
+</code></pre>
+<h3 id="network-todo">Network TODO</h3>
+<h3 id="objectpool">ObjectPool</h3>
+<pre><code>//创建引用池
+var tempTestObjectPoolItem = new TestItem();
+IObjectPool&lt;TestObjectPoolItem&gt; _itemObjectPool = GameEntry.ObjectPoolCreateSingleSpawnObjectPool&lt;TestObjectPoolItem&gt;(&quot;Test&quot;, 16);
+//创建对象
+TestObjectPoolItem itemObject = _itemObjectPool.Spawn();
+if (itemObject != null)
+{
+    itemObject = (TestObjectPoolItem)itemObject.Target;
+}
+else
+{
+    itemObject = UnityEngine.Object.Instantiate(tempTestObjectPoolItem);
+    _itemObjectPool.Register(TestObjectPoolItem.Create(itemObject), true);
+}
+//回收对象
+_itemObjectPool.Unspawn(itemObject);
+</code></pre>
+<pre><code>public class TestObjectPoolItem : ObjectBase
+{
+    public static TestObjectPoolItem Create(object target)
+    {
+        TestObjectPoolItem itemObject = ReferencePool.Acquire&lt;TestObjectPoolItem&gt;();
+        itemObject.Initialize(target);
+        return itemObject;
+    }
+    protected override void Release(bool isShutdown)
+    {
+        TestItem item = (TestItem)Target;
+        if (item == null)
+        {
+            return;
+        }
+        Object.Destroy(item.gameObject);
+    }
+}
+public class TestItem : MonoBehaviour
+{
+}
+</code></pre>
+<h3 id="procedure--todo">Procedure 流程模块 TODO</h3>
+<h3 id="resource--">Resource 资源模块 加载图片为例</h3>
+<pre><code>string path = &quot;TestPath&quot;;
+Image obj = new GameObject().AddComponent&lt;Image&gt;();
+GameEntry.Resource.LoadAsset(path, Constant.AssetPriority.SpriteAsset, newLoadAssetCallbacks(LoadSuccessWhithNativeSize), obj);
+</code></pre>
+<h3 id="scene">Scene</h3>
+<pre><code>//加载场景
+GameEntry.Scene.LoadScene(&quot;Path&quot;);
+//卸载场景
+GameEntry.Scene.UnloadScene(&quot;Path&quot;);
+/**
+ *  UnityGameFramework.Runtime.LoadSceneSuccessEventArgs.EventId    加载成功
+    UnityGameFramework.Runtime.LoadSceneFailureEventArgs.EventId    加载失败
+    UnityGameFramework.Runtime.UnloadSceneFailureEventArgs.EventId  卸载成功
+    UnityGameFramework.Runtime.UnloadSceneSuccessEventArgs.EventId  卸载失败
+    UnityGameFramework.Runtime.LoadSceneUpdateEventArgs.EventId     加载进度
+    具体 监听参考 Event 模块
+ * */
+</code></pre>
+<h3 id="setting-">Setting 存储模块</h3>
+<pre><code>//存储 Key + Object
+GameEntry.Setting.SetObject(&quot;UserData&quot;, null);
+/*
+ *  GameEntry.Setting.SetBool();
+ *  GameEntry.Setting.SetFloat();
+ *  GameEntry.Setting.SetInt();
+ *  GameEntry.Setting.SetString();
+ *  建议不同的数据存储类型不一样，方便于数据清理
+ * **/
+//获取同上Get
+</code></pre>
+<h3 id="sound--assetsgamemaindatatables">Sound 声音模块 配置表位于Assets/GameMain/DataTables</h3>
+<pre><code>//播放音效 封装过
+GameEntry.Sound.PlaySound(1001);
+//TODO 封装音效循环 封装相同音效只允许存在单个
+</code></pre>
+<h3 id="ui-ui-assetsgamemaindatatables">UI UI模块 配置表位于Assets/GameMain/DataTables</h3>
+<pre><code>//打开
+int gameFormId = (int)GameEntry.UI.OpenUIForm(UIFormId.GameForm);
+//关闭
+GameEntry.UI.CloseUIForm(gameFormId);
+//关闭所有
+GameEntry.UI.CloseAllLoadedUIForms();
+GameEntry.UI.CloseAllLoadingUIForms();
+</code></pre>
+<h3 id="webrequest-todo">WebRequest TODO</h3>
+<h2 id="customs">Customs:自定义组件</h2>
+<h3 id="native">如Native</h3>
+<pre><code>脚本  NativeComponent : GameFrameworkComponent 并挂载于GF节点下
+//GameEntry获取
+NativeComponent Native = UnityGameFramework.Runtime.GameEntryGetComponent&lt;NativeComponent&gt;();
+//全局使用
+GameEntry.Native.Vibrate(50);
+//其他同
+</code></pre>
+<h1 id="heading">传送门</h1>
+<h3 id="gameframeworkhttpsgameframeworkcn"><a href="https://gameframework.cn/">GameFramework官网</a></h3>
+<h3 id="gameframeworkhttpsgithubcomellanjianggameframework"><a href="https://github.com/EllanJiang/GameFramework">GameFramework仓库</a></h3>
+
+  </div>
+
+  
+  <nav class="post-nav">
+    
+    <a href="/post/gameframework-shi-yong-editor/" class="post-nav-card post-nav-card--prev">
+      
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">上一篇</span>
+        <span class="post-nav-card__title">GameFramework使用(Editor)</span>
+      </div>
+      <span class="post-nav-card__arrow">&larr;</span>
+    </a>
+    
+    
+    <a href="/post/wei-yun-suan/" class="post-nav-card post-nav-card--next">
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">下一篇</span>
+        <span class="post-nav-card__title">位运算（愉快的周末从写博客开始）</span>
+      </div>
+      
+      <span class="post-nav-card__arrow">&rarr;</span>
+    </a>
+    
+  </nav>
+
+  
+  
+
+
+  
+    <section class="comment-section">
+  <h2 class="comment-section__title">评论</h2>
+  <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    var gitalk = new Gitalk({
+      clientID: 'ca79a66585e72af3bff6',
+      clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+      repo: 'zhoujun2303.github.io',
+      owner: 'zhoujun2303',
+      admin: ['zhoujun2303'],
+      id: location.pathname,
+      distractionFreeMode: false
+    });
+    gitalk.render('gitalk-container');
+  </script>
+</section>
+
+  
+
+
+
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+
+    
+    
+    <nav class="footer-nav" aria-label="页脚导航">
+      
+      <a class="footer-nav__link" href="/">首页</a>
+      
+      <a class="footer-nav__link" href="/post">博客</a>
+      
+      <a class="footer-nav__link" href="/memos">闪念</a>
+      
+      <a class="footer-nav__link" href="/archives">归档</a>
+      
+      <a class="footer-nav__link" href="/tags">标签</a>
+      
+      <a class="footer-nav__link" href="/links">友链</a>
+      
+      <a class="footer-nav__link" href="/post/about">关于</a>
+      
+    </nav>
+    
+
+    
+    <div class="footer-social">
+      
+      
+      
+      <a class="footer-social__link" href="/feed.xml" aria-label="RSS">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6.18 15.64a2.18 2.18 0 110 4.36 2.18 2.18 0 010-4.36zM4 4.44A15.56 15.56 0 0119.56 20h-2.83A12.73 12.73 0 004 7.27V4.44zm0 5.66a9.9 9.9 0 019.9 9.9h-2.83A7.07 7.07 0 004 12.93V10.1z"/>
+        </svg>
+      </a>
+    </div>
+
+    
+    <div class="footer-copyright">
+      <p>&copy; 2026 长胖是个梦想. All rights reserved.</p>
+    </div>
+
+    
+    
+    <div class="footer-custom">
+      Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+    </div>
+    
+
+    
+    <div class="footer-powered">
+      <span>Powered by <a href="https://gridea.pro" target="_blank" rel="noopener noreferrer">Gridea Pro</a></span>
+    </div>
+
+  </div>
+</footer>
+
+  
+  <div class="search-overlay" id="searchOverlay" style="display:none;">
+  <div class="search-modal">
+    <div class="search-header">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索文章..." autocomplete="off" />
+      <span class="search-kbd">&#8984;K</span>
+      <button class="search-close" id="searchClose" type="button" aria-label="关闭搜索">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script src="/scripts/search.js"></script>
+  
+
+  
+
+  
+
+  
+
+<script>console.log("\n%c ✦ Gridea Pro v1.2.2 %c · Theme: flavor-theme v1.0.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+</body>
+</html>

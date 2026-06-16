@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Unity 授权逆向分析流程</title>
+  <desc id="desc">从授权样本开始，识别构建后端，分别检查 Mono、IL2CPP、资源、日志和网络，最后输出安全报告。</desc>
+  <defs>
+    <style>
+      .bg{fill:#f7f8fb}
+      .card{fill:#fff;stroke:#cfd7e6;stroke-width:2}
+      .mono{fill:#ecfdf5;stroke:#34a853;stroke-width:2}
+      .il2cpp{fill:#eef4ff;stroke:#3b82f6;stroke-width:2}
+      .asset{fill:#fff7ed;stroke:#f97316;stroke-width:2}
+      .report{fill:#fef2f2;stroke:#ef4444;stroke-width:2}
+      .text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:24px;fill:#172033}
+      .small{font-size:17px;fill:#4b5563}
+      .line{stroke:#64748b;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1200" height="560"/>
+  <text class="text" x="48" y="58" style="font-size:34px;font-weight:700">Unity 授权逆向分析工作流</text>
+  <text class="small" x="50" y="92">目标：分析自有或获得书面授权的 Unity 项目，发现信息泄露、客户端信任和资源暴露风险。</text>
+
+  <rect class="card" x="60" y="150" rx="18" ry="18" width="190" height="112"/>
+  <text class="text" x="91" y="195">授权样本</text>
+  <text class="small" x="83" y="228">EXE / APK / AAB</text>
+
+  <rect class="card" x="330" y="150" rx="18" ry="18" width="220" height="112"/>
+  <text class="text" x="370" y="195">识别后端</text>
+  <text class="small" x="360" y="228">Mono 或 IL2CPP</text>
+
+  <rect class="mono" x="650" y="72" rx="18" ry="18" width="230" height="112"/>
+  <text class="text" x="707" y="118">Mono</text>
+  <text class="small" x="686" y="151">ILSpy / dnSpyEx</text>
+
+  <rect class="il2cpp" x="650" y="220" rx="18" ry="18" width="230" height="112"/>
+  <text class="text" x="705" y="266">IL2CPP</text>
+  <text class="small" x="676" y="299">Il2CppDumper / Ghidra</text>
+
+  <rect class="asset" x="650" y="368" rx="18" ry="18" width="230" height="112"/>
+  <text class="text" x="703" y="414">资源包</text>
+  <text class="small" x="679" y="447">AssetStudio / AssetRipper</text>
+
+  <rect class="report" x="970" y="220" rx="18" ry="18" width="180" height="112"/>
+  <text class="text" x="1016" y="266">报告</text>
+  <text class="small" x="994" y="299">风险与修复建议</text>
+
+  <path class="line" d="M250 206 H318"/>
+  <path class="line" d="M550 206 C600 206 604 128 638 128"/>
+  <path class="line" d="M550 206 C600 206 604 276 638 276"/>
+  <path class="line" d="M550 206 C610 206 598 424 638 424"/>
+  <path class="line" d="M880 128 C920 128 932 260 958 260"/>
+  <path class="line" d="M880 276 H958"/>
+  <path class="line" d="M880 424 C922 424 930 296 958 296"/>
+
+  <text class="small" x="72" y="510">安全边界：不破解商业游戏、不绕过付费/反作弊、不提供作弊修改步骤；只输出授权审计证据和加固方案。</text>
+</svg>

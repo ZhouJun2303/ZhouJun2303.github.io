@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Unity 防逆向分层加固</title>
+  <desc id="desc">Unity 客户端防护包括构建配置、代码混淆、资源治理、存档签名、通信校验和服务端权威。</desc>
+  <defs>
+    <style>
+      .bg{fill:#f8fafc}
+      .center{fill:#172033}
+      .layer1{fill:#dbeafe;stroke:#2563eb;stroke-width:2}
+      .layer2{fill:#dcfce7;stroke:#16a34a;stroke-width:2}
+      .layer3{fill:#fef3c7;stroke:#d97706;stroke-width:2}
+      .layer4{fill:#fae8ff;stroke:#a855f7;stroke-width:2}
+      .layer5{fill:#ffe4e6;stroke:#e11d48;stroke-width:2}
+      .text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:23px;fill:#172033}
+      .white{fill:#fff}
+      .small{font-size:16px;fill:#475569}
+      .line{stroke:#94a3b8;stroke-width:2.5}
+    </style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1200" height="560"/>
+  <text class="text" x="48" y="58" style="font-size:34px;font-weight:700">Unity 游戏防逆向与防篡改分层</text>
+  <text class="small" x="50" y="92">原则：客户端只做展示和输入，关键资产、经济、支付、排行榜和风控判断由服务端校验。</text>
+
+  <circle class="center" cx="600" cy="292" r="96"/>
+  <text class="text white" x="550" y="282" style="font-weight:700">服务端</text>
+  <text class="small white" x="526" y="318">权威校验与风控</text>
+
+  <rect class="layer1" x="80" y="155" rx="18" ry="18" width="250" height="108"/>
+  <text class="text" x="138" y="198">构建配置</text>
+  <text class="small" x="110" y="231">IL2CPP / 关闭调试 / 去符号</text>
+
+  <rect class="layer2" x="80" y="330" rx="18" ry="18" width="250" height="108"/>
+  <text class="text" x="138" y="373">代码保护</text>
+  <text class="small" x="112" y="406">混淆 / 裁剪 / 日志清理</text>
+
+  <rect class="layer3" x="475" y="425" rx="18" ry="18" width="250" height="108"/>
+  <text class="text" x="532" y="468">资源治理</text>
+  <text class="small" x="505" y="501">分包 / 延迟下发 / Hash</text>
+
+  <rect class="layer4" x="870" y="330" rx="18" ry="18" width="250" height="108"/>
+  <text class="text" x="928" y="373">数据保护</text>
+  <text class="small" x="898" y="406">存档签名 / 用户绑定</text>
+
+  <rect class="layer5" x="870" y="155" rx="18" ry="18" width="250" height="108"/>
+  <text class="text" x="928" y="198">通信保护</text>
+  <text class="small" x="897" y="231">TLS / Nonce / 请求签名</text>
+
+  <line class="line" x1="330" y1="209" x2="510" y2="260"/>
+  <line class="line" x1="330" y1="384" x2="510" y2="322"/>
+  <line class="line" x1="600" y1="425" x2="600" y2="388"/>
+  <line class="line" x1="870" y1="384" x2="690" y2="322"/>
+  <line class="line" x1="870" y1="209" x2="690" y2="260"/>
+
+  <text class="small" x="80" y="510">每一层都只能提高成本，不能单独保证安全；高价值逻辑必须放到服务端做最终判断。</text>
+</svg>

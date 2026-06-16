@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-label="Unity 开发高级/资深学习路线">
+  <rect width="1200" height="560" fill="#f8fafc"/>
+  <text x="600" y="58" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="34" font-weight="700" fill="#111827">Unity 开发高级/资深学习路线</text>
+  <g font-family="Arial, 'PingFang SC', sans-serif">
+    <line x1="125" y1="300" x2="1075" y2="300" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+    <g>
+      <circle cx="150" cy="300" r="34" fill="#2563eb"/>
+      <text x="150" y="308" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">1</text>
+      <text x="150" y="380" text-anchor="middle" font-size="18" font-weight="700" fill="#1e40af">基础</text>
+      <text x="150" y="410" text-anchor="middle" font-size="14" fill="#475569">Unity / C# / UI</text>
+    </g>
+    <g>
+      <circle cx="330" cy="300" r="34" fill="#16a34a"/>
+      <text x="330" y="308" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">2</text>
+      <text x="330" y="220" text-anchor="middle" font-size="18" font-weight="700" fill="#166534">框架</text>
+      <text x="330" y="250" text-anchor="middle" font-size="14" fill="#475569">网络 / 配置 / 对象池</text>
+    </g>
+    <g>
+      <circle cx="510" cy="300" r="34" fill="#d97706"/>
+      <text x="510" y="308" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">3</text>
+      <text x="510" y="380" text-anchor="middle" font-size="18" font-weight="700" fill="#92400e">热更发布</text>
+      <text x="510" y="410" text-anchor="middle" font-size="14" fill="#475569">资源 / SDK / CI</text>
+    </g>
+    <g>
+      <circle cx="690" cy="300" r="34" fill="#db2777"/>
+      <text x="690" y="308" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">4</text>
+      <text x="690" y="220" text-anchor="middle" font-size="18" font-weight="700" fill="#9d174d">性能质量</text>
+      <text x="690" y="250" text-anchor="middle" font-size="14" fill="#475569">Profiler / 内存 / 包体</text>
+    </g>
+    <g>
+      <circle cx="870" cy="300" r="34" fill="#7c3aed"/>
+      <text x="870" y="308" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">5</text>
+      <text x="870" y="380" text-anchor="middle" font-size="18" font-weight="700" fill="#5b21b6">复杂系统</text>
+      <text x="870" y="410" text-anchor="middle" font-size="14" fill="#475569">战斗 / 渲染 / TA</text>
+    </g>
+    <g>
+      <circle cx="1050" cy="300" r="34" fill="#0f766e"/>
+      <text x="1050" y="308" text-anchor="middle" font-size="22" font-weight="700" fill="#ffffff">6</text>
+      <text x="1050" y="220" text-anchor="middle" font-size="18" font-weight="700" fill="#0f766e">带队交付</text>
+      <text x="1050" y="250" text-anchor="middle" font-size="14" fill="#475569">评审 / 风险 / 复盘</text>
+    </g>
+  </g>
+</svg>

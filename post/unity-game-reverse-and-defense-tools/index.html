@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="/styles/main.min.css">
+
+
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+
+
+<style>:root { --heatmap-color: #39d353; }</style>
+
+
+
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('flavor-theme');
+      var theme = saved || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+      }
+    } catch (e) { }
+  })();
+</script>
+  <meta name="generator" content="Gridea Pro 1.2.2">
+  <title>Unity 游戏逆向分析与防逆向加固工具教程 | 长胖是个梦想</title>
+  
+<meta property="og:title" content="Unity 游戏逆向分析与防逆向加固工具教程" />
+<meta property="og:type" content="article" />
+
+
+<meta name="description" content="本文只用于自有项目、公司授权项目、比赛靶场或教学样本的安全研究。不要用这些方法破解商业游戏、绕过付费、绕过反作弊、修改线上数据或传播他人资源。 这篇文章参考逆向论坛常见的写法：环境、工具、样本、步骤、截图位置、结论。内容重点不是“怎么改游戏”，而是学会用工具看清 Unity 包里暴露了什么，再反过来做防护。 ![Unity 授权逆向分析流程](/post-images/unity-&amp;hellip;">
+<link rel="canonical" href="https://zhoujun2303.github.io/post/unity-game-reverse-and-defense-tools/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 游戏逆向分析与防逆向加固工具教程","url":"https://zhoujun2303.github.io/post/unity-game-reverse-and-defense-tools/","description":"本文只用于自有项目、公司授权项目、比赛靶场或教学样本的安全研究。不要用这些方法破解商业游戏、绕过付费、绕过反作弊、修改线上数据或传播他人资源。 这篇文章参考逆向论坛常见的写法：环境、工具、样本、步骤、截图位置、结论。内容重点不是“怎么改游戏”，而是学会用工具看清 Unity 包里暴露了什么，再反过来做防护。 ![Unity 授权逆向分析流程](/post-images/unity-\u0026hellip;","datePublished":"2026-06-10T16:30:00+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-game-reverse-and-defense-tools/","name":"Unity 游戏逆向分析与防逆向加固工具教程","position":2}]}</script>
+<meta property="og:title" content="Unity 游戏逆向分析与防逆向加固工具教程">
+<meta property="og:description" content="本文只用于自有项目、公司授权项目、比赛靶场或教学样本的安全研究。不要用这些方法破解商业游戏、绕过付费、绕过反作弊、修改线上数据或传播他人资源。 这篇文章参考逆向论坛常见的写法：环境、工具、样本、步骤、截图位置、结论。内容重点不是“怎么改游戏”，而是学会用工具看清 Unity 包里暴露了什么，再反过来做防护。 ![Unity 授权逆向分析流程](/post-images/unity-&amp;hellip;">
+<meta property="og:url" content="https://zhoujun2303.github.io/post/unity-game-reverse-and-defense-tools/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="长胖是个梦想">
+<meta property="og:image" content="/images/avatar.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-game-reverse-and-defense-tools/">
+<meta name="twitter:title" content="Unity 游戏逆向分析与防逆向加固工具教程">
+<meta name="twitter:description" content="本文只用于自有项目、公司授权项目、比赛靶场或教学样本的安全研究。不要用这些方法破解商业游戏、绕过付费、绕过反作弊、修改线上数据或传播他人资源。 这篇文章参考逆向论坛常见的写法：环境、工具、样本、步骤、截图位置、结论。内容重点不是“怎么改游戏”，而是学会用工具看清 Unity 包里暴露了什么，再反过来做防护。 ![Unity 授权逆向分析流程](/post-images/unity-&amp;hellip;">
+<meta name="twitter:image" content="/images/avatar.png">
+</head>
+<body class="flavor-theme">
+
+  <header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <div class="top-bar">
+
+      
+      <div class="top-bar__left">
+        
+        <a href="https://zhoujun2303.github.io" class="site-avatar-link" aria-label="返回首页">
+          <img class="site-avatar" src="/images/avatar.png" alt="长胖是个梦想" />
+        </a>
+        
+        <a href="https://zhoujun2303.github.io" class="site-name-link">长胖是个梦想</a>
+      </div>
+
+      
+      <nav class="top-bar__nav" id="sectionBar">
+        
+        
+        <a class="nav-item" href="/">首页</a>
+        
+        <a class="nav-item" href="/post">博客</a>
+        
+        <a class="nav-item" href="/memos">闪念</a>
+        
+        <a class="nav-item" href="/archives">归档</a>
+        
+        <a class="nav-item" href="/tags">标签</a>
+        
+        <a class="nav-item" href="/links">友链</a>
+        
+        <a class="nav-item" href="/post/about">关于</a>
+        
+        
+      </nav>
+
+      
+      <div class="top-bar__right">
+        <button class="btn-icon btn-search search-btn" id="btnSearch" type="button" aria-label="搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-sun" id="themeToggleSun" type="button"
+          aria-label="切换到浅色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1C12.5523 1 13 1.44772 13 2V4C13 4.55228 12.5523 5 12 5C11.4477 5 11 4.55228 11 4V2C11 1.44772 11.4477 1 12 1Z"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z"></path>
+            <path d="M13 20C13 19.4477 12.5523 19 12 19C11.4477 19 11 19.4477 11 20V22C11 22.5523 11.4477 23 12 23C12.5523 23 13 22.5523 13 22V20Z"></path>
+            <path d="M4.22282 4.22289C4.61335 3.83236 5.24651 3.83236 5.63704 4.22289L7.04704 5.63289C7.43756 6.02341 7.43756 6.65658 7.04704 7.0471C6.65651 7.43762 6.02335 7.43762 5.63283 7.0471L4.22282 5.6371C3.8323 5.24658 3.8323 4.61341 4.22282 4.22289Z"></path>
+            <path d="M18.367 16.9529C17.9765 16.5623 17.3433 16.5623 16.9528 16.9529C16.5623 17.3434 16.5623 17.9766 16.9528 18.3671L18.3628 19.7771C18.7533 20.1676 19.3865 20.1676 19.777 19.7771C20.1675 19.3866 20.1675 18.7534 19.777 18.3629L18.367 16.9529Z"></path>
+            <path d="M1 12C1 11.4477 1.44772 11 2 11H4C4.55228 11 5 11.4477 5 12C5 12.5523 4.55228 13 4 13H2C1.44772 13 1 12.5523 1 12Z"></path>
+            <path d="M20 11C19.4477 11 19 11.4477 19 12C19 12.5523 19.4477 13 20 13H22C22.5523 13 23 12.5523 23 12C23 11.4477 22.5523 11 22 11H20Z"></path>
+            <path d="M7.04704 16.9529C7.43756 17.3434 7.43756 17.9766 7.04704 18.3671L5.63704 19.7771C5.24651 20.1676 4.61335 20.1676 4.22282 19.7771C3.8323 19.3866 3.8323 18.7534 4.22283 18.3629L5.63283 16.9529C6.02335 16.5623 6.65651 16.5623 7.04704 16.9529Z"></path>
+            <path d="M19.777 5.6371C20.1675 5.24657 20.1675 4.61341 19.777 4.22289C19.3865 3.83236 18.7533 3.83236 18.3628 4.22289L16.9528 5.63289C16.5623 6.02341 16.5623 6.65658 16.9528 7.0471C17.3433 7.43762 17.9765 7.43762 18.367 7.0471L19.777 5.6371Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-moon" id="themeToggleMoon" type="button"
+          aria-label="切换到深色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C10.0222 2 8.08879 2.58649 6.4443 3.6853C4.79981 4.78412 3.51809 6.3459 2.76121 8.17317C2.00433 10.0004 1.8063 12.0111 2.19215 13.9509C2.578 15.8907 3.53041 17.6725 4.92894 19.0711C6.32746 20.4696 8.10929 21.422 10.0491 21.8079C11.9889 22.1937 13.9996 21.9957 15.8268 21.2388C17.6541 20.4819 19.2159 19.2002 20.3147 17.5557C21.4135 15.9112 22 13.9778 22 12C22 11.5955 21.7564 11.2309 21.3827 11.0761C21.009 10.9213 20.5789 11.0069 20.2929 11.2929C19.287 12.2988 17.9226 12.864 16.5 12.864C15.0774 12.864 13.713 12.2988 12.7071 11.2929C11.7012 10.287 11.136 8.92261 11.136 7.5C11.136 6.07739 11.7012 4.71304 12.7071 3.70711C12.9931 3.42111 13.0787 2.99099 12.9239 2.61732C12.7691 2.24364 12.4045 2 12 2ZM7.55544 5.34824C8.27036 4.87055 9.05353 4.51389 9.87357 4.28778C9.39271 5.27979 9.13604 6.37666 9.13604 7.5C9.13604 9.45304 9.91189 11.3261 11.2929 12.7071C12.6739 14.0881 14.547 14.864 16.5 14.864C17.6233 14.864 18.7202 14.6073 19.7122 14.1264C19.4861 14.9465 19.1295 15.7296 18.6518 16.4446C17.7727 17.7602 16.5233 18.7855 15.0615 19.391C13.5997 19.9965 11.9911 20.155 10.4393 19.8463C8.88743 19.5376 7.46197 18.7757 6.34315 17.6569C5.21447 16.538 4.4624 15.1126 4.15372 13.5607C3.84504 12.0089 4.00347 10.4003 4.60897 8.93853C5.21447 7.47672 6.23985 6.22729 7.55544 5.34824Z"></path>
+            <path d="M19 2C19.5523 2 20 2.44772 20 3V4H21C21.5523 4 22 4.44772 22 5C22 5.55228 21.5523 6 21 6H20V7C20 7.55228 19.5523 8 19 8C18.4477 8 18 7.55228 18 7V6H17C16.4477 6 16 5.55228 16 5C16 4.44772 16.4477 4 17 4H18V3C18 2.44772 18.4477 2 19 2Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon btn-nav-toggle mobile-only" id="btnNavToggle" type="button" aria-label="切换导航">
+          <div class="hamburger" id="hamburger">
+            <span class="hamburger__line hamburger__line--top"></span>
+            <span class="hamburger__line hamburger__line--bottom"></span>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+
+<div class="header-spacer"></div>
+
+<script>
+(function(){
+  var btn = document.getElementById('btnNavToggle');
+  var nav = document.getElementById('sectionBar');
+  var hamburger = document.getElementById('hamburger');
+  if (btn && nav) {
+    btn.addEventListener('click', function(){
+      nav.classList.toggle('top-bar__nav--open');
+      if (hamburger) hamburger.classList.toggle('is-active');
+    });
+    nav.querySelectorAll('.nav-item').forEach(function(item){
+      item.addEventListener('click', function(){
+        nav.classList.remove('top-bar__nav--open');
+        if (hamburger) hamburger.classList.remove('is-active');
+      });
+    });
+  }
+
+  var root = document.documentElement;
+  var applyTheme = function(theme, persist){
+    if (theme === 'light') {
+      root.classList.add('theme-light');
+    } else {
+      root.classList.remove('theme-light');
+    }
+    if (persist) {
+      try { localStorage.setItem('flavor-theme', theme); } catch (e) {}
+    }
+  };
+  document.querySelectorAll('.theme-toggle').forEach(function(el){
+    el.addEventListener('click', function(){
+      applyTheme(root.classList.contains('theme-light') ? 'dark' : 'light', true);
+    });
+  });
+})();
+</script>
+
+  <main class="site-main" role="main">
+    
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">Unity 游戏逆向分析与防逆向加固工具教程</h1>
+    <div class="article-meta">
+      
+      <span class="article-meta__item">2026-06-10</span>
+      
+      <span class="article-meta__sep">·</span>
+      <span class="article-meta__item">33 分钟阅读</span>
+      
+    </div>
+    
+    <div class="article-header__tags">
+      
+      <a href="/tag/unity/" class="tag-pill tag-pill--sm">Unity</a>
+      
+      <a href="/tag/an-quan/" class="tag-pill tag-pill--sm">安全</a>
+      
+      <a href="/tag/ni-xiang/" class="tag-pill tag-pill--sm">逆向</a>
+      
+      <a href="/tag/il2cpp/" class="tag-pill tag-pill--sm">IL2CPP</a>
+      
+    </div>
+    
+  </header>
+
+  
+
+  <div class="article-content">
+    <blockquote>
+<p>本文只用于自有项目、公司授权项目、比赛靶场或教学样本的安全研究。不要用这些方法破解商业游戏、绕过付费、绕过反作弊、修改线上数据或传播他人资源。</p>
+</blockquote>
+<p>这篇文章参考逆向论坛常见的写法：环境、工具、样本、步骤、截图位置、结论。内容重点不是“怎么改游戏”，而是学会用工具看清 Unity 包里暴露了什么，再反过来做防护。</p>
+<p><img src="/post-images/unity-authorized-reverse-workflow.svg" alt="Unity 授权逆向分析流程" /></p>
+<h2 id="1-">1. 准备环境</h2>
+<h3 id="11-">1.1 基础工具</h3>
+<p>建议准备一个专门的分析目录，例如：</p>
+<pre><code class="language-bash">mkdir -p ~/UnitySecurityLab/{samples,tools,outputs,reports}
+</code></pre>
+<p>常用工具如下：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+<th>下载建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unity Hub / Unity Editor</td>
+<td>构建自己的测试样本</td>
+<td>Unity 官方</td>
+</tr>
+<tr>
+<td>7-Zip / Keka / unzip</td>
+<td>解压 APK、AAB、ZIP 包</td>
+<td>官方或系统包管理器</td>
+</tr>
+<tr>
+<td>ILSpy</td>
+<td>查看 Mono 下的 C# 程序集</td>
+<td><a href="https://github.com/icsharpcode/ILSpy">https://github.com/icsharpcode/ILSpy</a></td>
+</tr>
+<tr>
+<td>dnSpyEx</td>
+<td>查看 .NET 程序集、搜索引用</td>
+<td><a href="https://github.com/dnSpyEx/dnSpy">https://github.com/dnSpyEx/dnSpy</a></td>
+</tr>
+<tr>
+<td>AssetStudio</td>
+<td>查看 Unity 资源、TextAsset、贴图、音频</td>
+<td><a href="https://github.com/Perfare/AssetStudio">https://github.com/Perfare/AssetStudio</a></td>
+</tr>
+<tr>
+<td>AssetRipper</td>
+<td>对自有项目做资源结构恢复分析</td>
+<td><a href="https://github.com/AssetRipper/AssetRipper">https://github.com/AssetRipper/AssetRipper</a></td>
+</tr>
+<tr>
+<td>Il2CppDumper</td>
+<td>分析 IL2CPP 元数据与本地符号关系</td>
+<td><a href="https://github.com/Perfare/Il2CppDumper">https://github.com/Perfare/Il2CppDumper</a></td>
+</tr>
+<tr>
+<td>Cpp2IL</td>
+<td>IL2CPP 结构分析的可选替代工具</td>
+<td><a href="https://github.com/SamboyCoding/Cpp2IL">https://github.com/SamboyCoding/Cpp2IL</a></td>
+</tr>
+<tr>
+<td>Ghidra</td>
+<td>查看 IL2CPP 生成的本地代码</td>
+<td><a href="https://github.com/NationalSecurityAgency/ghidra">https://github.com/NationalSecurityAgency/ghidra</a></td>
+</tr>
+<tr>
+<td>jadx-gui</td>
+<td>查看 Android Java/Kotlin 层代码</td>
+<td><a href="https://github.com/skylot/jadx">https://github.com/skylot/jadx</a></td>
+</tr>
+<tr>
+<td>apktool</td>
+<td>解包 AndroidManifest、资源表</td>
+<td><a href="https://apktool.org/">https://apktool.org/</a></td>
+</tr>
+<tr>
+<td>Android Studio / adb</td>
+<td>安装包、抓日志、看设备状态</td>
+<td>Android 官方</td>
+</tr>
+<tr>
+<td>mitmproxy / Charles</td>
+<td>检查自己 App 的网络请求</td>
+<td>官方网站</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-">1.2 推荐样本</h3>
+<p>不要直接拿商业游戏练手。最好自己创建一个 Unity 工程，命名为 <code>SecurityLabGame</code>，放几个常见模块：</p>
+<ul>
+<li><code>LoginService.cs</code>：模拟登录、接口地址、测试账号。</li>
+<li><code>InventoryService.cs</code>：金币、钻石、背包。</li>
+<li><code>SaveManager.cs</code>：本地存档。</li>
+<li><code>NetworkClient.cs</code>：请求签名和错误日志。</li>
+<li><code>DebugPanel.cs</code>：仅开发环境使用的调试面板。</li>
+</ul>
+<p>然后分别打两个包：</p>
+<ul>
+<li>Mono 包：用于学习 <code>Assembly-CSharp.dll</code> 结构。</li>
+<li>IL2CPP 包：用于学习正式包的常见形态。</li>
+</ul>
+<p>Unity 设置路径：</p>
+<pre><code class="language-text">File &gt; Build Profiles 或 File &gt; Build Settings
+Edit &gt; Project Settings &gt; Player &gt; Other Settings
+</code></pre>
+<p>Mono 样本：</p>
+<pre><code class="language-text">Scripting Backend: Mono
+Development Build: 可以先打开，便于学习
+Script Debugging: 可以先打开，便于学习
+</code></pre>
+<p>IL2CPP 样本：</p>
+<pre><code class="language-text">Scripting Backend: IL2CPP
+Development Build: 关闭
+Script Debugging: 关闭
+Managed Stripping Level: Medium
+</code></pre>
+<p>Unity 官方说明：脚本后端决定 C# 脚本如何被编译和执行；IL2CPP 会把 IL 转为 C++ 再编译成本地代码。参考 Unity Manual：<code>https://docs.unity3d.com/Manual/scripting-backends.html</code>。</p>
+<h2 id="2--unity-">2. 识别 Unity 包结构</h2>
+<h3 id="21-windows-">2.1 Windows 包</h3>
+<p>典型 Mono 包：</p>
+<pre><code class="language-text">SecurityLabGame.exe
+SecurityLabGame_Data/
+  Managed/
+    Assembly-CSharp.dll
+    UnityEngine.CoreModule.dll
+  Resources/
+  StreamingAssets/
+</code></pre>
+<p>典型 IL2CPP 包：</p>
+<pre><code class="language-text">SecurityLabGame.exe
+GameAssembly.dll
+UnityPlayer.dll
+SecurityLabGame_Data/
+  Managed/
+    Metadata/
+      global-metadata.dat
+  il2cpp_data/
+</code></pre>
+<p>检查命令：</p>
+<pre><code class="language-bash">find ./SecurityLabGame -maxdepth 4 -type f | sort
+</code></pre>
+<p>快速判断：</p>
+<pre><code class="language-bash">find ./SecurityLabGame -name &quot;Assembly-CSharp.dll&quot; -o -name &quot;GameAssembly.dll&quot; -o -name &quot;global-metadata.dat&quot;
+</code></pre>
+<p>看到 <code>Assembly-CSharp.dll</code>，大概率有 Mono 托管程序集可看。看到 <code>GameAssembly.dll</code> 和 <code>global-metadata.dat</code>，大概率是 IL2CPP。</p>
+<h3 id="22-android-apk">2.2 Android APK</h3>
+<p>APK 本质是 ZIP，可以先列文件：</p>
+<pre><code class="language-bash">unzip -l SecurityLabGame.apk | rg &quot;Assembly-CSharp|libil2cpp|global-metadata|resources.assets|AndroidManifest&quot;
+</code></pre>
+<p>Mono 常见位置：</p>
+<pre><code class="language-text">assets/bin/Data/Managed/Assembly-CSharp.dll
+</code></pre>
+<p>IL2CPP 常见位置：</p>
+<pre><code class="language-text">lib/arm64-v8a/libil2cpp.so
+assets/bin/Data/Managed/Metadata/global-metadata.dat
+</code></pre>
+<p>解压到分析目录：</p>
+<pre><code class="language-bash">mkdir -p outputs/SecurityLabGame_apk
+unzip SecurityLabGame.apk -d outputs/SecurityLabGame_apk
+</code></pre>
+<p>查看基本信息：</p>
+<pre><code class="language-bash">file outputs/SecurityLabGame_apk/lib/arm64-v8a/libil2cpp.so
+shasum -a 256 SecurityLabGame.apk
+</code></pre>
+<h3 id="23-aab-">2.3 AAB 包</h3>
+<p>如果是 Android App Bundle：</p>
+<pre><code class="language-bash">unzip -l SecurityLabGame.aab | rg &quot;base|libil2cpp|global-metadata|manifest&quot;
+</code></pre>
+<p>本地生成通用 APK 方便测试：</p>
+<pre><code class="language-bash">java -jar bundletool.jar build-apks \
+  --bundle=SecurityLabGame.aab \
+  --output=SecurityLabGame.apks \
+  --mode=universal
+</code></pre>
+<p>解出 APK：</p>
+<pre><code class="language-bash">unzip SecurityLabGame.apks -d outputs/SecurityLabGame_apks
+</code></pre>
+<h2 id="3-mono-ilspy--dnspyex">3. Mono 项目分析：ILSpy 和 dnSpyEx</h2>
+<h3 id="31-">3.1 找到程序集</h3>
+<p>Windows：</p>
+<pre><code class="language-text">SecurityLabGame_Data/Managed/Assembly-CSharp.dll
+</code></pre>
+<p>Android：</p>
+<pre><code class="language-text">assets/bin/Data/Managed/Assembly-CSharp.dll
+</code></pre>
+<p>把文件复制到：</p>
+<pre><code class="language-text">~/UnitySecurityLab/outputs/mono/Assembly-CSharp.dll
+</code></pre>
+<h3 id="32--ilspy">3.2 使用 ILSpy</h3>
+<p>操作步骤：</p>
+<ol>
+<li>打开 ILSpy。</li>
+<li><code>File &gt; Open</code>，选择 <code>Assembly-CSharp.dll</code>。</li>
+<li>左侧展开程序集。</li>
+<li>优先看自己写的命名空间，例如 <code>Game</code>, <code>Hotfix</code>, <code>Services</code>, <code>Managers</code>。</li>
+<li>使用搜索框搜索关键词。</li>
+</ol>
+<p>推荐搜索：</p>
+<pre><code class="language-text">http
+https
+token
+secret
+password
+debug
+gm
+cheat
+coin
+diamond
+iap
+purchase
+sign
+</code></pre>
+<p>重点观察：</p>
+<ul>
+<li>类名是否暴露真实业务，例如 <code>AddDiamondService</code>。</li>
+<li>方法名是否暴露敏感能力，例如 <code>UnlockAllSkins</code>。</li>
+<li>字符串是否包含测试域名、后台接口、临时 token。</li>
+<li>逻辑是否完全由客户端决定，例如金币增加、抽卡结果、支付成功。</li>
+<li><code>Debug.Log</code> 是否打印用户 ID、token、订单号。</li>
+</ul>
+<p>右键常用功能：</p>
+<pre><code class="language-text">Analyze
+</code></pre>
+<p>可以查看：</p>
+<ul>
+<li><code>Used By</code>：谁调用了这个方法。</li>
+<li><code>Uses</code>：这个方法调用了谁。</li>
+<li>字段在哪里被读写。</li>
+</ul>
+<h3 id="33--dnspyex">3.3 使用 dnSpyEx</h3>
+<p>操作步骤：</p>
+<ol>
+<li>打开 dnSpyEx。</li>
+<li><code>File &gt; Open</code>，选择 <code>Assembly-CSharp.dll</code>。</li>
+<li><code>Ctrl + Shift + K</code> 全局搜索类型、方法、字符串。</li>
+<li>点到方法后，看右侧反编译结果。</li>
+<li>右键方法选择 <code>Analyze</code>，看调用链。</li>
+</ol>
+<p>本文只建议把 dnSpyEx 当只读分析工具使用，不写补丁、不改第三方程序、不绕过授权。</p>
+<h3 id="34-">3.4 命令行辅助搜索</h3>
+<p>先用 <code>strings</code> 提取明显字符串：</p>
+<pre><code class="language-bash">strings -a Assembly-CSharp.dll | rg -i &quot;http|token|secret|password|debug|gm|cheat|coin|diamond|purchase&quot;
+</code></pre>
+<p>把结果保存为证据：</p>
+<pre><code class="language-bash">strings -a Assembly-CSharp.dll \
+  | rg -i &quot;http|token|secret|password|debug|gm|cheat|coin|diamond|purchase&quot; \
+  &gt; reports/mono-sensitive-strings.txt
+</code></pre>
+<p>报告写法：</p>
+<pre><code class="language-text">发现：Assembly-CSharp.dll 中包含 https://test-api.example.local
+风险：测试接口地址被正式包携带，可能暴露内部环境。
+证据：reports/mono-sensitive-strings.txt 第 12 行。
+建议：正式构建使用环境配置注入，不在客户端硬编码测试域名。
+</code></pre>
+<h2 id="4-il2cpp-il2cppdumpercpp2ilghidra">4. IL2CPP 项目分析：Il2CppDumper、Cpp2IL、Ghidra</h2>
+<p>IL2CPP 比 Mono 更难直接阅读，但它不是安全边界。类名、方法名、字符串、metadata 仍可能泄露信息。</p>
+<h3 id="41-">4.1 找到关键文件</h3>
+<p>Windows：</p>
+<pre><code class="language-text">GameAssembly.dll
+SecurityLabGame_Data/Managed/Metadata/global-metadata.dat
+</code></pre>
+<p>Android：</p>
+<pre><code class="language-text">lib/arm64-v8a/libil2cpp.so
+assets/bin/Data/Managed/Metadata/global-metadata.dat
+</code></pre>
+<p>复制到工作目录：</p>
+<pre><code class="language-bash">mkdir -p outputs/il2cpp
+cp GameAssembly.dll outputs/il2cpp/
+cp SecurityLabGame_Data/Managed/Metadata/global-metadata.dat outputs/il2cpp/
+</code></pre>
+<p>Android 示例：</p>
+<pre><code class="language-bash">mkdir -p outputs/il2cpp
+cp outputs/SecurityLabGame_apk/lib/arm64-v8a/libil2cpp.so outputs/il2cpp/
+cp outputs/SecurityLabGame_apk/assets/bin/Data/Managed/Metadata/global-metadata.dat outputs/il2cpp/
+</code></pre>
+<h3 id="42--il2cppdumper">4.2 使用 Il2CppDumper</h3>
+<p>Windows 示例：</p>
+<pre><code class="language-bash">Il2CppDumper GameAssembly.dll global-metadata.dat outputs/il2cpp/dumper
+</code></pre>
+<p>Android 示例：</p>
+<pre><code class="language-bash">Il2CppDumper libil2cpp.so global-metadata.dat outputs/il2cpp/dumper
+</code></pre>
+<p>常见输出：</p>
+<pre><code class="language-text">DummyDll/
+il2cpp.h
+script.json
+stringliteral.json
+ghidra.py 或 ida.py
+</code></pre>
+<p>怎么看：</p>
+<ul>
+<li><code>DummyDll</code>：用 ILSpy 打开，查看类、方法、字段轮廓。</li>
+<li><code>stringliteral.json</code>：搜索接口、敏感词、配置名。</li>
+<li><code>il2cpp.h</code>：给 Ghidra/IDA 辅助理解结构。</li>
+<li><code>ghidra.py</code>：部分版本会生成导入符号的脚本。</li>
+</ul>
+<p>搜索字符串：</p>
+<pre><code class="language-bash">rg -i &quot;http|token|secret|debug|gm|coin|diamond|purchase&quot; outputs/il2cpp/dumper
+</code></pre>
+<h3 id="43--cpp2il">4.3 使用 Cpp2IL</h3>
+<p>Cpp2IL 是另一种 IL2CPP 分析工具。不同版本参数可能略有变化，先看帮助：</p>
+<pre><code class="language-bash">Cpp2IL --help
+</code></pre>
+<p>常见思路：</p>
+<pre><code class="language-bash">Cpp2IL --game-path ./SecurityLabGame --output-to outputs/cpp2il
+</code></pre>
+<p>输出后重点看：</p>
+<ul>
+<li>还原出的类型名和方法名。</li>
+<li>字符串引用。</li>
+<li>是否有调试类、测试入口、后台接口常量。</li>
+</ul>
+<p>如果 Cpp2IL 和 Il2CppDumper 结果不一致，以“能稳定复现的证据”为准，不要只凭一个工具下结论。</p>
+<h3 id="44--ghidra">4.4 使用 Ghidra</h3>
+<p>Ghidra 适合看 IL2CPP 生成的本地代码结构。</p>
+<p>操作步骤：</p>
+<ol>
+<li>打开 Ghidra。</li>
+<li><code>File &gt; New Project</code>，创建非共享项目。</li>
+<li><code>File &gt; Import File</code>。</li>
+<li>Windows 选 <code>GameAssembly.dll</code>；Android 选 <code>libil2cpp.so</code>。</li>
+<li>双击导入的程序。</li>
+<li>弹出分析提示时选择 <code>Yes</code>，保留默认分析项。</li>
+<li>等待 Auto Analysis 完成。</li>
+<li>如果 Il2CppDumper 生成了 <code>ghidra.py</code>，在 <code>Window &gt; Script Manager</code> 中添加脚本目录并运行。</li>
+</ol>
+<p>常用视图：</p>
+<pre><code class="language-text">Symbol Tree
+Defined Strings
+Decompile
+Listing
+Function Graph
+</code></pre>
+<p>常用搜索：</p>
+<pre><code class="language-text">Search &gt; For Strings
+Search &gt; Program Text
+Search &gt; Memory
+</code></pre>
+<p>建议搜索：</p>
+<pre><code class="language-text">Login
+Save
+Purchase
+Diamond
+Coin
+Debug
+GM
+http
+</code></pre>
+<p>分析目标：</p>
+<ul>
+<li>确认敏感字符串是否进入二进制。</li>
+<li>确认类名、方法名是否暴露核心业务。</li>
+<li>确认 Release 包是否仍有调试分支。</li>
+<li>确认 native 插件是否包含密钥或测试接口。</li>
+</ul>
+<p>不要在本文范围内做二进制补丁、授权绕过、反作弊规避或线上作弊。</p>
+<h2 id="5-unity-assetstudio--assetripper">5. Unity 资源分析：AssetStudio 和 AssetRipper</h2>
+<h3 id="51-">5.1 资源位置</h3>
+<p>Windows：</p>
+<pre><code class="language-text">SecurityLabGame_Data/resources.assets
+SecurityLabGame_Data/sharedassets*.assets
+SecurityLabGame_Data/StreamingAssets/
+</code></pre>
+<p>Android：</p>
+<pre><code class="language-text">assets/bin/Data/resources.assets
+assets/bin/Data/sharedassets*.assets
+assets/bin/Data/StreamingAssets/
+</code></pre>
+<p>Addressables / AssetBundle 常见位置：</p>
+<pre><code class="language-text">StreamingAssets/aa/
+AssetBundles/
+remote catalog
+</code></pre>
+<h3 id="52--assetstudio">5.2 使用 AssetStudio</h3>
+<p>操作步骤：</p>
+<ol>
+<li>打开 AssetStudio。</li>
+<li><code>File &gt; Load Folder</code>，选择整个 <code>*_Data</code> 目录，Android 选择 <code>assets/bin/Data</code>。</li>
+<li>等待索引完成。</li>
+<li>切到 <code>Asset List</code>。</li>
+<li>用 <code>Type</code> 过滤资源类型。</li>
+</ol>
+<p>常看类型：</p>
+<pre><code class="language-text">TextAsset
+Texture2D
+Sprite
+AudioClip
+Mesh
+MonoBehaviour
+AnimationClip
+</code></pre>
+<p>检查点：</p>
+<ul>
+<li><code>TextAsset</code> 是否包含配置表、概率、活动数据、测试域名。</li>
+<li><code>Texture2D</code> 是否包含未上线角色、活动图、运营素材。</li>
+<li><code>AudioClip</code> 是否包含未上线剧情。</li>
+<li><code>MonoBehaviour</code> 序列化字段是否暴露调试开关。</li>
+<li>AssetBundle 名称是否暴露未上线内容。</li>
+</ul>
+<p>导出证据：</p>
+<pre><code class="language-text">右键资源 &gt; Export selected assets
+</code></pre>
+<p>报告写法：</p>
+<pre><code class="language-text">发现：正式包包含 TextAsset activity_2026_summer_boss_config。
+风险：未上线活动和 Boss 名称提前暴露。
+建议：活动资源改为远程分包，并在活动开启前下发。
+</code></pre>
+<h3 id="53--assetripper">5.3 使用 AssetRipper</h3>
+<p>AssetRipper 对自有项目很适合做“包体内容盘点”。</p>
+<p>操作步骤：</p>
+<ol>
+<li>打开 AssetRipper。</li>
+<li>选择 <code>Open Folder</code>。</li>
+<li>选择 <code>SecurityLabGame_Data</code> 或 Android 的 <code>assets/bin/Data</code>。</li>
+<li>加载完成后选择导出目录，例如 <code>outputs/assetripper-export</code>。</li>
+<li>导出后用编辑器搜索。</li>
+</ol>
+<p>命令行搜索：</p>
+<pre><code class="language-bash">rg -i &quot;http|token|debug|gm|coin|diamond|purchase|test&quot; outputs/assetripper-export
+</code></pre>
+<p>注意：AssetRipper 恢复出的工程不是原工程，结论应写成“资源暴露风险”，不要把导出结果当作源码原貌。</p>
+<h2 id="6-android-jadxapktooladb">6. Android 层分析：jadx、apktool、adb</h2>
+<p>Unity 游戏也有 Android 壳层，里面可能有 SDK、权限、深链、广告、支付、推送配置。</p>
+<h3 id="61--jadx-gui">6.1 使用 jadx-gui</h3>
+<p>操作步骤：</p>
+<ol>
+<li>打开 <code>jadx-gui</code>。</li>
+<li>拖入 <code>SecurityLabGame.apk</code>。</li>
+<li>等待反编译完成。</li>
+<li>左侧查看 <code>AndroidManifest.xml</code>、<code>resources.arsc</code>、<code>com.xxx</code> 包名。</li>
+<li>全局搜索关键词。</li>
+</ol>
+<p>推荐搜索：</p>
+<pre><code class="language-text">api
+secret
+token
+appkey
+appid
+channel
+debug
+payment
+purchase
+</code></pre>
+<p>重点检查：</p>
+<ul>
+<li>SDK 初始化参数是否硬编码。</li>
+<li>AndroidManifest 是否有多余权限。</li>
+<li><code>android:debuggable</code> 是否为 <code>true</code>。</li>
+<li>是否暴露不该导出的 Activity、Service、Provider、Receiver。</li>
+<li>渠道包配置是否混入测试环境。</li>
+</ul>
+<h3 id="62--apktool">6.2 使用 apktool</h3>
+<p>解包：</p>
+<pre><code class="language-bash">apktool d SecurityLabGame.apk -o outputs/apktool-SecurityLabGame
+</code></pre>
+<p>查看 Manifest：</p>
+<pre><code class="language-bash">sed -n '1,220p' outputs/apktool-SecurityLabGame/AndroidManifest.xml
+</code></pre>
+<p>搜索配置：</p>
+<pre><code class="language-bash">rg -i &quot;debuggable|exported|permission|http|secret|token|appkey&quot; outputs/apktool-SecurityLabGame
+</code></pre>
+<p>本文只讲解包检查，不讲重打包、绕签名、绕支付或绕反作弊。</p>
+<h3 id="63--adb-">6.3 使用 adb 看日志</h3>
+<p>安装自有测试包：</p>
+<pre><code class="language-bash">adb install -r SecurityLabGame.apk
+</code></pre>
+<p>清空日志：</p>
+<pre><code class="language-bash">adb logcat -c
+</code></pre>
+<p>只看 Unity 日志：</p>
+<pre><code class="language-bash">adb logcat Unity:D '*:S'
+</code></pre>
+<p>把日志保存下来：</p>
+<pre><code class="language-bash">adb logcat Unity:D '*:S' &gt; reports/unity-logcat.txt
+</code></pre>
+<p>检查敏感日志：</p>
+<pre><code class="language-bash">rg -i &quot;token|secret|password|order|purchase|uid|debug|gm&quot; reports/unity-logcat.txt
+</code></pre>
+<p>报告写法：</p>
+<pre><code class="language-text">发现：登录成功后日志输出 accessToken。
+风险：测试机、崩溃平台或第三方日志 SDK 可能收集敏感凭证。
+建议：Release 包删除该日志，日志系统默认脱敏。
+</code></pre>
+<h2 id="7-mitmproxy--charles">7. 网络检查：mitmproxy 或 Charles</h2>
+<p>只对自己的 App 和自己的服务器做抓包检查。不要讲或做证书锁定绕过。</p>
+<h3 id="71-mitmproxy-">7.1 mitmproxy 基本流程</h3>
+<p>电脑启动代理：</p>
+<pre><code class="language-bash">mitmweb --listen-host 0.0.0.0 --listen-port 8080
+</code></pre>
+<p>手机设置 Wi-Fi 代理：</p>
+<pre><code class="language-text">代理主机：电脑 IP
+代理端口：8080
+</code></pre>
+<p>测试目标：</p>
+<ul>
+<li>请求是否全部走 HTTPS。</li>
+<li>URL 是否带 token、手机号、邮箱等敏感参数。</li>
+<li>是否有时间戳、nonce、签名。</li>
+<li>重放同一个请求是否会被服务端拒绝。</li>
+<li>客户端传来的金币、道具、价格是否被服务端重新校验。</li>
+</ul>
+<h3 id="72-charles-">7.2 Charles 基本流程</h3>
+<p>操作步骤：</p>
+<ol>
+<li><code>Proxy &gt; Proxy Settings</code>，确认 HTTP Proxy 端口。</li>
+<li>手机连接同一 Wi-Fi。</li>
+<li>手机 Wi-Fi 代理指向电脑 IP 和 Charles 端口。</li>
+<li><code>Proxy &gt; SSL Proxying Settings</code>，只添加自己的测试域名。</li>
+<li>运行自有测试包，观察请求。</li>
+</ol>
+<p>报告写法：</p>
+<pre><code class="language-text">发现：领取奖励接口只接收客户端上传 rewardCount。
+风险：客户端参数可被篡改，服务端没有按配置重新计算奖励。
+建议：客户端只上报事件，服务端根据关卡、任务、账号状态计算奖励。
+</code></pre>
+<h2 id="8-">8. 输出逆向分析报告</h2>
+<p>推荐目录：</p>
+<pre><code class="language-text">reports/
+  01-package-structure.md
+  02-mono-analysis.md
+  03-il2cpp-analysis.md
+  04-assets-analysis.md
+  05-android-analysis.md
+  06-network-analysis.md
+  99-summary.md
+</code></pre>
+<p>单条问题模板：</p>
+<pre><code class="language-text">编号：U-SEC-001
+标题：正式包包含测试接口地址
+等级：中
+影响范围：Android 1.0.0 Release
+证据：
+- Assembly-CSharp.dll strings 结果包含 https://test-api.example.local
+- jadx 搜索结果显示 TestConfig.TEST_API
+风险：
+- 暴露内部服务命名和测试环境
+- 可能被误连或被扫描
+建议：
+- 正式包构建时从 CI 注入环境配置
+- 客户端不携带测试环境地址
+- 服务端限制测试环境访问来源
+复测：
+- 重新构建后 strings / jadx / AssetStudio 均未检出测试域名
+</code></pre>
+<h2 id="9-">9. 防逆向与防篡改总原则</h2>
+<p><img src="/post-images/unity-defense-layers.svg" alt="Unity 防逆向分层加固" /></p>
+<p>客户端防护只能提高成本，不能保证绝对安全。真正重要的判断必须由服务端完成。</p>
+<p>不要把这些东西交给客户端最终决定：</p>
+<ul>
+<li>支付是否成功。</li>
+<li>金币、钻石、体力、道具数量。</li>
+<li>抽卡结果和掉落结果。</li>
+<li>排行榜成绩。</li>
+<li>PVP 结算。</li>
+<li>活动资格。</li>
+<li>封禁和解封。</li>
+</ul>
+<p>客户端可以做：</p>
+<ul>
+<li>展示 UI。</li>
+<li>收集玩家输入。</li>
+<li>播放动画。</li>
+<li>本地预测。</li>
+<li>缓存非关键数据。</li>
+<li>做基础完整性检查。</li>
+</ul>
+<p>服务端必须做：</p>
+<ul>
+<li>重新计算奖励。</li>
+<li>校验订单。</li>
+<li>校验签名。</li>
+<li>校验 nonce 和时间戳。</li>
+<li>校验用户状态。</li>
+<li>校验排行榜数据合理性。</li>
+<li>记录异常行为。</li>
+</ul>
+<h2 id="10-unity-">10. Unity 构建层防护</h2>
+<h3 id="101-player-settings">10.1 Player Settings</h3>
+<p>路径：</p>
+<pre><code class="language-text">Edit &gt; Project Settings &gt; Player
+</code></pre>
+<p>正式包建议：</p>
+<pre><code class="language-text">Development Build: 关闭
+Script Debugging: 关闭
+Wait For Managed Debugger: 关闭
+Scripting Backend: IL2CPP
+Managed Stripping Level: Medium 或 High
+Strip Engine Code: 开启，先完整回归测试
+Stack Trace: Release 下尽量降低详细程度
+</code></pre>
+<p>Unity 官方说明：Managed Code Stripping 会在构建过程中移除未使用或不可达的托管代码，可在 Editor 中配置裁剪级别，也可以通过注解或 <code>link.xml</code> 保留必要代码。参考 Unity Manual：<code>https://docs.unity3d.com/Manual/managed-code-stripping.html</code>。</p>
+<h3 id="102-">10.2 检查构建产物</h3>
+<p>构建完成后做一次“自查逆向”：</p>
+<pre><code class="language-bash">strings -a GameAssembly.dll | rg -i &quot;secret|token|password|gm|cheat|debug|http://|test-api&quot;
+</code></pre>
+<p>Android：</p>
+<pre><code class="language-bash">unzip -l app-release.apk | rg &quot;Assembly-CSharp|libil2cpp|global-metadata&quot;
+strings -a outputs/SecurityLabGame_apk/lib/arm64-v8a/libil2cpp.so | rg -i &quot;secret|token|password|gm|debug|test-api&quot;
+strings -a outputs/SecurityLabGame_apk/assets/bin/Data/Managed/Metadata/global-metadata.dat | rg -i &quot;AddDiamond|UnlockAll|DebugPanel|GM&quot;
+</code></pre>
+<p>如果还能搜到非常直白的业务词，说明命名、日志、配置或裁剪策略还需要处理。</p>
+<h2 id="11--1">11. 代码层防护</h2>
+<h3 id="111--release-">11.1 移除 Release 调试入口</h3>
+<p>错误写法：</p>
+<pre><code class="language-csharp">public class DebugPanel : MonoBehaviour
+{
+    public void AddDiamond()
+    {
+        PlayerData.Diamond += 9999;
+    }
+}
+</code></pre>
+<p>推荐写法：</p>
+<pre><code class="language-csharp">#if UNITY_EDITOR || DEVELOPMENT_BUILD
+public class DebugPanel : MonoBehaviour
+{
+    public void Open()
+    {
+        gameObject.SetActive(true);
+    }
+}
+#endif
+</code></pre>
+<p>再用命令检查：</p>
+<pre><code class="language-bash">rg -n &quot;DebugPanel|AddDiamond|GM|Cheat|TestAccount&quot; Assets
+</code></pre>
+<h3 id="112-">11.2 日志脱敏</h3>
+<p>错误写法：</p>
+<pre><code class="language-csharp">Debug.Log($&quot;login success uid={uid}, token={token}&quot;);
+</code></pre>
+<p>推荐写法：</p>
+<pre><code class="language-csharp">SafeLog.Info(&quot;login success uid={0}&quot;, MaskUserId(uid));
+</code></pre>
+<p>示例：</p>
+<pre><code class="language-csharp">public static class SafeLog
+{
+    [System.Diagnostics.Conditional(&quot;UNITY_EDITOR&quot;)]
+    [System.Diagnostics.Conditional(&quot;DEVELOPMENT_BUILD&quot;)]
+    public static void Info(string format, params object[] args)
+    {
+        UnityEngine.Debug.LogFormat(format, args);
+    }
+}
+</code></pre>
+<p>检查：</p>
+<pre><code class="language-bash">rg -n &quot;Debug\\.Log|Debug\\.LogWarning|Debug\\.LogError|print\\(&quot; Assets
+</code></pre>
+<p>不是所有 <code>Debug.LogError</code> 都必须删除，但要确认不会输出 token、订单号、手机号、邮箱、身份证、后台地址。</p>
+<h3 id="113-">11.3 混淆工具</h3>
+<p>可选工具：</p>
+<ul>
+<li>BeeByte Obfuscator：Unity 生态常见商业混淆工具。</li>
+<li>Eazfuscator.NET：.NET 混淆工具，适用性需要按 Unity 版本验证。</li>
+<li>自研命名混淆：对业务层类名、方法名、字段名做构建期映射。</li>
+</ul>
+<p>混淆前先列白名单：</p>
+<ul>
+<li>Unity 序列化字段。</li>
+<li>反射调用的类和方法。</li>
+<li>JSON 序列化字段。</li>
+<li>Lua/JS/热更新入口。</li>
+<li>SDK 回调方法。</li>
+<li><code>SendMessage</code> 调用的方法。</li>
+</ul>
+<p>混淆后必测：</p>
+<ul>
+<li>登录。</li>
+<li>支付。</li>
+<li>新手引导。</li>
+<li>背包。</li>
+<li>战斗。</li>
+<li>热更新。</li>
+<li>Addressables 加载。</li>
+<li>崩溃上报。</li>
+</ul>
+<p>混淆不是为了隐藏密钥。密钥一旦放在客户端，就应该默认会被拿到。</p>
+<h3 id="114-linkxml--preserve">11.4 link.xml 和 Preserve</h3>
+<p>裁剪级别升高后，反射和热更新容易出问题。可以用 <code>Preserve</code> 或 <code>link.xml</code> 保留必要类型。</p>
+<p>代码：</p>
+<pre><code class="language-csharp">using UnityEngine.Scripting;
+
+[Preserve]
+public class HotfixEntry
+{
+    [Preserve]
+    public void Run()
+    {
+    }
+}
+</code></pre>
+<p><code>Assets/link.xml</code>：</p>
+<pre><code class="language-xml">&lt;linker&gt;
+  &lt;assembly fullname=&quot;Assembly-CSharp&quot;&gt;
+    &lt;type fullname=&quot;Game.HotfixEntry&quot; preserve=&quot;all&quot; /&gt;
+  &lt;/assembly&gt;
+&lt;/linker&gt;
+</code></pre>
+<p>检查思路：</p>
+<pre><code class="language-text">提高 Managed Stripping Level
+打包
+跑自动化和核心流程
+如果反射入口丢失，再用 Preserve 或 link.xml 精确保留
+</code></pre>
+<h2 id="12--1">12. 资源层防护</h2>
+<h3 id="121-">12.1 不提前下发未上线资源</h3>
+<p>最有效的资源防泄露方法不是加密，而是不把资源放进包里。</p>
+<p>建议：</p>
+<ul>
+<li>未上线角色不进当前包。</li>
+<li>活动资源按活动时间远程下发。</li>
+<li>剧情文本和语音分版本控制。</li>
+<li>测试图、废弃图、运营草稿不进正式包。</li>
+<li>AssetBundle 名称不要暴露真实活动名。</li>
+</ul>
+<p>检查：</p>
+<pre><code class="language-bash">rg -i &quot;summer|boss|secret|test|debug|gm|activity&quot; outputs/assetripper-export
+</code></pre>
+<h3 id="122-assetbundle-">12.2 AssetBundle 完整性</h3>
+<p>建议保存：</p>
+<pre><code class="language-text">bundleName
+version
+crc
+hash
+size
+downloadUrl
+</code></pre>
+<p>客户端加载前检查：</p>
+<ul>
+<li>下载大小是否正确。</li>
+<li>Hash 是否匹配。</li>
+<li>版本是否匹配。</li>
+<li>Catalog 是否来自可信服务端。</li>
+</ul>
+<p>注意：CRC/Hash 是完整性校验，不是保密。资源只要到了客户端，就有被提取的可能。</p>
+<h2 id="13-">13. 存档和本地数据防护</h2>
+<h3 id="131-">13.1 本地存档最低要求</h3>
+<p>存档建议包含：</p>
+<pre><code class="language-json">{
+  &quot;userId&quot;: &quot;10001&quot;,
+  &quot;level&quot;: 12,
+  &quot;inventory&quot;: [],
+  &quot;timestamp&quot;: 1781080200,
+  &quot;version&quot;: 3
+}
+</code></pre>
+<p>再加签名：</p>
+<pre><code class="language-text">signature = HMAC(sessionKey, canonicalJson(payload))
+</code></pre>
+<p>客户端发送给服务端时：</p>
+<pre><code class="language-text">payload + signature + nonce + timestamp
+</code></pre>
+<p>服务端验证：</p>
+<ul>
+<li>签名是否正确。</li>
+<li>时间戳是否过期。</li>
+<li>nonce 是否用过。</li>
+<li>userId 是否匹配当前会话。</li>
+<li>数据变化是否合理。</li>
+</ul>
+<h3 id="132-c-hmac-">13.2 C# HMAC 示例</h3>
+<p>这个示例用于说明格式。正式项目的关键密钥应由服务端生成和校验，不要把长期密钥硬编码在客户端。</p>
+<pre><code class="language-csharp">using System;
+using System.Security.Cryptography;
+using System.Text;
+
+public static class RequestSigner
+{
+    public static string HmacSha256(string message, string sessionKey)
+    {
+        byte[] keyBytes = Encoding.UTF8.GetBytes(sessionKey);
+        byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+
+        using var hmac = new HMACSHA256(keyBytes);
+        byte[] hash = hmac.ComputeHash(messageBytes);
+        return Convert.ToBase64String(hash);
+    }
+}
+</code></pre>
+<p>规范化字符串示例：</p>
+<pre><code class="language-text">POST
+/api/reward/claim
+nonce=8f2b...
+timestamp=1781080200
+bodyHash=...
+</code></pre>
+<p>服务端不要相信客户端传来的 <code>rewardCount</code>、<code>price</code>、<code>diamond</code>，这些值必须重新计算。</p>
+<h2 id="14-">14. 通信和平台完整性</h2>
+<h3 id="141-">14.1 请求签名</h3>
+<p>推荐字段：</p>
+<pre><code class="language-text">timestamp
+nonce
+bodyHash
+sessionId
+signature
+</code></pre>
+<p>服务端策略：</p>
+<ul>
+<li><code>timestamp</code> 超过窗口直接拒绝。</li>
+<li><code>nonce</code> 已使用直接拒绝。</li>
+<li><code>bodyHash</code> 不匹配直接拒绝。</li>
+<li><code>sessionId</code> 失效直接拒绝。</li>
+<li>账号状态异常进入风控队列。</li>
+</ul>
+<h3 id="142-android-play-integrity">14.2 Android Play Integrity</h3>
+<p>Android 可以接入 Google Play Integrity API。基本思路：</p>
+<pre><code class="language-text">客户端请求 integrity token
+客户端把 token 发给服务端
+服务端调用 Google API 验证
+服务端根据 verdict 参与风控决策
+</code></pre>
+<p>不要只在客户端判断，也不要把完整性结果当成唯一封禁依据。官方文档：<code>https://developer.android.com/google/play/integrity</code>。</p>
+<h3 id="143-ios-app-attest--devicecheck">14.3 iOS App Attest / DeviceCheck</h3>
+<p>iOS 可以考虑 App Attest 或 DeviceCheck。基本思路同样是：</p>
+<pre><code class="language-text">设备生成证明
+客户端提交证明
+服务端验证证明
+服务端把结果纳入风控
+</code></pre>
+<p>客户端结果只能作为信号，最终决策在服务端。</p>
+<h2 id="15-android-">15. Android 发布层防护</h2>
+<h3 id="151--debuggable">15.1 检查 debuggable</h3>
+<p>用 apktool 解包后：</p>
+<pre><code class="language-bash">rg -n &quot;debuggable&quot; outputs/apktool-SecurityLabGame/AndroidManifest.xml
+</code></pre>
+<p>正式包不应出现：</p>
+<pre><code class="language-xml">android:debuggable=&quot;true&quot;
+</code></pre>
+<h3 id="152-">15.2 检查签名</h3>
+<p>使用 Android SDK 的 <code>apksigner</code>：</p>
+<pre><code class="language-bash">apksigner verify --verbose --print-certs app-release.apk
+</code></pre>
+<p>检查点：</p>
+<ul>
+<li>是否已签名。</li>
+<li>是否使用正确 release 证书。</li>
+<li>是否意外使用 debug keystore。</li>
+</ul>
+<h3 id="153-r8--proguard">15.3 R8 / ProGuard</h3>
+<p>Unity Android 层的 Java/Kotlin 代码可以使用 R8/ProGuard。路径通常在：</p>
+<pre><code class="language-text">Edit &gt; Project Settings &gt; Player &gt; Android &gt; Publishing Settings
+</code></pre>
+<p>可开启：</p>
+<pre><code class="language-text">Minify Release
+Custom Proguard File
+</code></pre>
+<p>自定义规则文件常见位置：</p>
+<pre><code class="language-text">Assets/Plugins/Android/proguard-user.txt
+</code></pre>
+<p>注意：</p>
+<ul>
+<li>ProGuard 主要保护 Java/Kotlin 层，不保护 C# IL2CPP 本体。</li>
+<li>三方 SDK 需要保留规则，否则可能运行时崩溃。</li>
+<li>开启后必须跑支付、登录、广告、推送、分享等 SDK 流程。</li>
+</ul>
+<h2 id="16-ci-">16. CI 中加入安全检查</h2>
+<p>可以在打包流水线后加入自动检查：</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+set -euo pipefail
+
+APK=&quot;$1&quot;
+OUT=&quot;outputs/security-check&quot;
+
+rm -rf &quot;$OUT&quot;
+mkdir -p &quot;$OUT&quot;
+unzip -q &quot;$APK&quot; -d &quot;$OUT/apk&quot;
+
+echo &quot;[1] check manifest&quot;
+if rg -n 'android:debuggable=&quot;true&quot;' &quot;$OUT/apk&quot;; then
+  echo &quot;Release APK is debuggable&quot;
+  exit 1
+fi
+
+echo &quot;[2] check sensitive strings&quot;
+if strings -a &quot;$OUT/apk/lib/arm64-v8a/libil2cpp.so&quot; | rg -i &quot;test-api|secret|password|gm|cheat&quot;; then
+  echo &quot;Sensitive strings found in libil2cpp.so&quot;
+  exit 1
+fi
+
+echo &quot;[3] done&quot;
+</code></pre>
+<p>按项目调整关键词，不要把正常业务词误判为失败。</p>
+<h2 id="17-">17. 最终检查清单</h2>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>检查项</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>构建</td>
+<td>关闭 Development Build</td>
+<td>Unity Editor</td>
+</tr>
+<tr>
+<td>构建</td>
+<td>关闭 Script Debugging</td>
+<td>Unity Editor</td>
+</tr>
+<tr>
+<td>构建</td>
+<td>使用 IL2CPP</td>
+<td>Unity Editor</td>
+</tr>
+<tr>
+<td>构建</td>
+<td>Managed Stripping Level 已测试</td>
+<td>Unity Editor</td>
+</tr>
+<tr>
+<td>代码</td>
+<td>Release 无 GM / Cheat / DebugPanel</td>
+<td>rg / ILSpy / Il2CppDumper</td>
+</tr>
+<tr>
+<td>代码</td>
+<td>无硬编码长期密钥</td>
+<td>rg / strings</td>
+</tr>
+<tr>
+<td>代码</td>
+<td>日志不输出 token / 订单号</td>
+<td>adb logcat / rg</td>
+</tr>
+<tr>
+<td>资源</td>
+<td>未上线资源不进包</td>
+<td>AssetStudio / AssetRipper</td>
+</tr>
+<tr>
+<td>资源</td>
+<td>AssetBundle 有版本和 Hash</td>
+<td>自研工具 / CI</td>
+</tr>
+<tr>
+<td>Android</td>
+<td><code>debuggable</code> 为 false</td>
+<td>apktool</td>
+</tr>
+<tr>
+<td>Android</td>
+<td>使用 release 签名</td>
+<td>apksigner</td>
+</tr>
+<tr>
+<td>Android</td>
+<td>Java 层开启合适混淆</td>
+<td>R8 / ProGuard</td>
+</tr>
+<tr>
+<td>网络</td>
+<td>HTTPS + nonce + timestamp</td>
+<td>mitmproxy / Charles</td>
+</tr>
+<tr>
+<td>服务端</td>
+<td>支付走平台回调</td>
+<td>服务端日志</td>
+</tr>
+<tr>
+<td>服务端</td>
+<td>货币、道具、排行榜服务端校验</td>
+<td>服务端测试</td>
+</tr>
+<tr>
+<td>风控</td>
+<td>Play Integrity / App Attest 只作为信号</td>
+<td>服务端风控</td>
+</tr>
+</tbody>
+</table>
+<h2 id="18-">18. 总结</h2>
+<p>逆向教程的价值不是学会破解，而是看清自己的包在别人眼里是什么样子。Mono 包最容易暴露 C# 逻辑，IL2CPP 能提高分析成本但不能保密，资源包只要到达客户端就可能被提取。</p>
+<p>防护的正确顺序：</p>
+<pre><code class="language-text">服务端权威 &gt; 不下发敏感内容 &gt; Release 构建配置 &gt; 日志清理 &gt; 混淆裁剪 &gt; 完整性检查 &gt; 风控
+</code></pre>
+<p>做完防护以后，再用本文前半部分的工具重新分析一遍自己的正式包。能被工具轻易搜到的东西，线上用户也有机会看到。</p>
+
+  </div>
+
+  
+  <nav class="post-nav">
+    
+    <a href="/post/unity-senior-developer-skills/" class="post-nav-card post-nav-card--prev">
+      
+      <div class="post-nav-card__img">
+        <img src="/post-images/unity-senior-developer-skill-map.svg" alt="Unity 开发高级/资深技能总览" loading="lazy" />
+      </div>
+      
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">上一篇</span>
+        <span class="post-nav-card__title">Unity 开发高级/资深技能总览</span>
+      </div>
+      <span class="post-nav-card__arrow">&larr;</span>
+    </a>
+    
+    
+    <a href="/post/windows-ming-ling/" class="post-nav-card post-nav-card--next">
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">下一篇</span>
+        <span class="post-nav-card__title">Windows 命令</span>
+      </div>
+      
+      <span class="post-nav-card__arrow">&rarr;</span>
+    </a>
+    
+  </nav>
+
+  
+  
+
+
+  
+    <section class="comment-section">
+  <h2 class="comment-section__title">评论</h2>
+  <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    var gitalk = new Gitalk({
+      clientID: 'ca79a66585e72af3bff6',
+      clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+      repo: 'zhoujun2303.github.io',
+      owner: 'zhoujun2303',
+      admin: ['zhoujun2303'],
+      id: location.pathname,
+      distractionFreeMode: false
+    });
+    gitalk.render('gitalk-container');
+  </script>
+</section>
+
+  
+
+
+
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+
+    
+    
+    <nav class="footer-nav" aria-label="页脚导航">
+      
+      <a class="footer-nav__link" href="/">首页</a>
+      
+      <a class="footer-nav__link" href="/post">博客</a>
+      
+      <a class="footer-nav__link" href="/memos">闪念</a>
+      
+      <a class="footer-nav__link" href="/archives">归档</a>
+      
+      <a class="footer-nav__link" href="/tags">标签</a>
+      
+      <a class="footer-nav__link" href="/links">友链</a>
+      
+      <a class="footer-nav__link" href="/post/about">关于</a>
+      
+    </nav>
+    
+
+    
+    <div class="footer-social">
+      
+      
+      
+      <a class="footer-social__link" href="/feed.xml" aria-label="RSS">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6.18 15.64a2.18 2.18 0 110 4.36 2.18 2.18 0 010-4.36zM4 4.44A15.56 15.56 0 0119.56 20h-2.83A12.73 12.73 0 004 7.27V4.44zm0 5.66a9.9 9.9 0 019.9 9.9h-2.83A7.07 7.07 0 004 12.93V10.1z"/>
+        </svg>
+      </a>
+    </div>
+
+    
+    <div class="footer-copyright">
+      <p>&copy; 2026 长胖是个梦想. All rights reserved.</p>
+    </div>
+
+    
+    
+    <div class="footer-custom">
+      Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+    </div>
+    
+
+    
+    <div class="footer-powered">
+      <span>Powered by <a href="https://gridea.pro" target="_blank" rel="noopener noreferrer">Gridea Pro</a></span>
+    </div>
+
+  </div>
+</footer>
+
+  
+  <div class="search-overlay" id="searchOverlay" style="display:none;">
+  <div class="search-modal">
+    <div class="search-header">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索文章..." autocomplete="off" />
+      <span class="search-kbd">&#8984;K</span>
+      <button class="search-close" id="searchClose" type="button" aria-label="关闭搜索">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script src="/scripts/search.js"></script>
+  
+
+  
+
+  
+
+  
+
+<script>console.log("\n%c ✦ Gridea Pro v1.2.2 %c · Theme: flavor-theme v1.0.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+</body>
+</html>

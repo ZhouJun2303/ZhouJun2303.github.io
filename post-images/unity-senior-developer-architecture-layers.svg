@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-label="Unity 开发高级/资深能力分层图">
+  <rect width="1200" height="620" fill="#f8fafc"/>
+  <text x="600" y="58" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="34" font-weight="700" fill="#111827">Unity 开发高级/资深能力分层</text>
+  <g font-family="Arial, 'PingFang SC', sans-serif">
+    <rect x="140" y="110" width="920" height="90" rx="16" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="180" y="148" font-size="24" font-weight="700" fill="#1e40af">领导层</text>
+    <text x="180" y="178" font-size="17" fill="#1e3a8a">技术方案、风险控制、团队协作、发版节奏、事故复盘</text>
+
+    <rect x="140" y="225" width="920" height="90" rx="16" fill="#dcfce7" stroke="#16a34a"/>
+    <text x="180" y="263" font-size="24" font-weight="700" fill="#166534">质量层</text>
+    <text x="180" y="293" font-size="17" fill="#14532d">性能、内存、测试、日志、监控、安全、稳定性</text>
+
+    <rect x="140" y="340" width="920" height="90" rx="16" fill="#fef3c7" stroke="#d97706"/>
+    <text x="180" y="378" font-size="24" font-weight="700" fill="#92400e">框架层</text>
+    <text x="180" y="408" font-size="17" fill="#78350f">资源、UI、网络、配置、事件、对象池、构建、热更新</text>
+
+    <rect x="140" y="455" width="920" height="90" rx="16" fill="#fce7f3" stroke="#db2777"/>
+    <text x="180" y="493" font-size="24" font-weight="700" fill="#9d174d">基础层</text>
+    <text x="180" y="523" font-size="17" fill="#831843">Unity、C#、数据结构、生命周期、平台差异、调试工具</text>
+  </g>
+  <path d="M600 548 L600 110" stroke="#64748b" stroke-width="3" stroke-dasharray="10 10"/>
+  <text x="635" y="335" font-family="Arial, 'PingFang SC', sans-serif" font-size="16" fill="#475569">从基础能力向交付责任逐层上升</text>
+</svg>
+

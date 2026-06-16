@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-label="Unity 开发高级/资深技能地图">
+  <rect width="1200" height="720" fill="#f7fafc"/>
+  <rect x="40" y="40" width="1120" height="640" rx="28" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="600" y="98" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="36" font-weight="700" fill="#1f2937">Unity 开发高级/资深技能地图</text>
+  <text x="600" y="134" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="18" fill="#64748b">从写好模块，到把项目稳定交付上线</text>
+
+  <circle cx="600" cy="360" r="96" fill="#2563eb"/>
+  <text x="600" y="350" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="26" font-weight="700" fill="#ffffff">Unity 开发高级/资深</text>
+  <text x="600" y="386" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="16" fill="#dbeafe">架构 / 质量 / 交付</text>
+
+  <g font-family="Arial, 'PingFang SC', sans-serif" font-size="18" font-weight="700">
+    <rect x="90" y="185" width="250" height="86" rx="18" fill="#ecfeff" stroke="#06b6d4"/>
+    <text x="215" y="220" text-anchor="middle" fill="#155e75">引擎与 C#</text>
+    <text x="215" y="248" text-anchor="middle" font-size="14" font-weight="400" fill="#0f766e">生命周期 / GC / AOT</text>
+
+    <rect x="90" y="317" width="250" height="86" rx="18" fill="#fef3c7" stroke="#f59e0b"/>
+    <text x="215" y="352" text-anchor="middle" fill="#92400e">架构与规范</text>
+    <text x="215" y="380" text-anchor="middle" font-size="14" font-weight="400" fill="#92400e">模块边界 / Review / 文档</text>
+
+    <rect x="90" y="449" width="250" height="86" rx="18" fill="#f0fdf4" stroke="#22c55e"/>
+    <text x="215" y="484" text-anchor="middle" fill="#166534">资源与热更</text>
+    <text x="215" y="512" text-anchor="middle" font-size="14" font-weight="400" fill="#166534">Bundle / 下载 / 回滚</text>
+
+    <rect x="475" y="555" width="250" height="86" rx="18" fill="#fdf2f8" stroke="#ec4899"/>
+    <text x="600" y="590" text-anchor="middle" fill="#9d174d">UI 与玩法</text>
+    <text x="600" y="618" text-anchor="middle" font-size="14" font-weight="400" fill="#9d174d">面板 / 战斗 / 动画</text>
+
+    <rect x="860" y="449" width="250" height="86" rx="18" fill="#eef2ff" stroke="#6366f1"/>
+    <text x="985" y="484" text-anchor="middle" fill="#3730a3">网络与同步</text>
+    <text x="985" y="512" text-anchor="middle" font-size="14" font-weight="400" fill="#3730a3">协议 / 弱网 / AOI</text>
+
+    <rect x="860" y="317" width="250" height="86" rx="18" fill="#fff7ed" stroke="#f97316"/>
+    <text x="985" y="352" text-anchor="middle" fill="#9a3412">性能与包体</text>
+    <text x="985" y="380" text-anchor="middle" font-size="14" font-weight="400" fill="#9a3412">CPU / GPU / 内存</text>
+
+    <rect x="860" y="185" width="250" height="86" rx="18" fill="#f5f3ff" stroke="#8b5cf6"/>
+    <text x="985" y="220" text-anchor="middle" fill="#5b21b6">构建与平台</text>
+    <text x="985" y="248" text-anchor="middle" font-size="14" font-weight="400" fill="#5b21b6">CI / SDK / 发布</text>
+
+    <rect x="475" y="79" width="250" height="86" rx="18" fill="#f1f5f9" stroke="#64748b"/>
+    <text x="600" y="114" text-anchor="middle" fill="#334155">领导力与风险</text>
+    <text x="600" y="142" text-anchor="middle" font-size="14" font-weight="400" fill="#475569">评审 / 排期 / 复盘</text>
+  </g>
+
+  <g stroke="#94a3b8" stroke-width="3" fill="none">
+    <path d="M342 228 C430 230 470 270 512 315"/>
+    <path d="M342 360 C420 360 465 360 504 360"/>
+    <path d="M342 492 C430 488 470 450 512 405"/>
+    <path d="M600 555 L600 456"/>
+    <path d="M858 492 C770 488 730 450 688 405"/>
+    <path d="M858 360 C780 360 735 360 696 360"/>
+    <path d="M858 228 C770 230 730 270 688 315"/>
+    <path d="M600 166 L600 264"/>
+  </g>
+</svg>
+

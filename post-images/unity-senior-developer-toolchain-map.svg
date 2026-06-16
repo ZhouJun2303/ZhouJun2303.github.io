@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-label="Unity 开发高级/资深工具链地图">
+  <rect width="1200" height="720" fill="#f8fafc"/>
+  <rect x="42" y="42" width="1116" height="636" rx="28" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="600" y="94" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="36" font-weight="700" fill="#111827">Unity 开发高级/资深工具链地图</text>
+  <text x="600" y="128" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="17" fill="#64748b">工具不是越多越好，开发高级/资深要知道每类问题该用哪类工具验证</text>
+
+  <g font-family="Arial, 'PingFang SC', sans-serif">
+    <rect x="95" y="175" width="300" height="120" rx="18" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="245" y="214" text-anchor="middle" font-size="22" font-weight="700" fill="#1e40af">开发与架构</text>
+    <text x="245" y="247" text-anchor="middle" font-size="15" fill="#1e3a8a">Unity Editor / Rider / Git</text>
+    <text x="245" y="273" text-anchor="middle" font-size="15" fill="#1e3a8a">Mermaid / draw.io / Roslyn</text>
+
+    <rect x="450" y="175" width="300" height="120" rx="18" fill="#dcfce7" stroke="#16a34a"/>
+    <text x="600" y="214" text-anchor="middle" font-size="22" font-weight="700" fill="#166534">资源与热更</text>
+    <text x="600" y="247" text-anchor="middle" font-size="15" fill="#14532d">Addressables / Bundle Browser</text>
+    <text x="600" y="273" text-anchor="middle" font-size="15" fill="#14532d">HybridCLR / CDN / Variant 工具</text>
+
+    <rect x="805" y="175" width="300" height="120" rx="18" fill="#fef3c7" stroke="#d97706"/>
+    <text x="955" y="214" text-anchor="middle" font-size="22" font-weight="700" fill="#92400e">网络与平台</text>
+    <text x="955" y="247" text-anchor="middle" font-size="15" fill="#78350f">Protobuf / Wireshark / Charles</text>
+    <text x="955" y="273" text-anchor="middle" font-size="15" fill="#78350f">Android Studio / Xcode / Fastlane</text>
+
+    <rect x="95" y="350" width="300" height="120" rx="18" fill="#fce7f3" stroke="#db2777"/>
+    <text x="245" y="389" text-anchor="middle" font-size="22" font-weight="700" fill="#9d174d">表现与玩法</text>
+    <text x="245" y="422" text-anchor="middle" font-size="15" fill="#831843">UGUI / TMP / Timeline</text>
+    <text x="245" y="448" text-anchor="middle" font-size="15" fill="#831843">Cinemachine / Animator / NavMesh</text>
+
+    <rect x="450" y="350" width="300" height="120" rx="18" fill="#ede9fe" stroke="#7c3aed"/>
+    <text x="600" y="389" text-anchor="middle" font-size="22" font-weight="700" fill="#5b21b6">质量与性能</text>
+    <text x="600" y="422" text-anchor="middle" font-size="15" fill="#4c1d95">Profiler / Memory Profiler</text>
+    <text x="600" y="448" text-anchor="middle" font-size="15" fill="#4c1d95">RenderDoc / Crashlytics / ELK</text>
+
+    <rect x="805" y="350" width="300" height="120" rx="18" fill="#e0f2fe" stroke="#0284c7"/>
+    <text x="955" y="389" text-anchor="middle" font-size="22" font-weight="700" fill="#075985">测试与协作</text>
+    <text x="955" y="422" text-anchor="middle" font-size="15" fill="#0c4a6e">Unity Test Framework / Airtest</text>
+    <text x="955" y="448" text-anchor="middle" font-size="15" fill="#0c4a6e">Jira / Confluence / Miro</text>
+
+    <rect x="270" y="545" width="660" height="82" rx="20" fill="#f1f5f9" stroke="#64748b"/>
+    <text x="600" y="582" text-anchor="middle" font-size="22" font-weight="700" fill="#334155">开发高级/资深判断</text>
+    <text x="600" y="612" text-anchor="middle" font-size="16" fill="#475569">能用工具证明问题、定位风险、推动团队形成稳定流程</text>
+  </g>
+</svg>
