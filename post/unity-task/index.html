@@ -33,12 +33,12 @@
 <meta property="og:type" content="article" />
 
 
-<meta name="description" content="原生Task 使用 await Test3(); private async Task Test3() { Debug.Log($&amp;quot;TimeNow3_1 {DateTime.Now.ToString()}&amp;quot;); await new WaitForSeconds(3); Debug.Log($&amp;quot;TimeNow3_2 {DateTime.Now...">
+<meta name="description" content="原生Task 使用 await Test3(); private async Task Test3() { Debug.Log($&amp;quot;TimeNow3_1 {DateTime.Now.ToString()}&amp;quot;); await new WaitForSeconds(3); Debug.Log($&amp;quot;TimeNow3_2 {DateTime.No...">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/unity-task/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity Task","url":"https://zhoujun2303.github.io/post/unity-task/","description":"原生Task 使用 await Test3(); private async Task Test3() { Debug.Log($\u0026quot;TimeNow3_1 {DateTime.Now.ToString()}\u0026quot;); await new WaitForSeconds(3); Debug.Log($\u0026quot;TimeNow3_2 {DateTime.Now...","datePublished":"2025-03-10T11:36:29+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity Task","url":"https://zhoujun2303.github.io/post/unity-task/","description":"原生Task 使用 await Test3(); private async Task Test3() { Debug.Log($\u0026quot;TimeNow3_1 {DateTime.Now.ToString()}\u0026quot;); await new WaitForSeconds(3); Debug.Log($\u0026quot;TimeNow3_2 {DateTime.No...","datePublished":"2025-03-10T11:36:29+08:00","dateModified":"2026-06-17T10:10:59+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-task/","name":"Unity Task","position":2}]}</script>
 <meta property="og:title" content="Unity Task">
-<meta property="og:description" content="原生Task 使用 await Test3(); private async Task Test3() { Debug.Log($&amp;quot;TimeNow3_1 {DateTime.Now.ToString()}&amp;quot;); await new WaitForSeconds(3); Debug.Log($&amp;quot;TimeNow3_2 {DateTime.Now...">
+<meta property="og:description" content="原生Task 使用 await Test3(); private async Task Test3() { Debug.Log($&amp;quot;TimeNow3_1 {DateTime.Now.ToString()}&amp;quot;); await new WaitForSeconds(3); Debug.Log($&amp;quot;TimeNow3_2 {DateTime.No...">
 <meta property="og:url" content="https://zhoujun2303.github.io/post/unity-task/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="长胖是个梦想">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-task/">
 <meta name="twitter:title" content="Unity Task">
-<meta name="twitter:description" content="原生Task 使用 await Test3(); private async Task Test3() { Debug.Log($&amp;quot;TimeNow3_1 {DateTime.Now.ToString()}&amp;quot;); await new WaitForSeconds(3); Debug.Log($&amp;quot;TimeNow3_2 {DateTime.Now...">
+<meta name="twitter:description" content="原生Task 使用 await Test3(); private async Task Test3() { Debug.Log($&amp;quot;TimeNow3_1 {DateTime.Now.ToString()}&amp;quot;); await new WaitForSeconds(3); Debug.Log($&amp;quot;TimeNow3_2 {DateTime.No...">
 <meta name="twitter:image" content="/images/avatar.png">
 </head>
 <body class="flavor-theme">
@@ -175,6 +175,12 @@
     <h1 class="article-title">Unity Task</h1>
     <div class="article-meta">
       
+      
+      <a href="/category/unity/" class="article-meta__category">Unity</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
       <span class="article-meta__item">2025-03-10</span>
       
       <span class="article-meta__sep">·</span>
@@ -193,7 +199,7 @@
   
 
   <div class="article-content">
-    <h1 id="task">原生Task</h1>
+    <h2 id="task">原生Task</h2>
 <h2 id="heading">使用</h2>
 <pre><code>await Test3();
 private async Task Test3()
@@ -287,7 +293,7 @@ private Task Test3()
 }
 </code></pre>
 <p>以 await 为分隔符，分成不同的State</p>
-<h1 id="ettask-ethttpset-frameworkcn">参考ETTask实现一个最基本的 <a href="https://et-framework.cn/">ET文档</a></h1>
+<h2 id="ettask-ethttpsgithubcomegametanget">参考ETTask实现一个最基本的 <a href="https://github.com/egametang/ET">ET文档</a></h2>
 <h2 id="heading-2">实现</h2>
 <h3 id="systemruntimecompilerservicesasyncmethodbuildertypeofmyasynctaskmethodbuilder">使用System.Runtime.CompilerServices.AsyncMethodBuilder(typeof(MyAsyncTaskMethodBuilder)</h3>
 <pre><code>  [System.Runtime.CompilerServices.AsyncMethodBuilder(typeof(MyAsyncTaskMethodBuilder))]
@@ -500,7 +506,7 @@ private void Test6()
 <ul>
 <li>Unity 的Task 异步是伪异步，本质是状态机进行状态控制</li>
 </ul>
-<h1 id="heading-5">其他异步</h1>
+<h2 id="heading-5">其他异步</h2>
 <h2 id="heading-6">协程</h2>
 <pre><code>	...other code
     StartCoroutine(Custom1Enumerator());

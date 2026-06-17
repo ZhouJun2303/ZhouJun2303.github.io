@@ -33,12 +33,12 @@
 <meta property="og:type" content="article" />
 
 
-<meta name="description" content="APK、AAB的自动化命名 示例 defaultConfig { minSdkVersion 19 targetSdkVersion 33 multiDexEnabled true applicationId 'com.xx.xxx' ndk { abiFi...">
+<meta name="description" content="APK、AAB的自动化命名 示例 defaultConfig { minSdkVersion 19 targetSdkVersion 33 multiDexEnabled true applicationId 'com.xx.xxx' ndk { abiF...">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/android-gou-jian-zi-dong-ming-ming-apkaab-bao-zi-dong-kao-bei-fu-hao-biao/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Android 构建自动命名APK、AAB包，自动拷贝符号表","url":"https://zhoujun2303.github.io/post/android-gou-jian-zi-dong-ming-ming-apkaab-bao-zi-dong-kao-bei-fu-hao-biao/","description":"APK、AAB的自动化命名 示例 defaultConfig { minSdkVersion 19 targetSdkVersion 33 multiDexEnabled true applicationId 'com.xx.xxx' ndk { abiFi...","datePublished":"2023-07-20T15:48:25+08:00","dateModified":"2026-06-16T16:11:55+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Android 构建自动命名APK、AAB包，自动拷贝符号表","url":"https://zhoujun2303.github.io/post/android-gou-jian-zi-dong-ming-ming-apkaab-bao-zi-dong-kao-bei-fu-hao-biao/","description":"APK、AAB的自动化命名 示例 defaultConfig { minSdkVersion 19 targetSdkVersion 33 multiDexEnabled true applicationId 'com.xx.xxx' ndk { abiF...","datePublished":"2023-07-20T15:48:25+08:00","dateModified":"2026-06-17T10:11:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/android-gou-jian-zi-dong-ming-ming-apkaab-bao-zi-dong-kao-bei-fu-hao-biao/","name":"Android 构建自动命名APK、AAB包，自动拷贝符号表","position":2}]}</script>
 <meta property="og:title" content="Android 构建自动命名APK、AAB包，自动拷贝符号表">
-<meta property="og:description" content="APK、AAB的自动化命名 示例 defaultConfig { minSdkVersion 19 targetSdkVersion 33 multiDexEnabled true applicationId 'com.xx.xxx' ndk { abiFi...">
+<meta property="og:description" content="APK、AAB的自动化命名 示例 defaultConfig { minSdkVersion 19 targetSdkVersion 33 multiDexEnabled true applicationId 'com.xx.xxx' ndk { abiF...">
 <meta property="og:url" content="https://zhoujun2303.github.io/post/android-gou-jian-zi-dong-ming-ming-apkaab-bao-zi-dong-kao-bei-fu-hao-biao/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="长胖是个梦想">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://zhoujun2303.github.io/post/android-gou-jian-zi-dong-ming-ming-apkaab-bao-zi-dong-kao-bei-fu-hao-biao/">
 <meta name="twitter:title" content="Android 构建自动命名APK、AAB包，自动拷贝符号表">
-<meta name="twitter:description" content="APK、AAB的自动化命名 示例 defaultConfig { minSdkVersion 19 targetSdkVersion 33 multiDexEnabled true applicationId 'com.xx.xxx' ndk { abiFi...">
+<meta name="twitter:description" content="APK、AAB的自动化命名 示例 defaultConfig { minSdkVersion 19 targetSdkVersion 33 multiDexEnabled true applicationId 'com.xx.xxx' ndk { abiF...">
 <meta name="twitter:image" content="/images/avatar.png">
 </head>
 <body class="flavor-theme">
@@ -175,10 +175,24 @@
     <h1 class="article-title">Android 构建自动命名APK、AAB包，自动拷贝符号表</h1>
     <div class="article-meta">
       
+      
+      <a href="/category/android-ios/" class="article-meta__category">Android / iOS</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
       <span class="article-meta__item">2023-07-20</span>
       
       <span class="article-meta__sep">·</span>
       <span class="article-meta__item">2 分钟阅读</span>
+      
+    </div>
+    
+    <div class="article-header__tags">
+      
+      <a href="/tag/android/" class="tag-pill tag-pill--sm">Android</a>
+      
+      <a href="/tag/gou-jian-fa-bu/" class="tag-pill tag-pill--sm">构建发布</a>
       
     </div>
     
@@ -187,7 +201,7 @@
   
 
   <div class="article-content">
-    <h1 id="apkaab">APK、AAB的自动化命名</h1>
+    <h2 id="apkaab">APK、AAB的自动化命名</h2>
 <h2 id="heading">示例</h2>
 <pre><code> defaultConfig {
         minSdkVersion 19
@@ -218,7 +232,7 @@ def getAppName() {
     return s.replaceAll(&quot;\&quot;&quot;, &quot;&quot;);
 }
 </code></pre>
-<h1 id="heading-2">自动拷贝符号表</h1>
+<h2 id="heading-2">自动拷贝符号表</h2>
 <pre><code> applicationVariants.all { variant -&gt;
         variant.outputs.all { output -&gt;
             def currentVersion = defaultConfig.versionCode;

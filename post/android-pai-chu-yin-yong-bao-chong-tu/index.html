@@ -33,12 +33,12 @@
 <meta property="og:type" content="article" />
 
 
-<meta name="description" content="[原文链接](https://fengzhouxuan.github.io/2022/10/24/Andoird-Gradle%E6%8E%92%E9%99%A4aar%E5%8C%85%E4%B8%AD%E5%BC%95%E7%94%A8%E7%9A%84%E5%85%B6%E4%BB%96%E5%8C%85%E8%A7%A3%E5%86%B3%E5%BC%95%E7%94%A8%E5%86%B&amp;hellip;">
+<meta name="description" content="原文链接已失效，本文保留本地整理内容。 随着接入的三方库越来越多，依赖的不管是jar包还是aar包也越来越多，依赖包之间的冲突经常出现,所以做个总结记录 定位冲突的包 首先需要找到哪些包冲突了，有些冲突的包是被其他包引用的，所以肉眼是看不出来的，比如 A包和B包冲突，是因为B包自己依赖了一个其他版本的A包，这个时候就需要定位 在Android Studio中的控制台输入命令">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/android-pai-chu-yin-yong-bao-chong-tu/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Android 排除引用包冲突","url":"https://zhoujun2303.github.io/post/android-pai-chu-yin-yong-bao-chong-tu/","description":"[原文链接](https://fengzhouxuan.github.io/2022/10/24/Andoird-Gradle%E6%8E%92%E9%99%A4aar%E5%8C%85%E4%B8%AD%E5%BC%95%E7%94%A8%E7%9A%84%E5%85%B6%E4%BB%96%E5%8C%85%E8%A7%A3%E5%86%B3%E5%BC%95%E7%94%A8%E5%86%B\u0026hellip;","datePublished":"2023-03-19T14:53:08+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Android 排除引用包冲突","url":"https://zhoujun2303.github.io/post/android-pai-chu-yin-yong-bao-chong-tu/","description":"原文链接已失效，本文保留本地整理内容。 随着接入的三方库越来越多，依赖的不管是jar包还是aar包也越来越多，依赖包之间的冲突经常出现,所以做个总结记录 定位冲突的包 首先需要找到哪些包冲突了，有些冲突的包是被其他包引用的，所以肉眼是看不出来的，比如 A包和B包冲突，是因为B包自己依赖了一个其他版本的A包，这个时候就需要定位 在Android Studio中的控制台输入命令","datePublished":"2023-03-19T14:53:08+08:00","dateModified":"2026-06-17T10:11:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/android-pai-chu-yin-yong-bao-chong-tu/","name":"Android 排除引用包冲突","position":2}]}</script>
 <meta property="og:title" content="Android 排除引用包冲突">
-<meta property="og:description" content="[原文链接](https://fengzhouxuan.github.io/2022/10/24/Andoird-Gradle%E6%8E%92%E9%99%A4aar%E5%8C%85%E4%B8%AD%E5%BC%95%E7%94%A8%E7%9A%84%E5%85%B6%E4%BB%96%E5%8C%85%E8%A7%A3%E5%86%B3%E5%BC%95%E7%94%A8%E5%86%B&amp;hellip;">
+<meta property="og:description" content="原文链接已失效，本文保留本地整理内容。 随着接入的三方库越来越多，依赖的不管是jar包还是aar包也越来越多，依赖包之间的冲突经常出现,所以做个总结记录 定位冲突的包 首先需要找到哪些包冲突了，有些冲突的包是被其他包引用的，所以肉眼是看不出来的，比如 A包和B包冲突，是因为B包自己依赖了一个其他版本的A包，这个时候就需要定位 在Android Studio中的控制台输入命令">
 <meta property="og:url" content="https://zhoujun2303.github.io/post/android-pai-chu-yin-yong-bao-chong-tu/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="长胖是个梦想">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://zhoujun2303.github.io/post/android-pai-chu-yin-yong-bao-chong-tu/">
 <meta name="twitter:title" content="Android 排除引用包冲突">
-<meta name="twitter:description" content="[原文链接](https://fengzhouxuan.github.io/2022/10/24/Andoird-Gradle%E6%8E%92%E9%99%A4aar%E5%8C%85%E4%B8%AD%E5%BC%95%E7%94%A8%E7%9A%84%E5%85%B6%E4%BB%96%E5%8C%85%E8%A7%A3%E5%86%B3%E5%BC%95%E7%94%A8%E5%86%B&amp;hellip;">
+<meta name="twitter:description" content="原文链接已失效，本文保留本地整理内容。 随着接入的三方库越来越多，依赖的不管是jar包还是aar包也越来越多，依赖包之间的冲突经常出现,所以做个总结记录 定位冲突的包 首先需要找到哪些包冲突了，有些冲突的包是被其他包引用的，所以肉眼是看不出来的，比如 A包和B包冲突，是因为B包自己依赖了一个其他版本的A包，这个时候就需要定位 在Android Studio中的控制台输入命令">
 <meta name="twitter:image" content="/images/avatar.png">
 </head>
 <body class="flavor-theme">
@@ -175,6 +175,12 @@
     <h1 class="article-title">Android 排除引用包冲突</h1>
     <div class="article-meta">
       
+      
+      <a href="/category/android-ios/" class="article-meta__category">Android / iOS</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
       <span class="article-meta__item">2023-03-19</span>
       
       <span class="article-meta__sep">·</span>
@@ -193,7 +199,7 @@
   
 
   <div class="article-content">
-    <p><a href="https://fengzhouxuan.github.io/2022/10/24/Andoird-Gradle%E6%8E%92%E9%99%A4aar%E5%8C%85%E4%B8%AD%E5%BC%95%E7%94%A8%E7%9A%84%E5%85%B6%E4%BB%96%E5%8C%85%E8%A7%A3%E5%86%B3%E5%BC%95%E7%94%A8%E5%86%B2%E7%AA%81/">原文链接</a><br />
+    <p>原文链接已失效，本文保留本地整理内容。<br />
 随着接入的三方库越来越多，依赖的不管是jar包还是aar包也越来越多，依赖包之间的冲突经常出现,所以做个总结记录</p>
 <h2 id="heading">定位冲突的包</h2>
 <p>首先需要找到哪些包冲突了，有些冲突的包是被其他包引用的，所以肉眼是看不出来的，比如 A包和B包冲突，是因为B包自己依赖了一个其他版本的A包，这个时候就需要定位<br />

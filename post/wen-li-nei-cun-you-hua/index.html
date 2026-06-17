@@ -35,7 +35,7 @@
 
 <meta name="description" content="图片大小 图片大小一般采用小于等于2的次方大小 在Unity 中，如果图片的大小不是2的次方，如100*200Unity会在导入之后将其缩放为128*256的纹理、如果是129*256的纹理大小，则导入之后为256*256的纹理大小 Read/Wite Enable 开启Read/Wite Enable将允许自定义脚本访问，写入纹理数据。在运行时&amp;hellip;">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/wen-li-nei-cun-you-hua/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"纹理内存优化","url":"https://zhoujun2303.github.io/post/wen-li-nei-cun-you-hua/","description":"图片大小 图片大小一般采用小于等于2的次方大小 在Unity 中，如果图片的大小不是2的次方，如100*200Unity会在导入之后将其缩放为128*256的纹理、如果是129*256的纹理大小，则导入之后为256*256的纹理大小 Read/Wite Enable 开启Read/Wite Enable将允许自定义脚本访问，写入纹理数据。在运行时\u0026hellip;","datePublished":"2023-04-02T17:35:21+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"纹理内存优化","url":"https://zhoujun2303.github.io/post/wen-li-nei-cun-you-hua/","description":"图片大小 图片大小一般采用小于等于2的次方大小 在Unity 中，如果图片的大小不是2的次方，如100*200Unity会在导入之后将其缩放为128*256的纹理、如果是129*256的纹理大小，则导入之后为256*256的纹理大小 Read/Wite Enable 开启Read/Wite Enable将允许自定义脚本访问，写入纹理数据。在运行时\u0026hellip;","datePublished":"2023-04-02T17:35:21+08:00","dateModified":"2026-06-17T10:11:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/wen-li-nei-cun-you-hua/","name":"纹理内存优化","position":2}]}</script>
 <meta property="og:title" content="纹理内存优化">
 <meta property="og:description" content="图片大小 图片大小一般采用小于等于2的次方大小 在Unity 中，如果图片的大小不是2的次方，如100*200Unity会在导入之后将其缩放为128*256的纹理、如果是129*256的纹理大小，则导入之后为256*256的纹理大小 Read/Wite Enable 开启Read/Wite Enable将允许自定义脚本访问，写入纹理数据。在运行时&amp;hellip;">
@@ -175,6 +175,12 @@
     <h1 class="article-title">纹理内存优化</h1>
     <div class="article-meta">
       
+      
+      <a href="/category/unity/" class="article-meta__category">Unity</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
       <span class="article-meta__item">2023-04-02</span>
       
       <span class="article-meta__sep">·</span>
@@ -207,7 +213,7 @@
 <p>在游戏中选择使用哪种纹理格式通常取决于需要呈现的效果和资源的使用情况。如果需要呈现透明效果，或者需要在纹理中嵌入透明度信息，则应该使用32位RGBA纹理。如果不需要透明效果，则可以使用24位RGB纹理，这样可以减少资源占用，并提高渲染效率。</p>
 <h2 id="heading-2">根据平台选择支持的纹理压缩格式</h2>
 <p>在对应平台上选择支持的压缩格式，如果是不支持的压缩格式，Unity会自动转换成RGBA32/RGB24格式，并且转换之前的内存也会保留，将消耗更多的时间， 内存<br />
-[//Todo 各个平台纹理压缩区别] (<a href="https://docs.unity3d.com/cn/current/Manual/class-TextureImporter.html">https://docs.unity3d.com/cn/current/Manual/class-TextureImporter.html</a>)</p>
+<a href="https://docs.unity3d.com/cn/current/Manual/class-TextureImporter.html">//Todo 各个平台纹理压缩区别</a></p>
 <h2 id="generate-mip-maps">Generate Mip Maps</h2>
 <ul>
 <li>开启之后，可以让离摄像机较远的物体使用较小的纹理版本，但是运行时贴贴图大小将会变大。</li>

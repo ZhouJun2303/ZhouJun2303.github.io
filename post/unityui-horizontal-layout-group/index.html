@@ -35,7 +35,7 @@
 
 <meta name="description" content="宽屏横向适配问题 适配 左-中-右，中间大小不变，左右自动拉升 方案1 中间居中 左：锚点设置最左边 右：锚点设置最右边 float width = ui.HpNode.rectTransform.rect.width; float nodeItemLength = (width - 166) / 2; ui.LeftNode.rectTransform.sizeD...">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/unityui-horizontal-layout-group/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity(UI Horizontal Layout Group)","url":"https://zhoujun2303.github.io/post/unityui-horizontal-layout-group/","description":"宽屏横向适配问题 适配 左-中-右，中间大小不变，左右自动拉升 方案1 中间居中 左：锚点设置最左边 右：锚点设置最右边 float width = ui.HpNode.rectTransform.rect.width; float nodeItemLength = (width - 166) / 2; ui.LeftNode.rectTransform.sizeD...","datePublished":"2023-03-19T14:24:12+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity(UI Horizontal Layout Group)","url":"https://zhoujun2303.github.io/post/unityui-horizontal-layout-group/","description":"宽屏横向适配问题 适配 左-中-右，中间大小不变，左右自动拉升 方案1 中间居中 左：锚点设置最左边 右：锚点设置最右边 float width = ui.HpNode.rectTransform.rect.width; float nodeItemLength = (width - 166) / 2; ui.LeftNode.rectTransform.sizeD...","datePublished":"2023-03-19T14:24:12+08:00","dateModified":"2026-06-17T10:11:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unityui-horizontal-layout-group/","name":"Unity(UI Horizontal Layout Group)","position":2}]}</script>
 <meta property="og:title" content="Unity(UI Horizontal Layout Group)">
 <meta property="og:description" content="宽屏横向适配问题 适配 左-中-右，中间大小不变，左右自动拉升 方案1 中间居中 左：锚点设置最左边 右：锚点设置最右边 float width = ui.HpNode.rectTransform.rect.width; float nodeItemLength = (width - 166) / 2; ui.LeftNode.rectTransform.sizeD...">
@@ -175,6 +175,12 @@
     <h1 class="article-title">Unity(UI Horizontal Layout Group)</h1>
     <div class="article-meta">
       
+      
+      <a href="/category/unity/" class="article-meta__category">Unity</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
       <span class="article-meta__item">2023-03-19</span>
       
       <span class="article-meta__sep">·</span>
@@ -208,11 +214,11 @@ ui.RightNode.rectTransform.sizeDelta = new Vector2(nodeItemLength, 52);
 </code></pre>
 <h2 id="2">方案2</h2>
 <p>Horizontal Layout Group 设置控制子节点大小<br />
-<img src="https://zhoujun2303.github.io/post-images/1679208119320.jpeg" alt="" /><br />
+<img src="/post-images/1679208119320.jpeg" alt="" /><br />
 中间节点设置固定大小<br />
-<img src="https://zhoujun2303.github.io/post-images/1679208147076.jpg" alt="" /><br />
+<img src="/post-images/1679208147076.jpg" alt="" /><br />
 左右节点设置按比例自动分配大小<br />
-<img src="https://zhoujun2303.github.io/post-images/1679208171158.jpg" alt="" /></p>
+<img src="/post-images/1679208171158.jpg" alt="" /></p>
 
   </div>
 

@@ -35,7 +35,7 @@
 
 <meta name="description" content="Seiri 正确的命名标识符 Seiton 整齐 Seiso 清洁 注释掉的代码，说明不需要了 Seiketsu 标准化 Shitsuke 自律 持续完善 细节中自有天地 童子军军规 上传的代码比下拉的代码更干净 改好一个证明的变量名 拆分过长函数 消除重复的代码 清理嵌套的If 有意义的命名 使用可搜索的名称 &amp;hellip;">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/yue-du-lesslessdai-ma-zheng-ji-zhi-dao-greatergreater/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"阅读《代码整洁之道》","url":"https://zhoujun2303.github.io/post/yue-du-lesslessdai-ma-zheng-ji-zhi-dao-greatergreater/","description":"Seiri 正确的命名标识符 Seiton 整齐 Seiso 清洁 注释掉的代码，说明不需要了 Seiketsu 标准化 Shitsuke 自律 持续完善 细节中自有天地 童子军军规 上传的代码比下拉的代码更干净 改好一个证明的变量名 拆分过长函数 消除重复的代码 清理嵌套的If 有意义的命名 使用可搜索的名称 \u0026hellip;","datePublished":"2024-05-22T20:07:27+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"阅读《代码整洁之道》","url":"https://zhoujun2303.github.io/post/yue-du-lesslessdai-ma-zheng-ji-zhi-dao-greatergreater/","description":"Seiri 正确的命名标识符 Seiton 整齐 Seiso 清洁 注释掉的代码，说明不需要了 Seiketsu 标准化 Shitsuke 自律 持续完善 细节中自有天地 童子军军规 上传的代码比下拉的代码更干净 改好一个证明的变量名 拆分过长函数 消除重复的代码 清理嵌套的If 有意义的命名 使用可搜索的名称 \u0026hellip;","datePublished":"2024-05-22T20:07:27+08:00","dateModified":"2026-06-17T10:10:59+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/yue-du-lesslessdai-ma-zheng-ji-zhi-dao-greatergreater/","name":"阅读《代码整洁之道》","position":2}]}</script>
 <meta property="og:title" content="阅读《代码整洁之道》">
 <meta property="og:description" content="Seiri 正确的命名标识符 Seiton 整齐 Seiso 清洁 注释掉的代码，说明不需要了 Seiketsu 标准化 Shitsuke 自律 持续完善 细节中自有天地 童子军军规 上传的代码比下拉的代码更干净 改好一个证明的变量名 拆分过长函数 消除重复的代码 清理嵌套的If 有意义的命名 使用可搜索的名称 &amp;hellip;">
@@ -175,6 +175,12 @@
     <h1 class="article-title">阅读《代码整洁之道》</h1>
     <div class="article-meta">
       
+      
+      <a href="/category/reading-notes/" class="article-meta__category">阅读与资料</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
       <span class="article-meta__item">2024-05-22</span>
       
       <span class="article-meta__sep">·</span>
@@ -209,7 +215,7 @@
 <li>消除重复的代码</li>
 <li>清理嵌套的If</li>
 </ul>
-<h1 id="heading-1">有意义的命名</h1>
+<h2 id="heading-1">有意义的命名</h2>
 <ul>
 <li>使用可搜索的名称</li>
 <li>类型改变时，变量名同步</li>
@@ -219,7 +225,7 @@
 <li>每个概念对应一个词 如Controller和Manager</li>
 <li>尽可能用计算机术语 如JobQueue</li>
 </ul>
-<h1 id="heading-2">函数</h1>
+<h2 id="heading-2">函数</h2>
 <ul>
 <li>短小 20行封顶最佳</li>
 <li>函数只做一件事 判断标准：能否在拆出一个函数</li>
@@ -230,22 +236,22 @@
 <li>TryCatch中的代码块抽离为单独的函数</li>
 <li>如何写好规范函数，遵循规则，逐步打磨，没有人能一开始就写出规范的函数</li>
 </ul>
-<h1 id="heading-3">注释</h1>
+<h2 id="heading-3">注释</h2>
 <ul>
 <li>尽量减少注释（不赞同）</li>
 <li>注释不能代替屎山</li>
 </ul>
-<h1 id="heading-4">对象和数据结构</h1>
+<h2 id="heading-4">对象和数据结构</h2>
 <ul>
 <li>得墨忒耳律<br />
 <code>final String outputDir = ctxt.getoptions().getScratchDir().getAbsolutePath() </code></li>
 <li>区分数据结构和对象，存放数据的结构不能喝对象混用</li>
 </ul>
-<h1 id="heading-5">错误处理</h1>
+<h2 id="heading-5">错误处理</h2>
 <ul>
 <li>尽量别返回空值，别传递空值</li>
 </ul>
-<h1 id="heading-6">单元测试</h1>
+<h2 id="heading-6">单元测试</h2>
 <ul>
 <li>测试代码和正式代码一样重要，要遵守设计规范
 <ul>
@@ -255,12 +261,12 @@
 </ul>
 </li>
 </ul>
-<h1 id="heading-7">类</h1>
+<h2 id="heading-7">类</h2>
 <ul>
 <li>变量和方法应该有各自的位置，从上至下，不要穿插书写</li>
 <li>高内聚 -每个变量都被每个方法所使用，该类具有最大的内聚性</li>
 </ul>
-<h1 id="heading-8">系统</h1>
+<h2 id="heading-8">系统</h2>
 <ul>
 <li>系统构造和使用分开 不要使用延迟初始化/赋值 生命周期流程不明</li>
 </ul>

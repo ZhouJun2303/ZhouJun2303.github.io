@@ -33,12 +33,12 @@
 <meta property="og:type" content="article" />
 
 
-<meta name="description" content="bundletool 官方文档 AAB 转 APKS java -jar bund...">
+<meta name="description" content="bundletool 官方文档 AAB 转 APKS java -jar bundletool-all-1.8.0.jar build-apks --bundle=...">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/aab-zhuan-apks-ben-di-ce-shi-bundletool/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"AAB 转 APKS本地测试(bundletool)","url":"https://zhoujun2303.github.io/post/aab-zhuan-apks-ben-di-ce-shi-bundletool/","description":"bundletool 官方文档 AAB 转 APKS java -jar bund...","datePublished":"2021-11-08T14:16:20+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"AAB 转 APKS本地测试(bundletool)","url":"https://zhoujun2303.github.io/post/aab-zhuan-apks-ben-di-ce-shi-bundletool/","description":"bundletool 官方文档 AAB 转 APKS java -jar bundletool-all-1.8.0.jar build-apks --bundle=...","datePublished":"2021-11-08T14:16:20+08:00","dateModified":"2026-06-17T10:11:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/aab-zhuan-apks-ben-di-ce-shi-bundletool/","name":"AAB 转 APKS本地测试(bundletool)","position":2}]}</script>
 <meta property="og:title" content="AAB 转 APKS本地测试(bundletool)">
-<meta property="og:description" content="bundletool 官方文档 AAB 转 APKS java -jar bund...">
+<meta property="og:description" content="bundletool 官方文档 AAB 转 APKS java -jar bundletool-all-1.8.0.jar build-apks --bundle=...">
 <meta property="og:url" content="https://zhoujun2303.github.io/post/aab-zhuan-apks-ben-di-ce-shi-bundletool/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="长胖是个梦想">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://zhoujun2303.github.io/post/aab-zhuan-apks-ben-di-ce-shi-bundletool/">
 <meta name="twitter:title" content="AAB 转 APKS本地测试(bundletool)">
-<meta name="twitter:description" content="bundletool 官方文档 AAB 转 APKS java -jar bund...">
+<meta name="twitter:description" content="bundletool 官方文档 AAB 转 APKS java -jar bundletool-all-1.8.0.jar build-apks --bundle=...">
 <meta name="twitter:image" content="/images/avatar.png">
 </head>
 <body class="flavor-theme">
@@ -175,6 +175,12 @@
     <h1 class="article-title">AAB 转 APKS本地测试(bundletool)</h1>
     <div class="article-meta">
       
+      
+      <a href="/category/android-ios/" class="article-meta__category">Android / iOS</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
       <span class="article-meta__item">2021-11-08</span>
       
       <span class="article-meta__sep">·</span>
@@ -195,17 +201,17 @@
   
 
   <div class="article-content">
-    <h1 id="bundletool">bundletool</h1>
-<p><img src="https://zhoujun2303.github.io/post-images/1659766786590.jpg" alt="" /><br />
-<a href="https://developer.android.google.cn/studio/command-line/bundletool?hl=zh_cn">官方文档</a></p>
-<h1 id="aab---apks">AAB  转 APKS</h1>
+    <h2 id="bundletool">bundletool</h2>
+<p><img src="/post-images/1659766786590.jpg" alt="" /><br />
+<a href="https://developer.android.google.cn/tools/bundletool?hl=zh-cn">官方文档</a></p>
+<h2 id="aab---apks">AAB  转 APKS</h2>
 <pre><code>java -jar bundletool-all-1.8.0.jar build-apks --bundle=launcher.aab --output=release.apks --ks=E:/gitGogs/CarCraftRaceIO/CarCraftRace.keystore --ks-pass=pass:password --ks-key-alias=normalKey --key-pass=pass:password
 </code></pre>
 <p><em>目录结构，同级目录打开命令行</em><br />
-<img src="https://zhoujun2303.github.io/post-images/1659766793471.jpg" alt="" /><br />
+<img src="/post-images/1659766793471.jpg" alt="" /><br />
 <a href="https://github.com/google/bundletool">bundletool</a><br />
-<img src="https://zhoujun2303.github.io/post-images/1659766799713.jpg" alt="" /></p>
-<h1 id="apks-usb-">命令行安装APKS （一次安装到多个USB 设备自行百度）</h1>
+<img src="/post-images/1659766799713.jpg" alt="" /></p>
+<h2 id="apks-usb-">命令行安装APKS （一次安装到多个USB 设备自行百度）</h2>
 <pre><code>java -jar bundletool-all-1.8.0.jar install-apks --apks=release.apks
 </code></pre>
 

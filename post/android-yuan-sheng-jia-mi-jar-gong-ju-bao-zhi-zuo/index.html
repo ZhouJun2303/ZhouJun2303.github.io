@@ -33,12 +33,12 @@
 <meta property="og:type" content="article" />
 
 
-<meta name="description" content="设计 设计思路 可读接口-&amp;gt;不可读接口 Android 创建一个新的Lib 目录结构 --src --main --java com.tool.hwtools --CheckRoot --Hw.Tools --SignatureUtil --pro...">
+<meta name="description" content="设计 设计思路 可读接口-&amp;gt;不可读接口 Android 创建一个新的Lib 目录结构 --src --main --java com.tool.hwtools --CheckRoot --Hw.Tools --SignatureUtil --pr...">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/android-yuan-sheng-jia-mi-jar-gong-ju-bao-zhi-zuo/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Android 原生加密Jar工具包制作","url":"https://zhoujun2303.github.io/post/android-yuan-sheng-jia-mi-jar-gong-ju-bao-zhi-zuo/","description":"设计 设计思路 可读接口-\u0026gt;不可读接口 Android 创建一个新的Lib 目录结构 --src --main --java com.tool.hwtools --CheckRoot --Hw.Tools --SignatureUtil --pro...","datePublished":"2024-09-30T11:26:54+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Android 原生加密Jar工具包制作","url":"https://zhoujun2303.github.io/post/android-yuan-sheng-jia-mi-jar-gong-ju-bao-zhi-zuo/","description":"设计 设计思路 可读接口-\u0026gt;不可读接口 Android 创建一个新的Lib 目录结构 --src --main --java com.tool.hwtools --CheckRoot --Hw.Tools --SignatureUtil --pr...","datePublished":"2024-09-30T11:26:54+08:00","dateModified":"2026-06-17T10:10:59+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/android-yuan-sheng-jia-mi-jar-gong-ju-bao-zhi-zuo/","name":"Android 原生加密Jar工具包制作","position":2}]}</script>
 <meta property="og:title" content="Android 原生加密Jar工具包制作">
-<meta property="og:description" content="设计 设计思路 可读接口-&amp;gt;不可读接口 Android 创建一个新的Lib 目录结构 --src --main --java com.tool.hwtools --CheckRoot --Hw.Tools --SignatureUtil --pro...">
+<meta property="og:description" content="设计 设计思路 可读接口-&amp;gt;不可读接口 Android 创建一个新的Lib 目录结构 --src --main --java com.tool.hwtools --CheckRoot --Hw.Tools --SignatureUtil --pr...">
 <meta property="og:url" content="https://zhoujun2303.github.io/post/android-yuan-sheng-jia-mi-jar-gong-ju-bao-zhi-zuo/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="长胖是个梦想">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://zhoujun2303.github.io/post/android-yuan-sheng-jia-mi-jar-gong-ju-bao-zhi-zuo/">
 <meta name="twitter:title" content="Android 原生加密Jar工具包制作">
-<meta name="twitter:description" content="设计 设计思路 可读接口-&amp;gt;不可读接口 Android 创建一个新的Lib 目录结构 --src --main --java com.tool.hwtools --CheckRoot --Hw.Tools --SignatureUtil --pro...">
+<meta name="twitter:description" content="设计 设计思路 可读接口-&amp;gt;不可读接口 Android 创建一个新的Lib 目录结构 --src --main --java com.tool.hwtools --CheckRoot --Hw.Tools --SignatureUtil --pr...">
 <meta name="twitter:image" content="/images/avatar.png">
 </head>
 <body class="flavor-theme">
@@ -175,6 +175,12 @@
     <h1 class="article-title">Android 原生加密Jar工具包制作</h1>
     <div class="article-meta">
       
+      
+      <a href="/category/security-reverse/" class="article-meta__category">安全与逆向</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
       <span class="article-meta__item">2024-09-30</span>
       
       <span class="article-meta__sep">·</span>
@@ -195,7 +201,7 @@
   
 
   <div class="article-content">
-    <h1 id="heading">设计</h1>
+    <h2 id="heading">设计</h2>
 <ul>
 <li>设计思路<br />
 可读接口-&gt;不可读接口</li>
@@ -210,7 +216,7 @@
             --SignatureUtil
     --proguard-rules.pro
 </code></pre>
-<h1 id="heading-1">未加密代码</h1>
+<h2 id="heading-1">未加密代码</h2>
 <pre><code>package com.tool.hwtools;
 
 import android.content.Context;
@@ -639,7 +645,7 @@ public class SignatureUtil {
     *;
 }
 </code></pre>
-<h1 id="jar">Jar生成位置</h1>
+<h2 id="jar">Jar生成位置</h2>
 <pre><code>build/.transforms..../out/jars/classes.jar
 </code></pre>
 

@@ -33,12 +33,12 @@
 <meta property="og:type" content="article" />
 
 
-<meta name="description" content="1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] ![](https://zhoujun2303.github.io/post-images/1659768635872&amp;hellip;">
+<meta name="description" content="1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] android:testOnly=...">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/an-zhuo-chang-jian-wen-ti-/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"安卓常见问题","url":"https://zhoujun2303.github.io/post/an-zhuo-chang-jian-wen-ti-/","description":"1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] ![](https://zhoujun2303.github.io/post-images/1659768635872\u0026hellip;","datePublished":"2021-06-16T14:48:34+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"安卓常见问题","url":"https://zhoujun2303.github.io/post/an-zhuo-chang-jian-wen-ti-/","description":"1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] android:testOnly=...","datePublished":"2021-06-16T14:48:34+08:00","dateModified":"2026-06-17T10:11:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/an-zhuo-chang-jian-wen-ti-/","name":"安卓常见问题","position":2}]}</script>
 <meta property="og:title" content="安卓常见问题">
-<meta property="og:description" content="1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] ![](https://zhoujun2303.github.io/post-images/1659768635872&amp;hellip;">
+<meta property="og:description" content="1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] android:testOnly=...">
 <meta property="og:url" content="https://zhoujun2303.github.io/post/an-zhuo-chang-jian-wen-ti-/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="长胖是个梦想">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://zhoujun2303.github.io/post/an-zhuo-chang-jian-wen-ti-/">
 <meta name="twitter:title" content="安卓常见问题">
-<meta name="twitter:description" content="1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] ![](https://zhoujun2303.github.io/post-images/1659768635872&amp;hellip;">
+<meta name="twitter:description" content="1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] android:testOnly=...">
 <meta name="twitter:image" content="/images/avatar.png">
 </head>
 <body class="flavor-theme">
@@ -175,6 +175,12 @@
     <h1 class="article-title">安卓常见问题</h1>
     <div class="article-meta">
       
+      
+      <a href="/category/android-ios/" class="article-meta__category">Android / iOS</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
       <span class="article-meta__item">2021-06-16</span>
       
       <span class="article-meta__sep">·</span>
@@ -200,7 +206,7 @@
 </code></pre>
 <ul>
 <li>2，解决Failure [INSTALL_FAILED_TEST_ONLY]<br />
-<img src="https://zhoujun2303.github.io/post-images/1659768635872.jpg" alt="" /></li>
+<img src="/post-images/1659768635872.jpg" alt="" /></li>
 </ul>
 <pre><code>android:testOnly=&quot;true&quot; 
 改成 android:testOnly=&quot;false&quot;
@@ -215,7 +221,7 @@ android.injected.testOnly=false
 <li>b,连接至Androidstudio</li>
 <li>c,查看logcat（能查看包名的release包不能上架市场，不能查看即为正常）</li>
 <li>d,检查 androidManifest.xml 文件中是否存在 isDebugger = true的标签，如果存在该标签,即使使用签名文件发布正式包，打出来的apk或者aab 也是debug包<br />
-<img src="https://zhoujun2303.github.io/post-images/1659768662006.jpg" alt="" /></li>
+<img src="/post-images/1659768662006.jpg" alt="" /></li>
 </ul>
 </li>
 <li>

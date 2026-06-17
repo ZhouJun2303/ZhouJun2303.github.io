@@ -33,12 +33,12 @@
 <meta property="og:type" content="article" />
 
 
-<meta name="description" content="Stats面板 Render thread 渲染线程，渲染一帧需要多少ms Batches 批次，需要分几个批次提交给GPU Saved by batching 有多少物体是同一批次提交给GPU（合批数量） Tris: 三角形数（面数）&amp;hellip;">
+<meta name="description" content="Stats面板 Render thread 渲染线程，渲染一帧需要多少ms Batches 批次，需要分几个批次提交给GPU Saved by batching 有多少物体是同一批次提交给GPU（合批数量） Tris: 三角形数（面数） Verts:顶点数 Screen：屏幕分辨率&amp;hellip;">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/unity-profiler/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity Profiler","url":"https://zhoujun2303.github.io/post/unity-profiler/","description":"Stats面板 Render thread 渲染线程，渲染一帧需要多少ms Batches 批次，需要分几个批次提交给GPU Saved by batching 有多少物体是同一批次提交给GPU（合批数量） Tris: 三角形数（面数）\u0026hellip;","datePublished":"2023-03-25T18:08:02+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity Profiler","url":"https://zhoujun2303.github.io/post/unity-profiler/","description":"Stats面板 Render thread 渲染线程，渲染一帧需要多少ms Batches 批次，需要分几个批次提交给GPU Saved by batching 有多少物体是同一批次提交给GPU（合批数量） Tris: 三角形数（面数） Verts:顶点数 Screen：屏幕分辨率\u0026hellip;","datePublished":"2023-03-25T18:08:02+08:00","dateModified":"2026-06-17T10:11:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-profiler/","name":"Unity Profiler","position":2}]}</script>
 <meta property="og:title" content="Unity Profiler">
-<meta property="og:description" content="Stats面板 Render thread 渲染线程，渲染一帧需要多少ms Batches 批次，需要分几个批次提交给GPU Saved by batching 有多少物体是同一批次提交给GPU（合批数量） Tris: 三角形数（面数）&amp;hellip;">
+<meta property="og:description" content="Stats面板 Render thread 渲染线程，渲染一帧需要多少ms Batches 批次，需要分几个批次提交给GPU Saved by batching 有多少物体是同一批次提交给GPU（合批数量） Tris: 三角形数（面数） Verts:顶点数 Screen：屏幕分辨率&amp;hellip;">
 <meta property="og:url" content="https://zhoujun2303.github.io/post/unity-profiler/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="长胖是个梦想">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-profiler/">
 <meta name="twitter:title" content="Unity Profiler">
-<meta name="twitter:description" content="Stats面板 Render thread 渲染线程，渲染一帧需要多少ms Batches 批次，需要分几个批次提交给GPU Saved by batching 有多少物体是同一批次提交给GPU（合批数量） Tris: 三角形数（面数）&amp;hellip;">
+<meta name="twitter:description" content="Stats面板 Render thread 渲染线程，渲染一帧需要多少ms Batches 批次，需要分几个批次提交给GPU Saved by batching 有多少物体是同一批次提交给GPU（合批数量） Tris: 三角形数（面数） Verts:顶点数 Screen：屏幕分辨率&amp;hellip;">
 <meta name="twitter:image" content="/images/avatar.png">
 </head>
 <body class="flavor-theme">
@@ -175,6 +175,12 @@
     <h1 class="article-title">Unity Profiler</h1>
     <div class="article-meta">
       
+      
+      <a href="/category/unity/" class="article-meta__category">Unity</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
       <span class="article-meta__item">2023-03-25</span>
       
       <span class="article-meta__sep">·</span>
@@ -196,7 +202,7 @@
 
   <div class="article-content">
     <h2 id="stats">Stats面板</h2>
-<p><img src="https://zhoujun2303.github.io/post-images/1680420126719.jpg" alt="" /></p>
+<p><img src="/post-images/1680420126719.jpg" alt="" /></p>
 <ul>
 <li>Render thread 渲染线程，渲染一帧需要多少ms</li>
 <li>Batches 批次，需要分几个批次提交给GPU</li>
@@ -211,7 +217,7 @@
 <h2 id="profiler">Profiler</h2>
 <p><a href="https://www.bilibili.com/video/BV1Rd4y1q7jt/?spm_id_from=333.788.top_right_bar_window_history.content.click&amp;vd_source=6f81433b8f1dda2a8d9fd1f770a72ef3">Up主讲解</a><br />
 Profiler(Standalone Process) 单独开启一个线程进行分析，对现有游戏影响较小<br />
-<img src="https://zhoujun2303.github.io/post-images/1680423428267.jpg" alt="" /><br />
+<img src="/post-images/1680423428267.jpg" alt="" /><br />
 使用一个循环来伪造有问题的代码</p>
 <pre><code>using System.Collections;
 using System.Collections.Generic;

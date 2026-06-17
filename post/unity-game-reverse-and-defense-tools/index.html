@@ -35,7 +35,7 @@
 
 <meta name="description" content="本文只用于自有项目、公司授权项目、比赛靶场或教学样本的安全研究。不要用这些方法破解商业游戏、绕过付费、绕过反作弊、修改线上数据或传播他人资源。 这篇文章参考逆向论坛常见的写法：环境、工具、样本、步骤、截图位置、结论。内容重点不是“怎么改游戏”，而是学会用工具看清 Unity 包里暴露了什么，再反过来做防护。 ![Unity 授权逆向分析流程](/post-images/unity-&amp;hellip;">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/unity-game-reverse-and-defense-tools/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 游戏逆向分析与防逆向加固工具教程","url":"https://zhoujun2303.github.io/post/unity-game-reverse-and-defense-tools/","description":"本文只用于自有项目、公司授权项目、比赛靶场或教学样本的安全研究。不要用这些方法破解商业游戏、绕过付费、绕过反作弊、修改线上数据或传播他人资源。 这篇文章参考逆向论坛常见的写法：环境、工具、样本、步骤、截图位置、结论。内容重点不是“怎么改游戏”，而是学会用工具看清 Unity 包里暴露了什么，再反过来做防护。 ![Unity 授权逆向分析流程](/post-images/unity-\u0026hellip;","datePublished":"2026-06-10T16:30:00+08:00","dateModified":"2026-06-16T17:26:22+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 游戏逆向分析与防逆向加固工具教程","url":"https://zhoujun2303.github.io/post/unity-game-reverse-and-defense-tools/","description":"本文只用于自有项目、公司授权项目、比赛靶场或教学样本的安全研究。不要用这些方法破解商业游戏、绕过付费、绕过反作弊、修改线上数据或传播他人资源。 这篇文章参考逆向论坛常见的写法：环境、工具、样本、步骤、截图位置、结论。内容重点不是“怎么改游戏”，而是学会用工具看清 Unity 包里暴露了什么，再反过来做防护。 ![Unity 授权逆向分析流程](/post-images/unity-\u0026hellip;","datePublished":"2026-06-10T16:30:00+08:00","dateModified":"2026-06-17T10:10:59+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-game-reverse-and-defense-tools/","name":"Unity 游戏逆向分析与防逆向加固工具教程","position":2}]}</script>
 <meta property="og:title" content="Unity 游戏逆向分析与防逆向加固工具教程">
 <meta property="og:description" content="本文只用于自有项目、公司授权项目、比赛靶场或教学样本的安全研究。不要用这些方法破解商业游戏、绕过付费、绕过反作弊、修改线上数据或传播他人资源。 这篇文章参考逆向论坛常见的写法：环境、工具、样本、步骤、截图位置、结论。内容重点不是“怎么改游戏”，而是学会用工具看清 Unity 包里暴露了什么，再反过来做防护。 ![Unity 授权逆向分析流程](/post-images/unity-&amp;hellip;">
@@ -174,6 +174,12 @@
   <header class="article-header">
     <h1 class="article-title">Unity 游戏逆向分析与防逆向加固工具教程</h1>
     <div class="article-meta">
+      
+      
+      <a href="/category/security-reverse/" class="article-meta__category">安全与逆向</a>
+      
+      
+      <span class="article-meta__sep">·</span>
       
       <span class="article-meta__item">2026-06-10</span>
       
@@ -1009,7 +1015,7 @@ signature
 服务端调用 Google API 验证
 服务端根据 verdict 参与风控决策
 </code></pre>
-<p>不要只在客户端判断，也不要把完整性结果当成唯一封禁依据。官方文档：<code>https://developer.android.com/google/play/integrity</code>。</p>
+<p>不要只在客户端判断，也不要把完整性结果当成唯一封禁依据。官方文档：<code>https://developer.android.google.cn/google/play/integrity?hl=zh-cn</code>。</p>
 <h3 id="143-ios-app-attest--devicecheck">14.3 iOS App Attest / DeviceCheck</h3>
 <p>iOS 可以考虑 App Attest 或 DeviceCheck。基本思路同样是：</p>
 <pre><code class="language-text">设备生成证明
