@@ -184,7 +184,7 @@
       <span class="article-meta__item">2021-03-27</span>
       
       <span class="article-meta__sep">·</span>
-      <span class="article-meta__item">1 分钟阅读</span>
+      <span class="article-meta__item">6 分钟阅读</span>
       
     </div>
     
@@ -209,7 +209,119 @@
 <p><a href="https://opencore.slowgeek.com/">OpenCore排错</a></p>
 <p><a href="https://www.diskgenius.cn/">DiskGenius下载</a></p>
 <p><a href="https://www.bilibili.com/video/BV18V41187JZ">视频</a></p>
-<p><a href="https://note.youdao.com/s/P4UWBFXq">在虚拟机上安装详细教程</a></p>
+<h2 id="vmware16macos-big-sur-1101">VMware16安装macOS Big Sur 11.0.1</h2>
+<p>（黑苹果）VMware16安装macOS Big Sur 11.0.1</p>
+<p>目录  隐藏</p>
+<p>1 下载 macOS Big Sur 11.0.1</p>
+<p>2 下载并安装VMware16</p>
+<p>3 安装unlocker</p>
+<p>4 创建虚拟机</p>
+<p>4.1 选择macOS11.0</p>
+<p>4.2 选择处理器数量</p>
+<p>4.3 设置虚拟机内存</p>
+<p>4.4 选择网络类型</p>
+<p>4.5 选择I/O控制器类型</p>
+<p>4.6 选择磁盘类型</p>
+<p>4.7 指定磁盘容量</p>
+<p>5 配置虚拟机</p>
+<p>6 挂载安装镜像</p>
+<p>7 安装 macOS</p>
+<p>7.1 选择安装语言</p>
+<p>7.2 选择磁盘工具</p>
+<p>7.3 磁盘初始化</p>
+<p>7.4 选择安装位置</p>
+<p>7.5 开始安装</p>
+<p>8 配置macOS</p>
+<p>8.1 选择国家和地区</p>
+<p>8.2 选择网络连接方式</p>
+<p>8.3 迁移助理</p>
+<p>8.4 设置apple ID</p>
+<p>8.5 创建账户</p>
+<p>9 安装 VMware Tools</p>
+<p>10 安装Xcode</p>
+<p>文章目录 收缩</p>
+<p>下载 macOS Big Sur 11.0.1</p>
+<p>私我</p>
+<p>提取码 crsw</p>
+<p>下载并安装VMware16</p>
+<p>下载地址：https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.0.0-16894299.exe</p>
+<p>序列号：</p>
+<p>安装unlocker</p>
+<p>默认安装好的VMware16没有MacOS选项，需要先安装unlocker，下载地址：</p>
+<p><a href="https://github.com/paolo-projects/auto-unlocker/releases">https://github.com/paolo-projects/auto-unlocker/releases</a></p>
+<p>安装后：</p>
+<p><img src="/post-images/youdao-hei-ping-guo-01.png" alt="" /></p>
+<p>创建虚拟机</p>
+<p>打开 VMware Workstation 16 ，选择 “创建新的虚拟机”</p>
+<p><img src="/post-images/youdao-hei-ping-guo-02.png" alt="" /></p>
+<p><img src="/post-images/youdao-hei-ping-guo-03.png" alt="" /></p>
+<p><img src="/post-images/youdao-hei-ping-guo-04.png" alt="" /></p>
+<p>选择macOS11.0</p>
+<p><img src="/post-images/youdao-hei-ping-guo-05.png" alt="" /></p>
+<p>选择处理器数量</p>
+<p><img src="/post-images/youdao-hei-ping-guo-06.png" alt="" /></p>
+<p>设置虚拟机内存</p>
+<p><img src="/post-images/youdao-hei-ping-guo-07.png" alt="" /></p>
+<p>选择网络类型</p>
+<p><img src="/post-images/youdao-hei-ping-guo-08.png" alt="" /></p>
+<p>选择I/O控制器类型</p>
+<p><img src="/post-images/youdao-hei-ping-guo-09.png" alt="" /></p>
+<p>选择磁盘类型</p>
+<p><img src="/post-images/youdao-hei-ping-guo-10.png" alt="" /></p>
+<p><img src="/post-images/youdao-hei-ping-guo-11.png" alt="" /></p>
+<p>指定磁盘容量</p>
+<p><img src="/post-images/youdao-hei-ping-guo-12.png" alt="" /></p>
+<p>配置虚拟机</p>
+<p>创建完虚拟机后，找到虚拟机文件位置，编辑macOS 11.0.vmx文件，在末尾添加：</p>
+<p>挂载安装镜像</p>
+<p>点击“编辑虚拟机设置”，选择“CD/DVD”选项。</p>
+<p><img src="/post-images/youdao-hei-ping-guo-13.png" alt="" /></p>
+<p>保存以后点击“开启虚拟机”</p>
+<p>安装 macOS</p>
+<p><img src="/post-images/youdao-hei-ping-guo-14.png" alt="" /></p>
+<p>选择安装语言</p>
+<p><img src="/post-images/youdao-hei-ping-guo-15.png" alt="" /></p>
+<p>选择磁盘工具</p>
+<p><img src="/post-images/youdao-hei-ping-guo-16.png" alt="" /></p>
+<p>磁盘初始化</p>
+<p>找到名称为 VMware Virtual SATA Hard Drive Media 的磁盘，选中该磁盘，点击抹掉，格式选择 APFS</p>
+<p><img src="/post-images/youdao-hei-ping-guo-17.png" alt="" /></p>
+<p>退出磁盘工具，选择 安装 macOS 并继续</p>
+<p><img src="/post-images/youdao-hei-ping-guo-18.png" alt="" /></p>
+<p><img src="/post-images/youdao-hei-ping-guo-19.png" alt="" /></p>
+<p>选择安装位置</p>
+<p><img src="/post-images/youdao-hei-ping-guo-20.png" alt="" /></p>
+<p>开始安装</p>
+<p><img src="/post-images/youdao-hei-ping-guo-21.png" alt="" /></p>
+<p>配置macOS</p>
+<p>选择国家和地区</p>
+<p><img src="/post-images/youdao-hei-ping-guo-22.png" alt="" /></p>
+<p>选择网络连接方式</p>
+<p><img src="/post-images/youdao-hei-ping-guo-23.png" alt="" /></p>
+<p><img src="/post-images/youdao-hei-ping-guo-24.png" alt="" /></p>
+<p>提示网络连接失败的解决办法：</p>
+<p>1、回到windows，控制面板-网络连接-右键属性-VMware Network Adapter VMnet1–IPV4设置–自动获取ip地址–自动获得dns服务器；</p>
+<p>2、打开windows服务，打开服务：VMware DHCP Sevice和VMware NAT Service;</p>
+<p><img src="/post-images/youdao-hei-ping-guo-25.png" alt="" /></p>
+<p>迁移助理</p>
+<p>选择以后</p>
+<p><img src="/post-images/youdao-hei-ping-guo-26.png" alt="" /></p>
+<p>设置apple ID</p>
+<p>选择稍后设置</p>
+<p><img src="/post-images/youdao-hei-ping-guo-27.png" alt="" /></p>
+<p>创建账户</p>
+<p><img src="/post-images/youdao-hei-ping-guo-28.png" alt="" /></p>
+<p>安装 VMware Tools</p>
+<p>在 VMware 的 虚拟机(M) 菜单栏中选择 安装 VMware Tools(T)… 选项。</p>
+<p><img src="/post-images/youdao-hei-ping-guo-29.png" alt="" /></p>
+<p><img src="/post-images/youdao-hei-ping-guo-30.png" alt="" /></p>
+<p>安装过程会触发多个安全限制，请按照提示转到设置里的安全设置里解锁，最后完成安装。</p>
+<p><img src="/post-images/youdao-hei-ping-guo-31.png" alt="" /></p>
+<p>完成安装后必须重启系统，然后点击虚拟机上的进入全屏模式，macOS即可全屏显示。</p>
+<p>安装Xcode</p>
+<p><img src="/post-images/youdao-hei-ping-guo-32.png" alt="" /></p>
+<p>控制台中显示效果：</p>
+<p><img src="/post-images/youdao-hei-ping-guo-33.png" alt="" /></p>
 
   </div>
 

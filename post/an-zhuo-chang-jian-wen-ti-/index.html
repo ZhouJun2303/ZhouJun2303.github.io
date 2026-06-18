@@ -33,12 +33,12 @@
 <meta property="og:type" content="article" />
 
 
-<meta name="description" content="1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] android:testOnly=...">
+<meta name="description" content="安卓常见问题 1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] ![](/post-images/youdao-an-zhuo-chang&amp;hellip;">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/an-zhuo-chang-jian-wen-ti-/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"安卓常见问题","url":"https://zhoujun2303.github.io/post/an-zhuo-chang-jian-wen-ti-/","description":"1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] android:testOnly=...","datePublished":"2021-06-16T14:48:34+08:00","dateModified":"2026-06-17T10:11:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"安卓常见问题","url":"https://zhoujun2303.github.io/post/an-zhuo-chang-jian-wen-ti-/","description":"安卓常见问题 1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] ![](/post-images/youdao-an-zhuo-chang\u0026hellip;","datePublished":"2021-06-16T14:48:34+08:00","dateModified":"2026-06-17T10:11:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/an-zhuo-chang-jian-wen-ti-/","name":"安卓常见问题","position":2}]}</script>
 <meta property="og:title" content="安卓常见问题">
-<meta property="og:description" content="1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] android:testOnly=...">
+<meta property="og:description" content="安卓常见问题 1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] ![](/post-images/youdao-an-zhuo-chang&amp;hellip;">
 <meta property="og:url" content="https://zhoujun2303.github.io/post/an-zhuo-chang-jian-wen-ti-/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="长胖是个梦想">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://zhoujun2303.github.io/post/an-zhuo-chang-jian-wen-ti-/">
 <meta name="twitter:title" content="安卓常见问题">
-<meta name="twitter:description" content="1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] android:testOnly=...">
+<meta name="twitter:description" content="安卓常见问题 1，google国内镜像（安卓依赖包下载慢问题） url'http://maven.aliyun.com/nexus/content/groups/public/' 2，解决Failure [INSTALL_FAILED_TEST_ONLY] ![](/post-images/youdao-an-zhuo-chang&amp;hellip;">
 <meta name="twitter:image" content="/images/avatar.png">
 </head>
 <body class="flavor-theme">
@@ -199,42 +199,35 @@
   
 
   <div class="article-content">
-    <ul>
-<li>1，google国内镜像（安卓依赖包下载慢问题）</li>
-</ul>
-<pre><code>  url'http://maven.aliyun.com/nexus/content/groups/public/'
+    <p>安卓常见问题</p>
+<p>1，google国内镜像（安卓依赖包下载慢问题）</p>
+<pre><code class="language-javascript">  url'http://maven.aliyun.com/nexus/content/groups/public/'
 </code></pre>
-<ul>
-<li>2，解决Failure [INSTALL_FAILED_TEST_ONLY]<br />
-<img src="/post-images/1659768635872.jpg" alt="" /></li>
-</ul>
-<pre><code>android:testOnly=&quot;true&quot; 
+<p>2，解决Failure [INSTALL_FAILED_TEST_ONLY]</p>
+<p><img src="/post-images/youdao-an-zhuo-chang-jian-wen-ti--01.png" alt="" /></p>
+<pre><code class="language-javascript">android:testOnly=&quot;true&quot;
 改成 android:testOnly=&quot;false&quot;
-// 升级之后BUG 
-android.injected.testOnly=false 
+// 升级之后BUG
+android.injected.testOnly=false
 </code></pre>
-<ul>
-<li>
 <p>3，测试打出来的是不是签名包</p>
-<ul>
-<li>a,打出来的签名release包安装至手机（签名release包）</li>
-<li>b,连接至Androidstudio</li>
-<li>c,查看logcat（能查看包名的release包不能上架市场，不能查看即为正常）</li>
-<li>d,检查 androidManifest.xml 文件中是否存在 isDebugger = true的标签，如果存在该标签,即使使用签名文件发布正式包，打出来的apk或者aab 也是debug包<br />
-<img src="/post-images/1659768662006.jpg" alt="" /></li>
-</ul>
-</li>
-<li>
-<p>4，存在重复引用库问题<br />
-<a href="https://note.youdao.com/s/GLwOleTm">log.txt</a><br />
-检查.dragle文件 dependencies标签内是否存在重复引用<br />
-切换到project视角，差看Lib 里面是否在存重复引用库</p>
-</li>
-<li>
-<p>5，编译不通过问题<br />
-尝试升级 gradle版本</p>
-</li>
-</ul>
+<pre><code>a,打出来的签名release包安装至手机（签名release包）
+
+b,连接至Androidstudio
+
+c,查看logcat（能查看包名的release包不能上架市场，不能查看即为正常）
+
+d,检查 androidManifest.xml 文件中是否存在 isDebugger = true的标签，如果存在该标签，即使使用签名文件发布正式包，打出来的apk或者aab 也是debug包
+</code></pre>
+<p><img src="/post-images/youdao-an-zhuo-chang-jian-wen-ti--02.png" alt="" /></p>
+<p>4，存在重复引用库问题</p>
+<p><a href="https://note.youdao.com/yws/public/resource/bd402dd02836163ce8ec44b2fd74b823/xmlnote/721F4526649048CEB27E3E7EA09432A1/5366">log.txt</a></p>
+<pre><code class="language-javascript">检查.dragle文件 dependencies标签内是否存在重复引用
+切换到project视角，差看Lib 里面是否在存重复引用库
+</code></pre>
+<p>5，编译不通过问题</p>
+<pre><code class="language-javascript">尝试升级 gradle版本
+</code></pre>
 
   </div>
 
