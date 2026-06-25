@@ -33,12 +33,12 @@
 <meta property="og:type" content="article" />
 
 
-<meta name="description" content="返回总览 性能优化不是“感觉哪里慢就改哪里”，而是用数据证明瓶颈、用工具定位原因、用对比验证&amp;hellip;">
+<meta name="description" content="返回总览 性能优化不是“感觉哪里慢就改哪里”，而是用数据证明瓶颈、用工具定位原因、用对比验证收益、用规则防止回退。开发高级/资深需要建立一套能被团队重&amp;hellip;">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 开发高级/资深 08：性能、内存与包体","url":"https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/","description":"返回总览 性能优化不是“感觉哪里慢就改哪里”，而是用数据证明瓶颈、用工具定位原因、用对比验证\u0026hellip;","datePublished":"2026-06-10T21:58:00+08:00","dateModified":"2026-06-17T10:10:59+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 开发高级/资深 08：性能、内存与包体","url":"https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/","description":"返回总览 性能优化不是“感觉哪里慢就改哪里”，而是用数据证明瓶颈、用工具定位原因、用对比验证收益、用规则防止回退。开发高级/资深需要建立一套能被团队重\u0026hellip;","datePublished":"2026-06-10T21:58:00+08:00","dateModified":"2026-06-17T10:10:59+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/","name":"Unity 开发高级/资深 08：性能、内存与包体","position":2}]}</script>
 <meta property="og:title" content="Unity 开发高级/资深 08：性能、内存与包体">
-<meta property="og:description" content="返回总览 性能优化不是“感觉哪里慢就改哪里”，而是用数据证明瓶颈、用工具定位原因、用对比验证&amp;hellip;">
+<meta property="og:description" content="返回总览 性能优化不是“感觉哪里慢就改哪里”，而是用数据证明瓶颈、用工具定位原因、用对比验证收益、用规则防止回退。开发高级/资深需要建立一套能被团队重&amp;hellip;">
 <meta property="og:url" content="https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="长胖是个梦想">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-senior-developer-08-performance-memory-package/">
 <meta name="twitter:title" content="Unity 开发高级/资深 08：性能、内存与包体">
-<meta name="twitter:description" content="返回总览 性能优化不是“感觉哪里慢就改哪里”，而是用数据证明瓶颈、用工具定位原因、用对比验证&amp;hellip;">
+<meta name="twitter:description" content="返回总览 性能优化不是“感觉哪里慢就改哪里”，而是用数据证明瓶颈、用工具定位原因、用对比验证收益、用规则防止回退。开发高级/资深需要建立一套能被团队重&amp;hellip;">
 <meta name="twitter:image" content="/images/avatar.png">
 </head>
 <body class="flavor-theme">
@@ -184,7 +184,7 @@
       <span class="article-meta__item">2026-06-10</span>
       
       <span class="article-meta__sep">·</span>
-      <span class="article-meta__item">21 分钟阅读</span>
+      <span class="article-meta__item">20 分钟阅读</span>
       
     </div>
     
@@ -205,7 +205,7 @@
   
 
   <div class="article-content">
-    <p><a href="https://zhoujun2303.github.io/post/unity-senior-developer-skills/">返回总览</a></p>
+    <p><a href="/post/unity-senior-developer-skills/">返回总览</a></p>
 <p><img src="/post-images/unity-senior-developer-learning-roadmap.svg" alt="Unity 开发高级/资深学习路线" /></p>
 <p>性能优化不是“感觉哪里慢就改哪里”，而是用数据证明瓶颈、用工具定位原因、用对比验证收益、用规则防止回退。开发高级/资深需要建立一套能被团队重复执行的性能流程。</p>
 <h2 id="heading">性能优化基本原则</h2>
@@ -920,6 +920,14 @@ public int QueryEnemies(Vector3 center, float radius, LayerMask mask)
 
     
     <div class="footer-social">
+      
+      <a class="footer-social__link" href="https://github.com/ZhouJun2303" target="_blank" rel="noopener noreferrer"
+        aria-label="GitHub">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+      </a>
       
       
       
