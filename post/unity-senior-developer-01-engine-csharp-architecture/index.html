@@ -35,7 +35,7 @@
 
 <meta name="description" content="返回总览 Unity 引擎基础 生命周期：Awake、OnEnable、Start、U&amp;hellip;">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/unity-senior-developer-01-engine-csharp-architecture/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 开发高级/资深 01：引擎、C# 与客户端架构","url":"https://zhoujun2303.github.io/post/unity-senior-developer-01-engine-csharp-architecture/","description":"返回总览 Unity 引擎基础 生命周期：Awake、OnEnable、Start、U\u0026hellip;","datePublished":"2026-06-10T21:51:00+08:00","dateModified":"2026-06-17T10:10:59+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 开发高级/资深 01：引擎、C# 与客户端架构","url":"https://zhoujun2303.github.io/post/unity-senior-developer-01-engine-csharp-architecture/","description":"返回总览 Unity 引擎基础 生命周期：Awake、OnEnable、Start、U\u0026hellip;","datePublished":"2026-06-10T21:51:00+08:00","dateModified":"2026-06-26T09:48:24+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-senior-developer-01-engine-csharp-architecture/","name":"Unity 开发高级/资深 01：引擎、C# 与客户端架构","position":2}]}</script>
 <meta property="og:title" content="Unity 开发高级/资深 01：引擎、C# 与客户端架构">
 <meta property="og:description" content="返回总览 Unity 引擎基础 生命周期：Awake、OnEnable、Start、U&amp;hellip;">
@@ -184,7 +184,7 @@
       <span class="article-meta__item">2026-06-10</span>
       
       <span class="article-meta__sep">·</span>
-      <span class="article-meta__item">5 分钟阅读</span>
+      <span class="article-meta__item">13 分钟阅读</span>
       
     </div>
     
@@ -219,9 +219,155 @@
 <li>时间系统：Time.deltaTime、fixedDeltaTime、timeScale、真实时间、服务器时间、本地时间。</li>
 <li>输入系统：旧 Input、新 Input System、触控、键鼠、手柄在架构中的抽象方式。</li>
 <li>编辑器与运行时：Editor 代码隔离、Assembly Definition、条件编译、打包裁剪。</li>
-<li>版本意识：Unity LTS 选择、升级风险、插件兼容、渲染管线差异。</li>
+<li>版本意识：Unity LTS 选择、升级风险、插件兼容。</li>
+<li>渲染管线差异：<a href="/post/unity-senior-developer-01-01-render-pipeline-differences/">单独阅读</a> Built-in、URP、HDRP 的定位、资源兼容、Shader/材质、后处理、性能和迁移成本。</li>
 </ul>
-<h3 id="heading">需要掌握的工具</h3>
+<h3 id="heading">坐标、旋转与父子变换</h3>
+<p>坐标系统不要死记名词，核心是先问一句：这个值是相对于谁的？</p>
+<ul>
+<li>世界坐标：相对于整个 Scene 的坐标。<code>transform.position</code>、<code>transform.rotation</code> 表示物体在世界里的位置和旋转，适合做寻路、相机跟随、子弹飞行、怪物距离判断。</li>
+<li>本地坐标：相对于父节点的坐标。<code>transform.localPosition</code>、<code>transform.localRotation</code>、<code>transform.localScale</code> 表示子节点在父节点空间里的偏移，适合做挂点、武器、特效、UI 子节点布局。</li>
+<li>屏幕坐标：相对于屏幕像素的坐标。鼠标、触摸、<code>Camera.WorldToScreenPoint</code> 得到的通常是屏幕坐标，常用于点击检测、血条跟随角色、把 3D 位置投到屏幕上。</li>
+<li>UI 坐标：相对于某个 <code>RectTransform</code> 或 Canvas 的坐标。UGUI 里不要直接把屏幕坐标当成 <code>anchoredPosition</code>，通常要用 <code>RectTransformUtility.ScreenPointToLocalPointInRectangle</code> 做转换。</li>
+</ul>
+<p>常用转换可以按这个顺序理解：</p>
+<pre><code class="language-csharp">// 子节点挂点：本地偏移 -&gt; 世界位置
+Vector3 worldPoint = weaponRoot.TransformPoint(localOffset);
+
+// 判断一个世界点在某个物体自己的前后左右：世界位置 -&gt; 本地位置
+Vector3 localPoint = transform.InverseTransformPoint(enemy.position);
+bool enemyInFront = localPoint.z &gt; 0f;
+
+// 角色头顶世界坐标 -&gt; 屏幕坐标 -&gt; UI 面板坐标
+Vector3 screenPoint = Camera.main.WorldToScreenPoint(head.position);
+RectTransformUtility.ScreenPointToLocalPointInRectangle(
+    hpBarRoot,
+    screenPoint,
+    uiCamera,
+    out Vector2 uiPoint
+);
+hpBar.anchoredPosition = uiPoint;
+</code></pre>
+<p>角色头顶是 3D 世界坐标，血条是 2D UI 坐标，二者不能直接赋值。先转成屏幕坐标，是因为屏幕是相机投影后的共同参照：<code>WorldToScreenPoint</code> 会把世界点经过相机位置、朝向、FOV、透视投影和分辨率，变成屏幕上的像素点；然后再用 <code>ScreenPointToLocalPointInRectangle</code> 转成某个 UI 容器下的本地坐标。实际项目里还要判断 <code>screenPoint.z</code>，如果角色在相机背后，血条应该隐藏。</p>
+<p>四元数和矩阵可以先按“工具”理解，不用一开始就钻数学细节。</p>
+<ul>
+<li>四元数 <code>Quaternion</code> 用来表示旋转。它比欧拉角稳定，不容易遇到万向锁。业务代码里不要直接改 <code>x/y/z/w</code>，优先用 <code>Quaternion.Euler</code>、<code>Quaternion.LookRotation</code>、<code>Quaternion.AngleAxis</code>、<code>Quaternion.Slerp</code>。</li>
+<li>矩阵 <code>Matrix4x4</code> 可以把位置、旋转、缩放合成一次变换。Unity 的 <code>Transform</code> 背后本质就是矩阵变换：<code>localToWorldMatrix</code> 把本地空间转到世界空间，<code>worldToLocalMatrix</code> 反过来。日常业务优先用 <code>TransformPoint</code>、<code>InverseTransformPoint</code>，写 Shader、批量渲染、自定义骨骼或大量数学计算时再直接碰矩阵。</li>
+<li>父子节点变换的关系是：父节点的世界变换乘上子节点的本地变换，得到子节点的世界变换。父节点移动、旋转、缩放，子节点会一起变化；子节点改 <code>localPosition</code>，是在父节点空间里调整偏移。</li>
+</ul>
+<p>万向锁是欧拉角的典型问题：3D 旋转本来有三个自由度，但在某些角度下，两个旋转轴会重合，实际只剩两个有效方向。表现到 Unity 里，就是连续改 <code>transform.eulerAngles</code> 时可能出现角度跳变、方向怪、某个轴像是转不动。欧拉角适合 Inspector 显示和配置，四元数更适合代码里的旋转计算、插值和组合。</p>
+<p>几个容易踩坑的点：</p>
+<ul>
+<li><code>position</code> 和 <code>localPosition</code> 不是一回事。没有父节点时两者看起来一样，有父节点后差异会立刻出现。</li>
+<li><code>TransformPoint</code> 会受位置、旋转、缩放影响；<code>TransformDirection</code> 只处理方向，不处理位置。算方向时不要用点位转换硬减。</li>
+<li><code>SetParent(parent, true)</code> 会尽量保持当前世界位置不变，并重新计算本地坐标；<code>SetParent(parent, false)</code> 会保留当前本地值，世界位置可能变化。</li>
+<li>父节点有非等比缩放时，子节点旋转、碰撞体、粒子和 UI 都可能出现奇怪结果。项目里尽量不要把复杂逻辑挂在被拉伸的父节点下面。</li>
+<li>UI 的 Overlay、Screen Space Camera、World Space 三种 Canvas 模式转换方式不同。遇到“血条位置偏了”“点击区域不对”，先检查 Canvas 模式、相机参数和坐标转换函数。</li>
+</ul>
+<p>实际项目里，能把坐标系统讲清楚的人，通常能更快定位这类问题：角色头顶血条漂移、子弹方向不对、特效挂点偏移、拖拽 UI 跟手异常、相机跟随抖动、换父节点后物体瞬移。</p>
+<h3 id="playerloop-">PlayerLoop 与每帧执行链</h3>
+<p>PlayerLoop 可以理解成 Unity 一帧内部的执行流水线。开发时不需要背完整源码，但要知道脚本、物理、动画和渲染大致先后发生在哪里。</p>
+<p>简化顺序可以这样看：</p>
+<pre><code class="language-text">输入与时间更新
+↓
+FixedUpdate，可能 0 次、1 次或多次
+↓
+物理模拟
+↓
+Update
+↓
+动画、状态机、协程等更新
+↓
+LateUpdate
+↓
+相机、剔除、渲染提交
+↓
+画面显示
+</code></pre>
+<p><code>FixedUpdate</code> 按固定时间步长执行，不是每帧一定一次。帧率低时 Unity 可能连续执行多次来追物理时间，帧率高时也可能一次都不执行。<code>Rigidbody</code> 移动、加力、物理前控制适合放这里。</p>
+<p><code>Update</code> 基本每帧一次，适合输入、普通业务逻辑、角色状态、技能冷却、UI 刷新等。<code>LateUpdate</code> 在所有 <code>Update</code> 后执行，适合相机跟随、角色后处理、需要等别人先动完再修正自己的逻辑。</p>
+<p>渲染在脚本逻辑之后。也就是说这一帧在 <code>Update</code> 或 <code>LateUpdate</code> 改了位置、材质、显隐，后面的渲染阶段才会把变化画出来。理解 PlayerLoop，主要是为了排查物理抖动、相机抖动、输入延迟、动画覆盖位移、UI 跟随 3D 角色偏一帧、协程时机不符合预期这类问题。</p>
+<h3 id="heading-1">输入系统与动作抽象</h3>
+<p>输入系统的核心不是 API 名字，而是不要让业务代码到处直接读具体设备。角色、战斗、UI、交互系统应该关心“玩家想做什么”，而不是关心这个输入来自键盘、鼠标、触屏还是手柄。</p>
+<p>旧 <code>Input</code> 常见写法是直接读按键：</p>
+<pre><code class="language-csharp">if (Input.GetKeyDown(KeyCode.Space))
+{
+    Jump();
+}
+</code></pre>
+<p>这种方式简单，适合小项目和旧项目。但平台一多，业务代码里会散落很多 <code>GetKeyDown</code>、<code>GetMouseButtonDown</code>、<code>GetTouch</code>，后面支持手柄、改键位、做触屏虚拟摇杆都会很难收。</p>
+<p>New Input System 更推荐先定义 Action：</p>
+<pre><code class="language-text">Move：移动
+Look：视角旋转
+Jump：跳跃
+Attack：攻击
+Interact：交互
+OpenMenu：打开菜单
+</code></pre>
+<p>一个 Action 可以绑定多个输入来源：</p>
+<pre><code class="language-text">Move
+- Keyboard：WASD
+- Gamepad：Left Stick
+- Touch：Virtual Joystick
+
+Attack
+- Mouse：Left Button
+- Gamepad：Right Trigger
+- Touch：攻击按钮
+</code></pre>
+<p>业务层只读统一动作：</p>
+<pre><code class="language-csharp">Vector2 move = moveAction.ReadValue&lt;Vector2&gt;();
+</code></pre>
+<p>它不应该关心这个 <code>Vector2</code> 是键盘、摇杆还是虚拟摇杆来的。</p>
+<p><code>Action Map</code> 是一组输入动作的集合，通常按当前游戏状态划分：</p>
+<pre><code class="language-text">Gameplay
+- Move
+- Look
+- Jump
+- Attack
+- Interact
+
+UI
+- Navigate
+- Submit
+- Cancel
+- Point
+- Click
+
+Vehicle
+- Steer
+- Brake
+- Accelerate
+</code></pre>
+<p>分 Action Map 的意义是防止状态混乱。比如 <code>Esc</code> 在 Gameplay 里是打开菜单，在 UI 里是关闭弹窗；打开背包时应该禁用 Gameplay，启用 UI，避免“点 UI 的同时角色还在攻击或移动”。</p>
+<pre><code class="language-csharp">gameplayMap.Disable();
+uiMap.Enable();
+</code></pre>
+<p>设备热插拔指游戏运行中设备随时接入或断开。玩家可能先用键鼠，进入游戏后插入手柄；也可能中途拔掉手柄切回键鼠。New Input System 可以监听设备变化：</p>
+<pre><code class="language-csharp">InputSystem.onDeviceChange += (device, change) =&gt;
+{
+    if (change == InputDeviceChange.Added)
+    {
+        Debug.Log($&quot;设备接入: {device.displayName}&quot;);
+    }
+
+    if (change == InputDeviceChange.Removed)
+    {
+        Debug.Log($&quot;设备断开: {device.displayName}&quot;);
+    }
+};
+</code></pre>
+<p>中大型项目里，一般会再包一层 <code>InputService</code> 或 <code>InputReader</code>：</p>
+<pre><code class="language-text">New Input System
+↓
+InputReader / InputService
+↓
+统一动作数据
+↓
+角色、UI、战斗、交互系统
+</code></pre>
+<p>这样 UI 提示可以根据当前设备显示“按 E 交互”或“按 A 交互”，业务逻辑也不会因为新增触屏、手柄、键位重绑而大面积修改。</p>
+<h3 id="heading-2">需要掌握的工具</h3>
 <ul>
 <li>Unity Editor：Scene、Game、Inspector、Hierarchy、Project、Console、Profiler 等核心窗口。</li>
 <li>Package Manager：管理官方包、第三方包和本地包依赖。</li>
@@ -230,11 +376,12 @@
 <li>Frame Debugger：理解渲染顺序和 Draw Call。</li>
 <li>Unity Scripting API/Manual：查生命周期、组件 API 和版本差异。</li>
 </ul>
-<h3 id="heading-1">可继续细分方向</h3>
+<h3 id="heading-3">可继续细分方向</h3>
 <ul>
 <li>生命周期与 PlayerLoop。</li>
 <li>场景、Prefab 与序列化。</li>
 <li>Unity 平台参数与构建设置。</li>
+<li><a href="/post/unity-senior-developer-01-01-render-pipeline-differences/">渲染管线差异与升级迁移</a>。</li>
 <li>编辑器扩展与运行时代码隔离。</li>
 </ul>
 <p><a id="csharp"></a></p>
@@ -250,7 +397,7 @@
 <li>IL2CPP/AOT：泛型裁剪、反射保留、link.xml、AOT 泛型补充、符号堆栈。</li>
 <li>代码表达：命名清楚、函数短小、参数明确、避免魔法值、避免过深嵌套。</li>
 </ul>
-<h3 id="heading-2">需要掌握的工具</h3>
+<h3 id="heading-4">需要掌握的工具</h3>
 <ul>
 <li>Rider 或 Visual Studio：调试、重构、代码导航、性能提示。</li>
 <li>Roslyn Analyzer：静态检查空引用、命名、分配和风格问题。</li>
@@ -259,7 +406,7 @@
 <li>dotTrace/dotMemory 或 Rider Profiler：分析 C# 层耗时和托管内存。</li>
 <li>link.xml 与 Unity Managed Stripping 工具链：处理裁剪和反射保留。</li>
 </ul>
-<h3 id="heading-3">可继续细分方向</h3>
+<h3 id="heading-5">可继续细分方向</h3>
 <ul>
 <li>C# 基础语法与工程写法。</li>
 <li>GC、内存分配与性能敏感写法。</li>
@@ -267,7 +414,7 @@
 <li>IL2CPP、AOT、反射和泛型裁剪。</li>
 </ul>
 <p><a id="client-architecture"></a></p>
-<h2 id="heading-4">客户端架构设计</h2>
+<h2 id="heading-6">客户端架构设计</h2>
 <ul>
 <li>分层架构：入口层、框架层、业务层、表现层、数据层、平台层。</li>
 <li>模块边界：登录、资源、UI、网络、战斗、任务、背包、活动、音频、引导等模块互不乱调。</li>
@@ -279,7 +426,7 @@
 <li>Assembly 拆分：Runtime、Editor、Tests、ThirdParty、HotUpdate 独立边界。</li>
 <li>可演进性：给业务留扩展点，同时避免为了“未来可能需要”过度抽象。</li>
 </ul>
-<h3 id="heading-5">需要掌握的工具</h3>
+<h3 id="heading-7">需要掌握的工具</h3>
 <ul>
 <li>Assembly Definition：拆分 Runtime、Editor、Tests、HotUpdate 和第三方依赖。</li>
 <li>Mermaid、PlantUML、draw.io：画模块图、流程图、状态图和时序图。</li>
@@ -288,14 +435,14 @@
 <li>GitHub/GitLab Code Review：让架构约束通过评审持续落地。</li>
 <li>依赖分析脚本：检查 Assembly、命名空间、资源和模块引用边界。</li>
 </ul>
-<h3 id="heading-6">可继续细分方向</h3>
+<h3 id="heading-8">可继续细分方向</h3>
 <ul>
 <li>启动流程与游戏状态机。</li>
 <li>模块边界与依赖治理。</li>
 <li>全局服务、事件系统和对象池。</li>
 <li>异步流程、取消、超时和异常恢复。</li>
 </ul>
-<h2 id="heading-7">开发高级/资深判断标准</h2>
+<h2 id="heading-9">开发高级/资深判断标准</h2>
 <ul>
 <li>新人能否在一天内理解项目启动流程。</li>
 <li>一个业务模块能否独立开发、测试、替换和定位问题。</li>
@@ -303,7 +450,7 @@
 <li>框架代码是否稳定，业务迭代是否不用频繁改底层。</li>
 <li>出问题时能否通过日志和状态快速定位是哪一层失败。</li>
 </ul>
-<h2 id="heading-8">常见风险</h2>
+<h2 id="heading-10">常见风险</h2>
 <ul>
 <li>所有模块都依赖一个巨大的 GameManager。</li>
 <li>单例过多，模块之间直接互相调用，测试和替换困难。</li>

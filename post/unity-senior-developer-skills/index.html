@@ -37,7 +37,7 @@
 
 <meta name="description" content="“开发高级/资深”不是只负责写最难的代码，而是负责把 Unity 项目的技术方向、模块边界、性能质量、发版稳定性和团队交付串起来。本文采用“总分”结构：本文件是总览入口，下面的分文档展开每个方向的具体技能点。 阅读方式 总览&amp;hellip;">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/unity-senior-developer-skills/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 开发高级/资深技能总览","url":"https://zhoujun2303.github.io/post/unity-senior-developer-skills/","description":"“开发高级/资深”不是只负责写最难的代码，而是负责把 Unity 项目的技术方向、模块边界、性能质量、发版稳定性和团队交付串起来。本文采用“总分”结构：本文件是总览入口，下面的分文档展开每个方向的具体技能点。 阅读方式 总览\u0026hellip;","image":"/post-images/unity-senior-developer-skill-map.svg","datePublished":"2026-06-10T21:50:00+08:00","dateModified":"2026-06-17T10:10:59+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 开发高级/资深技能总览","url":"https://zhoujun2303.github.io/post/unity-senior-developer-skills/","description":"“开发高级/资深”不是只负责写最难的代码，而是负责把 Unity 项目的技术方向、模块边界、性能质量、发版稳定性和团队交付串起来。本文采用“总分”结构：本文件是总览入口，下面的分文档展开每个方向的具体技能点。 阅读方式 总览\u0026hellip;","image":"/post-images/unity-senior-developer-skill-map.svg","datePublished":"2026-06-10T21:50:00+08:00","dateModified":"2026-06-26T09:48:24+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-senior-developer-skills/","name":"Unity 开发高级/资深技能总览","position":2}]}</script>
 <meta property="og:title" content="Unity 开发高级/资深技能总览">
 <meta property="og:description" content="“开发高级/资深”不是只负责写最难的代码，而是负责把 Unity 项目的技术方向、模块边界、性能质量、发版稳定性和团队交付串起来。本文采用“总分”结构：本文件是总览入口，下面的分文档展开每个方向的具体技能点。 阅读方式 总览&amp;hellip;">
@@ -186,7 +186,7 @@
       <span class="article-meta__item">2026-06-10</span>
       
       <span class="article-meta__sep">·</span>
-      <span class="article-meta__item">26 分钟阅读</span>
+      <span class="article-meta__item">27 分钟阅读</span>
       
     </div>
     
@@ -219,7 +219,7 @@
 <ul>
 <li>总览入口：当前文档负责列出全部方向、能力地图、学习路线和自检清单。</li>
 <li>分文档：每个专题都有独立 Markdown，适合继续补充案例、代码片段和项目复盘。</li>
-<li>细分方式：每个分文档内继续按小方向拆分；如果某个方向后续需要更深案例，可以在同目录下继续新增专题文档。</li>
+<li>细分方式：主文档使用 <code>01</code>、<code>02</code> 这类一级编号；子级专题统一使用 <code>01-01</code>、<code>01-02</code> 这类二级编号，文件名也必须带完整二级编号。</li>
 <li>可跳转：目录表中的方向名都可以直接跳到对应分文档或分文档内的小节。</li>
 <li>工具要求：每个方向都列出了开发高级/资深需要掌握或至少能判断适用边界的工具。</li>
 <li>图片资源：本专题图片都放在 <code>post-images/</code> 下，正文统一使用 <code>/post-images/...</code> 引用。</li>
@@ -238,6 +238,11 @@
 <td>01</td>
 <td><a href="/post/unity-senior-developer-01-engine-csharp-architecture/">引擎、C# 与客户端架构</a></td>
 <td>Unity 基础、C#、架构分层、启动流程、模块边界</td>
+</tr>
+<tr>
+<td>01-01</td>
+<td><a href="/post/unity-senior-developer-01-01-render-pipeline-differences/">渲染管线差异</a></td>
+<td>Built-in、URP、HDRP 的定位、兼容、迁移和选型成本</td>
 </tr>
 <tr>
 <td>02</td>
@@ -524,7 +529,7 @@
 <tbody>
 <tr>
 <td>Unity 引擎基础</td>
-<td>项目启动流程图、生命周期规范、Prefab/Scene 使用规范、Unity 版本升级风险清单</td>
+<td>项目启动流程图、生命周期规范、Prefab/Scene 使用规范、Unity 版本升级和渲染管线迁移风险清单</td>
 </tr>
 <tr>
 <td>C# 与代码基本功</td>
@@ -884,6 +889,7 @@
 <h2 id="heading-8">专题文件结构</h2>
 <pre><code class="language-text">posts/unity-senior-developer-skills.md
 posts/unity-senior-developer-01-engine-csharp-architecture.md
+posts/unity-senior-developer-01-01-render-pipeline-differences.md
 posts/unity-senior-developer-02-engineering-maintainability.md
 posts/unity-senior-developer-03-assets-hot-update.md
 posts/unity-senior-developer-04-ui-interaction-input.md

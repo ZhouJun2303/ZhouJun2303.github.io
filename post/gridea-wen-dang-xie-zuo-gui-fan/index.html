@@ -37,7 +37,7 @@
 
 <meta name="description" content="本规范用于当前 Gridea Pro 站点后续新增和维护文章。只要文章最终要发布到本站，就按这里的目录、元数据、图片、链接和渲染规则处理。 目录规则 站点根目录是当前 Gridea Pro 项目目录，也就是本仓库根目录。 文章 Markdown&amp;hellip;">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/gridea-wen-dang-xie-zuo-gui-fan/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Gridea 文档写作规范","url":"https://zhoujun2303.github.io/post/gridea-wen-dang-xie-zuo-gui-fan/","description":"本规范用于当前 Gridea Pro 站点后续新增和维护文章。只要文章最终要发布到本站，就按这里的目录、元数据、图片、链接和渲染规则处理。 目录规则 站点根目录是当前 Gridea Pro 项目目录，也就是本仓库根目录。 文章 Markdown\u0026hellip;","image":"/post-images/unity-senior-developer-toolchain-map.svg","datePublished":"2026-06-10T22:10:00+08:00","dateModified":"2026-06-17T10:35:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Gridea 文档写作规范","url":"https://zhoujun2303.github.io/post/gridea-wen-dang-xie-zuo-gui-fan/","description":"本规范用于当前 Gridea Pro 站点后续新增和维护文章。只要文章最终要发布到本站，就按这里的目录、元数据、图片、链接和渲染规则处理。 目录规则 站点根目录是当前 Gridea Pro 项目目录，也就是本仓库根目录。 文章 Markdown\u0026hellip;","image":"/post-images/unity-senior-developer-toolchain-map.svg","datePublished":"2026-06-10T22:10:00+08:00","dateModified":"2026-06-26T09:48:24+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/gridea-wen-dang-xie-zuo-gui-fan/","name":"Gridea 文档写作规范","position":2}]}</script>
 <meta property="og:title" content="Gridea 文档写作规范">
 <meta property="og:description" content="本规范用于当前 Gridea Pro 站点后续新增和维护文章。只要文章最终要发布到本站，就按这里的目录、元数据、图片、链接和渲染规则处理。 目录规则 站点根目录是当前 Gridea Pro 项目目录，也就是本仓库根目录。 文章 Markdown&amp;hellip;">
@@ -220,12 +220,14 @@
 <li>Gridea Pro 文章仍按扁平结构管理，<code>posts/</code> 下不要再建子目录。</li>
 <li>长文档采用“一篇主文档 + N 篇分文档”的方式拆分，每篇文档都有独立 slug。</li>
 <li>主文档 <code>hideInList: false</code>，分文档建议 <code>hideInList: true</code>，通过主文档目录跳转。</li>
+<li>系列文章必须使用可排序编号：主文档用 <code>01</code>、<code>02</code>，子级专题用 <code>01-01</code>、<code>01-02</code>，不要使用 <code>01-1</code> 或省略子级编号。</li>
 <li><code>output/</code> 是 Gridea Pro 渲染后的产物，不要手动编辑。</li>
 <li>新增、修改、发布和渲染优先通过 Gridea Pro 客户端或 Gridea Pro MCP 完成。</li>
 </ul>
 <h2 id="heading-1">文件命名</h2>
 <ul>
 <li>文件名使用稳定 slug，例如 <code>unity-senior-developer-08-performance-memory-package.md</code>。</li>
+<li>系列子级专题文件名格式为 <code>&lt;series&gt;-&lt;parent&gt;-&lt;child&gt;-&lt;topic&gt;.md</code>，例如 <code>unity-senior-developer-01-01-render-pipeline-differences.md</code>。</li>
 <li>只使用小写英文、数字和连字符。</li>
 <li>不使用中文文件名、空格、特殊符号。</li>
 <li>slug 一旦发布不要随意改，否则旧链接会失效。</li>
@@ -331,7 +333,7 @@ isTop: false
 <p>长文档按这个方式拆：</p>
 <ul>
 <li>主文档：总览、导航、能力地图、工具总览、交付物索引。</li>
-<li>分文档：每个方向一个专题，必要时继续按小节细分。</li>
+<li>分文档：每个一级方向一个专题，必要时继续拆二级专题；二级专题编号必须跟随父级，例如 <code>01-01</code>、<code>01-02</code>。</li>
 <li>图片：主文档至少一张总览图，分文档按需要引用流程图或工具图。</li>
 <li>链接：主文档跳分文档，分文档返回主文档。</li>
 <li>首页：只让主文档进入列表，分文档隐藏在列表中但保留访问链接。</li>
