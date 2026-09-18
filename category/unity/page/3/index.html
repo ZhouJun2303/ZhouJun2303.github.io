@@ -169,12 +169,29 @@
   <div class="page-header">
     <h1 class="page-title">Unity</h1>
     
-    <p class="page-subtitle meta-text">共 46 篇文章</p>
+    <p class="page-subtitle meta-text">共 47 篇文章</p>
     
   </div>
 
   
   <div class="post-list">
+    
+    <article class="post-card post-card--list">
+  <div class="post-card__body">
+    <a href="/post/unity-guan-yu-google-hou-tai-beng-kui-crash-pi-liang-jie-xi-gong-ju/" class="post-card__title-link">
+      <h3 class="post-card__title clamp-3">Unity 关于Google后台崩溃Crash批量解析工具</h3>
+    </a>
+    <a href="/post/unity-guan-yu-google-hou-tai-beng-kui-crash-pi-liang-jie-xi-gong-ju/" class="post-card__excerpt clamp-2">
+      //todo 链接至有道 暂未开放
+    </a>
+    <div class="post-card__meta meta-text">
+      2023-07-20
+      
+    </div>
+  </div>
+  
+</article>
+
     
     <article class="post-card post-card--list">
   <div class="post-card__body">
@@ -269,14 +286,13 @@ Tris: 三角形数...
       <h3 class="post-card__title clamp-3">委托和事件</h3>
     </a>
     <a href="/post/wei-tuo-he-shi-jian/" class="post-card__excerpt clamp-2">
-      委托
+      先说结论
+委托和事件最容易混在一起，是因为事件本身就是基于委托做的。
+可以先这样记：
 
-使用delegate关键字来声明
-委托是一个函数指针数组，运行时保存一个或多个方式引用，可以为null
-委托是独立的，不依赖于事件
-包含Combine()和Remove()方法，用于将方法添加到调用类表
-可以作为方法参数传递
-...
+委托是一个类型安全的方法引用，可以保存一个或多个方法
+多播委托用 += 增加方法，用 -= 移除方法，调用时会按注册顺序执行
+事件是对委托字段的一...
     </a>
     <div class="post-card__meta meta-text">
       2023-03-25
@@ -369,32 +385,6 @@ Unity导入Spin...
     </a>
     <div class="post-card__meta meta-text">
       2023-03-02
-      
-    </div>
-  </div>
-  
-</article>
-
-    
-    <article class="post-card post-card--list">
-  <div class="post-card__body">
-    <a href="/post/odin-inspector/" class="post-card__title-link">
-      <h3 class="post-card__title clamp-3">Odin Inspector</h3>
-    </a>
-    <a href="/post/odin-inspector/" class="post-card__excerpt clamp-2">
-      记录一下Odin一些常用功能
-
-标题类型
-[Title(&amp;quot;Name&amp;quot;)]
-//标题，类似于Unity 原生Header
-
-限制数值
-[Range(0,100)]
-[MinValue(0)]
-[MaxValu...
-    </a>
-    <div class="post-card__meta meta-text">
-      2022-09-25
       
     </div>
   </div>

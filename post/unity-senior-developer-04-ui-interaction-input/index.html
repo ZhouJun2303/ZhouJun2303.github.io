@@ -33,12 +33,12 @@
 <meta property="og:type" content="article" />
 
 
-<meta name="description" content="返回总览 UI 框架 UI 分层：HUD、普通面板、全屏面板、弹窗、Toast、引导&amp;hellip;">
+<meta name="description" content="返回总览 相关图示：工具速查总览 UI 框架 UI 分层：HUD、普通面板、全屏面板、弹窗、Toast、引导、Loading、系统&amp;hellip;">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/unity-senior-developer-04-ui-interaction-input/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 开发高级/资深 04：UI、交互与输入","url":"https://zhoujun2303.github.io/post/unity-senior-developer-04-ui-interaction-input/","description":"返回总览 UI 框架 UI 分层：HUD、普通面板、全屏面板、弹窗、Toast、引导\u0026hellip;","datePublished":"2026-06-10T21:54:00+08:00","dateModified":"2026-06-17T10:10:59+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 开发高级/资深 04：UI、交互与输入","url":"https://zhoujun2303.github.io/post/unity-senior-developer-04-ui-interaction-input/","description":"返回总览 相关图示：工具速查总览 UI 框架 UI 分层：HUD、普通面板、全屏面板、弹窗、Toast、引导、Loading、系统\u0026hellip;","datePublished":"2026-06-10T21:54:00+08:00","dateModified":"2026-08-03T20:45:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-senior-developer-04-ui-interaction-input/","name":"Unity 开发高级/资深 04：UI、交互与输入","position":2}]}</script>
 <meta property="og:title" content="Unity 开发高级/资深 04：UI、交互与输入">
-<meta property="og:description" content="返回总览 UI 框架 UI 分层：HUD、普通面板、全屏面板、弹窗、Toast、引导&amp;hellip;">
+<meta property="og:description" content="返回总览 相关图示：工具速查总览 UI 框架 UI 分层：HUD、普通面板、全屏面板、弹窗、Toast、引导、Loading、系统&amp;hellip;">
 <meta property="og:url" content="https://zhoujun2303.github.io/post/unity-senior-developer-04-ui-interaction-input/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="长胖是个梦想">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-senior-developer-04-ui-interaction-input/">
 <meta name="twitter:title" content="Unity 开发高级/资深 04：UI、交互与输入">
-<meta name="twitter:description" content="返回总览 UI 框架 UI 分层：HUD、普通面板、全屏面板、弹窗、Toast、引导&amp;hellip;">
+<meta name="twitter:description" content="返回总览 相关图示：工具速查总览 UI 框架 UI 分层：HUD、普通面板、全屏面板、弹窗、Toast、引导、Loading、系统&amp;hellip;">
 <meta name="twitter:image" content="/images/avatar.png">
 </head>
 <body class="flavor-theme">
@@ -184,7 +184,7 @@
       <span class="article-meta__item">2026-06-10</span>
       
       <span class="article-meta__sep">·</span>
-      <span class="article-meta__item">3 分钟阅读</span>
+      <span class="article-meta__item">13 分钟阅读</span>
       
     </div>
     
@@ -204,7 +204,7 @@
 
   <div class="article-content">
     <p><a href="/post/unity-senior-developer-skills/">返回总览</a></p>
-<p><img src="/post-images/unity-senior-developer-toolchain-map.svg" alt="Unity 开发高级/资深工具链地图" /></p>
+<p>相关图示：<a href="/post/unity-senior-developer-skills/#toolchain-map">工具速查总览</a></p>
 <p><a id="ui-framework"></a></p>
 <h2 id="ui-">UI 框架</h2>
 <ul>
@@ -218,9 +218,192 @@
 <li>适配：安全区、刘海屏、平板、PC 窗口、超宽屏、横竖屏。</li>
 <li>性能：Canvas 拆分、避免频繁 Rebuild、图集、字体、ScrollView 虚拟列表。</li>
 </ul>
-<h3 id="heading">需要掌握的工具</h3>
+<h3 id="ui--1">UI 分层</h3>
+<p>HUD 全称 Heads-Up Display（抬头显示），指常驻屏幕、不打断操作的信息层（血条、小地图、货币等）。</p>
+<p>分层主要靠 <strong>Canvas / sortingOrder</strong>，不是靠 CanvasGroup。CanvasGroup 管显隐、透明度和能否点击。</p>
+<table>
+<thead>
+<tr>
+<th>逻辑层</th>
+<th>典型 sortingOrder 区间</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HUD</td>
+<td>100</td>
+<td>常驻信息，不挡操作</td>
+</tr>
+<tr>
+<td>普通面板</td>
+<td>200</td>
+<td>背包、商店等</td>
+</tr>
+<tr>
+<td>全屏面板</td>
+<td>300</td>
+<td>主界面、结算</td>
+</tr>
+<tr>
+<td>弹窗</td>
+<td>400</td>
+<td>确认框、二次确认</td>
+</tr>
+<tr>
+<td>Toast</td>
+<td>500</td>
+<td>飘字</td>
+</tr>
+<tr>
+<td>引导</td>
+<td>600</td>
+<td>遮罩、高亮</td>
+</tr>
+<tr>
+<td>Loading / 系统提示</td>
+<td>700+</td>
+<td>最高，必须盖住一切</td>
+</tr>
+</tbody>
+</table>
+<p>落地习惯：</p>
 <ul>
-<li>UGUI：Canvas、Graphic、Layout、EventSystem、Mask、ScrollRect。</li>
+<li>每个逻辑层一个根节点（空节点或独立 Canvas）；打开面板时挂到对应层并设 sortingOrder。</li>
+<li>Canvas 按重建成本拆：常驻少变（HUD）、动态频繁、Toast/Loading/引导常单独 Canvas。</li>
+<li><strong>不同 Canvas 不能合批</strong>；合批发生在同一 Canvas 内。拆层是用 Draw Call 换 Rebuild 隔离。</li>
+</ul>
+<p>UIManager 用层枚举映射层根与 sortingOrder，业务不要手拖层级。</p>
+<h3 id="heading">生命周期</h3>
+<p>收成 <strong>状态机 + UIManager 统一调度</strong>，业务不直接 <code>Instantiate</code> / <code>Destroy</code>。</p>
+<p>典型状态：<code>None → Loading → Opening → Opened → Hiding → Hidden</code>，以及 <code>Closing → Closed</code>（Cached 或 Destroyed）。</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Open</td>
+<td>加载 → 挂层 → 开启动画 → 绑数据/事件</td>
+</tr>
+<tr>
+<td>Close</td>
+<td>解绑 → 关动画 → 出栈；再决定缓存或销毁</td>
+</tr>
+<tr>
+<td>Hide</td>
+<td>不销毁，常不卸资源；被全屏盖住时用</td>
+</tr>
+<tr>
+<td>Resume/Show</td>
+<td>从 Hidden 回来，刷新数据，不一定重新加载</td>
+</tr>
+<tr>
+<td>Cache</td>
+<td>关了但实例留下，下次秒开</td>
+</tr>
+<tr>
+<td>Destroy</td>
+<td>卸事件、卸资源、销毁实例</td>
+</tr>
+<tr>
+<td>重复打开</td>
+<td>聚焦置顶 / 刷新 / 忽略，看配置</td>
+</tr>
+<tr>
+<td>快速关闭</td>
+<td>取消加载、打断动画、防回调落到已关面板</td>
+</tr>
+</tbody>
+</table>
+<p>配置驱动：层级、是否互斥/进栈、关闭策略（Destroy / Cache / HideOnly）、缓存上限、是否允许重复打开。</p>
+<p>缓存淘汰常用 <strong>LRU（Least Recently Used，最近最少使用）</strong>：满了或内存紧时先丢最久未打开的面板。</p>
+<p>关闭必做：取消异步与网络回调、解绑事件/红点、停动画、归还列表池、Release 资源句柄。</p>
+<h3 id="heading-1">面板栈</h3>
+<p>可入栈的界面（普通面板、全屏、弹窗）推进栈；HUD / Toast / Loading 通常 <strong>不入栈</strong>。</p>
+<ul>
+<li><strong>返回键 / Esc</strong>：全局 <code>UIManager.Back()</code>，只关栈顶；<code>BlockBack</code>（二次确认、引导、Loading）时吞掉或走面板 <code>OnBack</code>。</li>
+<li><strong>遮罩</strong>：弹窗/全屏自动加 Mask；<code>CloseOnClickMask</code> 可配；sortingOrder 夹在下层与当前弹窗之间，防点穿。</li>
+<li><strong>互斥</strong>：配置互斥组，Open 前由 Manager 关同组或 Hide 被盖住的面板，并同步改栈。</li>
+<li><strong>弹窗优先级</strong>：系统断线 &gt; 付费/重要奖励 &gt; 普通确认 &gt; 弱提示/运营窗；高优先级可压低优先级，同级排队。</li>
+<li><strong>二次确认</strong>：独立高优先级入栈；返回键等于取消；回调前检查原面板是否仍在。</li>
+</ul>
+<p>面板配置常见字段：<code>Layer</code> / 是否入栈、<code>MutexGroup</code>、<code>Priority</code>、<code>ShowMask</code>、<code>ClickMaskClose</code>、<code>HandleBack</code>。</p>
+<h3 id="heading-2">异步加载</h3>
+<p>把「打开面板」当成带生命周期的异步请求，贯穿 <strong>openId + CancellationToken</strong>。</p>
+<p>流水线：<code>Open(requestId) → LoadAsync → 成功则校验仍有效再实例化进栈 → 无效则 Destroy/Release → 失败则有限重试或失败 UI</code>。</p>
+<p><strong>取消后 Addressables 句柄要 Release。</strong> 句柄（Handle）是一次异步加载的凭证（如 <code>AsyncOperationHandle</code>）；取消是业务语义，Release 是资源语义，所有出口（成功/失败/取消/openId 失效）走同一 <code>Cleanup()</code>，且只 Release 一次。</p>
+<p>资深常盯四点：</p>
+<ol>
+<li>取消后句柄有没有 Release。</li>
+<li>失败重试是否也看 token（Delay 也传 token；用户已取消不要再弹失败框）。</li>
+<li>连点：按钮防抖 + Manager 对同面板 Opening 做 Ignore / Join / Replace；已 Opened 则 Refresh 置顶。</li>
+<li>加载完成回调先回主线程再碰 Unity 对象；再验 openId，无效则绝不 Instantiate。</li>
+</ol>
+<p>加载中算 Opening；可先不正式 push，或 push Loading 占位。快速关闭 = Cancel + 清理同面板排队请求。</p>
+<h3 id="heading-3">数据绑定</h3>
+<p>大厂很少全项目一种绑定，按变更频率与成本混用：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>做法</th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>手动刷新</td>
+<td><code>OnOpen</code> / <code>Refresh()</code> 赋值</td>
+<td>打开时定死、列表 cell 的 <code>SetData</code></td>
+</tr>
+<tr>
+<td>事件刷新</td>
+<td>领域事件订阅后改 UI</td>
+<td>货币、邮件、多界面要听的推送</td>
+</tr>
+<tr>
+<td>响应式绑定</td>
+<td>Observable / MVVM 声明式</td>
+<td>表单、设置、局部双向；少全量上</td>
+</tr>
+</tbody>
+</table>
+<p>注意：关面板退订；打开先 Snapshot 再 Subscribe；事件风暴合并刷新；列表不对每行做深度响应式。成本不仅在 GC，更在生命周期与可调试性。</p>
+<h3 id="heading-4">红点系统</h3>
+<p>独立子系统（树 + 叶子算、向上聚），UI 只绑节点 key。</p>
+<ul>
+<li><strong>数据源（叶子）</strong>：未读数、可领奖励、新解锁未点等；业务变更时 <code>Notify</code>，禁止 UI <code>Update</code> 轮询。</li>
+<li><strong>依赖树</strong>：配置/注册 <code>父 ← 子</code>；动态活动可增删子节点。</li>
+<li><strong>聚合</strong>：OR（入口最常见）、SUM（数量）、MAX（优先级）、少数 CUSTOM。</li>
+<li><strong>缓存</strong>：节点缓存 <code>isShow</code> / <code>count</code> / <code>dirty</code>；脏了向上传。</li>
+<li><strong>刷新频率</strong>：同帧多叶子变 → 标脏 → 帧末/节流再算，只对真变化的节点通知 UI。</li>
+<li><strong>调试视图</strong>：整树可视化、叶子条件、已读标记、强制 Set；能解释「为什么亮/不亮」。</li>
+</ul>
+<h3 id="heading-5">适配</h3>
+<p>原则：<strong>规则吃掉设备差异，禁止每个面板手调一版。</strong></p>
+<ul>
+<li><strong>安全区 / 刘海</strong>：<code>Screen.safeArea</code>（必要时厂商校正）→ 全局 SafeRoot padding；方向/分屏变化要重算。</li>
+<li><strong>CanvasScaler</strong>：固定设计稿契约（如 1080×1920）+ Match；美术出一套锚点规范。</li>
+<li><strong>平板</strong>：IsTablet 判断；限制内容最大宽、居中，避免巨空白。</li>
+<li><strong>PC 窗口</strong>：监听 resize；最小窗口；Mobile/PC profile。</li>
+<li><strong>超宽</strong>：中间安全内容区（如仍按 16:9 逻辑宽）；左右贴边仍受 SafeArea 约束。</li>
+<li><strong>横竖屏</strong>：锁方向最省事；双方向由 OrientationService 广播，面板切布局，不各自听 orientation。</li>
+</ul>
+<h3 id="heading-6">性能</h3>
+<p>UGUI 瓶颈主要在 <strong>Rebuild（CPU）</strong> 与 <strong>Draw Call / Overdraw（GPU）</strong>。</p>
+<p><strong>Canvas 拆分：</strong> 静态 vs 动态、按层、高频小组件；嵌套 Canvas 把狂刷子树隔离。跨 Canvas 不合批。<code>overrideSorting</code> 默认关，只为排序不够用再开，并测 Mask。</p>
+<p><strong>少 Rebuild：</strong> 脏标记合并写 UI；赋值前比较；少 Layout 套娃；动画避开 Layout 子节点；整页淡入优先 CanvasGroup。</p>
+<p><strong>图集：</strong> 按模块/生命周期打包；一界面少图集；动态头像勿期待与静态合批；Mask/多材质仍断批。</p>
+<p><strong>字体（TMP）：</strong> 常用字预热；控动态扩图集；少材质变体；列表少富文本、少每帧改字。</p>
+<p><strong>虚拟列表：</strong> 只创建可见区+缓冲 cell，滑出回收 <code>SetData</code>；固定行高优先；回收解绑事件/红点/异步回调（index/version 防错图）。</p>
+<p>排查顺序：Profiler UI Rebuild → Frame Debugger DC → 打开/滑动卡顿查虚拟列表与字体扩容。</p>
+<h3 id="heading-7">需要掌握的工具</h3>
+<ul>
+<li>UGUI：Canvas、Graphic、Layout、EventSystem、Mask、ScrollRect（见下节深度要求）。</li>
 <li>TextMeshPro：字体资产、Fallback、富文本、缺字处理。</li>
 <li>UI Toolkit：了解适用场景，尤其是编辑器工具和部分运行时 UI。</li>
 <li>Unity Profiler UI 模块：分析 Canvas Rebuild、Batch、Layout 和 GC。</li>
@@ -229,15 +412,53 @@
 <li>Figma、Sketch、Photoshop 标注：对齐视觉尺寸、切图、字体和交互动效。</li>
 <li>FairyGUI、UGUI Extension 或项目自研 UI 工具：根据团队技术栈掌握。</li>
 </ul>
-<h3 id="heading-1">可继续细分方向</h3>
+<h3 id="ugui-">UGUI 深度要求（高级/资深）</h3>
+<p>不是「用过组件」，而是能讲原理、排坑、定规范。</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Canvas</td>
+<td>Render Mode 选型；sortingOrder 分层；拆分/嵌套与 Rebuild vs 合批交易；Scaler 与 SafeArea</td>
+</tr>
+<tr>
+<td>Graphic</td>
+<td>脏与重建；Raycast Target 能关尽关；合批与断批；CanvasGroup 整页淡入</td>
+</tr>
+<tr>
+<td>Layout</td>
+<td>知代价；固定尺寸/锚点优先；虚拟列表 cell 少套娃；动画不打在 Layout 链上</td>
+</tr>
+<tr>
+<td>EventSystem</td>
+<td>命中链；单例；UI/场景隔离；Loading/引导门控；手柄焦点</td>
+</tr>
+<tr>
+<td>Mask</td>
+<td>Mask(Stencil) vs RectMask2D；列表用矩形裁；知合批代价；嵌套 Canvas 要测裁剪</td>
+</tr>
+<tr>
+<td>ScrollRect</td>
+<td>拖点冲突阈值；嵌套滚动；<strong>虚拟列表</strong>为默认加分/必考</td>
+</tr>
+</tbody>
+</table>
+<p>自学优先序：Canvas/Rebuild 合批 → EventSystem 命中 → ScrollRect 虚拟列表 → Layout/Mask 代价 → Graphic 脏与 Raycast。</p>
+<h3 id="heading-8">可继续细分方向</h3>
 <ul>
 <li>UI 生命周期和面板栈。</li>
 <li>红点系统和功能入口。</li>
 <li>UI 适配和多语言布局。</li>
 <li>UI 性能、图集和虚拟列表。</li>
+<li>引导框架与目标寻址。</li>
 </ul>
 <p><a id="interaction-input"></a></p>
-<h2 id="heading-2">交互与输入</h2>
+<h2 id="heading-9">交互与输入</h2>
 <ul>
 <li>输入抽象：触控、键鼠、手柄、快捷键统一成项目内的输入事件。</li>
 <li>UI 与场景隔离：点击 UI 时不触发场景射线，拖拽时不误触点击。</li>
@@ -248,23 +469,86 @@
 <li>手柄：焦点导航、确认/取消、摇杆移动、功能轮盘。</li>
 <li>防误触：连点保护、点击穿透、Loading 遮罩、网络请求中的按钮状态。</li>
 </ul>
-<h3 id="heading-3">需要掌握的工具</h3>
+<h3 id="ui--2">UI 与场景点击优先级</h3>
+<p>三个角色：</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>挂哪</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EventSystem</td>
+<td>场景通常 1 个</td>
+<td>收输入、RaycastAll、派发事件</td>
+</tr>
+<tr>
+<td>GraphicRaycaster</td>
+<td>可点 UI 的 Canvas</td>
+<td>命中 Graphic</td>
+</tr>
+<tr>
+<td>PhysicsRaycaster</td>
+<td>玩法 Camera</td>
+<td>命中 3D Collider</td>
+</tr>
+</tbody>
+</table>
+<p>流程：<code>InputModule → RaycastAll（UI + 场景）→ 结果排序 → 交给最前对象</code>。</p>
+<p>排序概念上比：<code>sortOrderPriority</code> → <code>renderOrderPriority</code> → sortingLayer/Order → depth → distance。GraphicRaycaster 跟 Canvas Sort Order 挂钩；PhysicsRaycaster 默认 priority 往往最低，<strong>正常 UI 通常排在 3D 前面</strong>——前提是 UI 真被射中。</p>
+<p><strong>EventSystem 上没有「UI vs 场景优先级」总开关。</strong> 可调的是：</p>
+<table>
+<thead>
+<tr>
+<th>想控制的</th>
+<th>去哪设</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UI 之间谁先被点</td>
+<td>Canvas Sort Order / Sorting Layer</td>
+</tr>
+<tr>
+<td>UI 能不能被点</td>
+<td>Graphic Raycast Target + GraphicRaycaster</td>
+</tr>
+<tr>
+<td>UI 是否被 3D 挡（Camera 模式）</td>
+<td>GraphicRaycaster Blocking Objects / Mask</td>
+</tr>
+<tr>
+<td>场景能点哪些</td>
+<td>PhysicsRaycaster Event Mask</td>
+</tr>
+</tbody>
+</table>
+<p>两种架构：</p>
+<ul>
+<li><strong>场景也走 EventSystem（IPointerClick）</strong>：排序基本交给引擎；遮罩必须能 Raycast。</li>
+<li><strong>场景自研 <code>Physics.Raycast</code>（更常见）</strong>：引擎不会自动挡住玩法射线，必须门控：<code>IsPointerOverGameObject</code> 或 <code>InputGate.CanSceneInteract()</code>（Loading/模态/引导/指针在 UI 上则禁止场景点击）。</li>
+</ul>
+<p>遮罩靠「可 Raycast 的全屏图 + CanvasGroup.blocksRaycasts」，不是靠半透明「看起来挡住了」。拖拽相机时在 PointerDown 采样是否在 UI 上，整段手势策略一致。</p>
+<h3 id="heading-10">需要掌握的工具</h3>
 <ul>
 <li>Unity Input System：抽象触控、键鼠、手柄、快捷键和重绑定。</li>
-<li>EventSystem、Graphic Raycaster、Physics Raycaster：处理 UI 和场景点击优先级。</li>
+<li>EventSystem、Graphic Raycaster、Physics Raycaster：处理 UI 和场景点击优先级（见上节）。</li>
 <li>Physics Debugger：排查射线、碰撞层和交互触发问题。</li>
 <li>Cinemachine：处理镜头跟随、缩放、碰撞和交互聚焦。</li>
 <li>Device Simulator 与真机调试：验证触控、手势、安全区和设备返回键。</li>
 <li>自研输入调试面板：显示当前输入源、命中对象、射线路径和焦点状态。</li>
 </ul>
-<h3 id="heading-4">可继续细分方向</h3>
+<h3 id="heading-11">可继续细分方向</h3>
 <ul>
 <li>UI 输入与场景输入隔离。</li>
 <li>触控手势。</li>
 <li>键鼠和手柄适配。</li>
 <li>射线交互、防误触和焦点系统。</li>
 </ul>
-<h2 id="ui--1">UI 架构常见模块</h2>
+<h2 id="ui--3">UI 架构常见模块</h2>
 <ul>
 <li>UIManager：统一打开、关闭、查找、层级、返回、缓存。</li>
 <li>WindowBase：面板生命周期、资源句柄、事件注册、动画状态。</li>
@@ -274,13 +558,25 @@
 <li>SafeAreaAdapter：统一处理设备安全区。</li>
 <li>ListVirtualizer：大量列表复用和增量刷新。</li>
 </ul>
-<h2 id="heading-5">开发高级/资深关注点</h2>
+<h3 id="heading-12">引导框架要点</h3>
+<p>配置驱动步骤 + 高优先级 GuideLayer；强/弱引导策略不同，共用 Manager。</p>
+<p><strong>三坑与底线解法：</strong></p>
+<ol>
+<li><strong>勿用 Hierarchy 绝对路径找按钮</strong> → 稳定 key + 注册表（<code>Register/Unregister</code>）；动态目标用业务 ID；预制体可挂 Authoring 组件自动登记。</li>
+<li><strong>引导勿私自 Instantiate 业务面板</strong> → 只调 UIManager.Open；步骤用 <code>requires</code>/commands 声明依赖；恢复读档也跑同一套 Open。</li>
+<li><strong>必须有超时与失败出口</strong> → findTimeout；SkipStep / SkipGuide / AbortUnlockInput；失败必撤遮罩、解锁输入、写档防反复卡；打点 + 远程关引导。</li>
+</ol>
+<p>进阶：强类型 TargetId、Step 依赖图、失败降级弱引导、关键进度以服务端为准、能减则减强引导。调试要能回答「卡在哪一步、目标是谁、为什么找不到」。</p>
+<h2 id="heading-13">开发高级/资深关注点</h2>
 <ul>
 <li>UI 打开失败是否有日志和用户可恢复路径。</li>
-<li>UI 关闭后是否释放事件、异步回调和资源引用。</li>
+<li>UI 关闭后是否释放事件、异步回调和资源引用（含 Addressables 句柄）。</li>
+<li>快速关闭、重复打开、加载完成时 openId 是否仍有效。</li>
 <li>红点是否能解释“为什么亮”和“为什么不亮”。</li>
 <li>适配是否用规则解决，而不是每个界面手动调。</li>
 <li>列表、背包、邮件、排行榜等高频 UI 是否做虚拟化和增量刷新。</li>
+<li>引导是否可失败退出、可远程关闭，寻址是否与正式 Open 同路径。</li>
+<li>UI/场景点击是否有统一输入门控，遮罩是否真正可 Raycast。</li>
 </ul>
 
   </div>

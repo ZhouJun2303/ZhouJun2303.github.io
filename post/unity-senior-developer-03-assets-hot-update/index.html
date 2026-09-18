@@ -33,12 +33,12 @@
 <meta property="og:type" content="article" />
 
 
-<meta name="description" content="返回总览 资源管理 资源方案：理解 Resources、AssetBundle、Addre&amp;hellip;">
+<meta name="description" content="返回总览 相关图示：交付闭环图 资源管理 资源方案：理解 Resources、AssetBundle、Addressables、&amp;hellip;">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/unity-senior-developer-03-assets-hot-update/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 开发高级/资深 03：资源管理与热更新","url":"https://zhoujun2303.github.io/post/unity-senior-developer-03-assets-hot-update/","description":"返回总览 资源管理 资源方案：理解 Resources、AssetBundle、Addre\u0026hellip;","datePublished":"2026-06-10T21:53:00+08:00","dateModified":"2026-06-17T10:10:59+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 开发高级/资深 03：资源管理与热更新","url":"https://zhoujun2303.github.io/post/unity-senior-developer-03-assets-hot-update/","description":"返回总览 相关图示：交付闭环图 资源管理 资源方案：理解 Resources、AssetBundle、Addressables、\u0026hellip;","datePublished":"2026-06-10T21:53:00+08:00","dateModified":"2026-07-29T20:53:30+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-senior-developer-03-assets-hot-update/","name":"Unity 开发高级/资深 03：资源管理与热更新","position":2}]}</script>
 <meta property="og:title" content="Unity 开发高级/资深 03：资源管理与热更新">
-<meta property="og:description" content="返回总览 资源管理 资源方案：理解 Resources、AssetBundle、Addre&amp;hellip;">
+<meta property="og:description" content="返回总览 相关图示：交付闭环图 资源管理 资源方案：理解 Resources、AssetBundle、Addressables、&amp;hellip;">
 <meta property="og:url" content="https://zhoujun2303.github.io/post/unity-senior-developer-03-assets-hot-update/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="长胖是个梦想">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-senior-developer-03-assets-hot-update/">
 <meta name="twitter:title" content="Unity 开发高级/资深 03：资源管理与热更新">
-<meta name="twitter:description" content="返回总览 资源管理 资源方案：理解 Resources、AssetBundle、Addre&amp;hellip;">
+<meta name="twitter:description" content="返回总览 相关图示：交付闭环图 资源管理 资源方案：理解 Resources、AssetBundle、Addressables、&amp;hellip;">
 <meta name="twitter:image" content="/images/avatar.png">
 </head>
 <body class="flavor-theme">
@@ -184,7 +184,7 @@
       <span class="article-meta__item">2026-06-10</span>
       
       <span class="article-meta__sep">·</span>
-      <span class="article-meta__item">4 分钟阅读</span>
+      <span class="article-meta__item">7 分钟阅读</span>
       
     </div>
     
@@ -206,11 +206,11 @@
 
   <div class="article-content">
     <p><a href="/post/unity-senior-developer-skills/">返回总览</a></p>
-<p><img src="/post-images/unity-senior-developer-delivery-loop.svg" alt="开发高级/资深交付闭环" /></p>
+<p>相关图示：<a href="/post/unity-senior-developer-skills/#delivery-loop">交付闭环图</a></p>
 <p><a id="asset-management"></a></p>
 <h2 id="heading">资源管理</h2>
 <ul>
-<li>资源方案：理解 Resources、AssetBundle、Addressables 的优缺点和迁移成本。</li>
+<li>资源方案：理解 Resources、AssetBundle、Addressables、YooAsset 的优缺点和迁移成本。</li>
 <li>分组策略：按常驻、场景、UI、角色、活动、语言、平台、清晰度拆分。</li>
 <li>依赖控制：避免重复打包、循环依赖、隐式引用和大包牵连小资源。</li>
 <li>引用计数：加载、持有、释放、卸载之间要有明确生命周期。</li>
@@ -220,9 +220,58 @@
 <li>缓存策略：内存缓存、磁盘缓存、下载缓存、版本缓存不能互相混淆。</li>
 <li>资源规范：贴图尺寸、压缩格式、模型面数、骨骼数、材质数、动画裁剪。</li>
 </ul>
-<h3 id="heading-1">需要掌握的工具</h3>
+<h3 id="heading-1">资源方案选型</h3>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>适用场景</th>
+<th>优势</th>
+<th>主要成本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resources</td>
+<td>小型项目、少量内置资源、原型验证</td>
+<td>接入简单，Unity 原生支持</td>
+<td>无法细粒度更新，资源管理和卸载能力弱，不适合大型项目</td>
+</tr>
+<tr>
+<td>AssetBundle</td>
+<td>需要完全自研资源管线或特殊打包规则</td>
+<td>控制力强，是多数上层资源框架的底层基础</td>
+<td>要自行实现依赖、版本、下载、缓存、校验、引用计数和诊断工具</td>
+</tr>
+<tr>
+<td>Addressables</td>
+<td>偏好 Unity 官方生态，希望使用统一地址加载和内容更新</td>
+<td>官方维护，与 Unity 构建和分析工具集成较好</td>
+<td>分组与更新规则有学习成本，复杂项目仍需封装生命周期和发布流程</td>
+</tr>
+<tr>
+<td>YooAsset</td>
+<td>商业项目的首包、分包、远程热更、多资源包和弱网恢复</td>
+<td>提供资源包、版本清单、下载器、缓存和多种运行模式，热更链路较完整</td>
+<td>需要维护宿主服务、构建发布规范，并自行约束业务层引用和版本兼容</td>
+</tr>
+</tbody>
+</table>
+<p>选型不是只比较加载 API。还要比较团队是否能长期维护构建流水线、CDN 目录、版本清单、缓存迁移、失败恢复和线上诊断。Addressables 与 YooAsset 通常二选一作为资源管理主干，不建议在同一业务域混用两套地址、引用计数和缓存体系。</p>
+<h3 id="yooasset-">YooAsset 落地要点</h3>
 <ul>
-<li>Addressables：资源分组、远程目录、依赖、异步加载、内容更新。</li>
+<li>运行模式：开发期使用 <code>EditorSimulateMode</code>，随包资源使用 <code>OfflinePlayMode</code>，远程热更使用 <code>HostPlayMode</code>，WebGL 使用 <code>WebPlayMode</code>；初始化参数和文件服务必须按平台配置。</li>
+<li>资源包：按主资源、语言、活动、DLC 等边界拆分 Package；明确默认 Package，跨 Package 引用要有规则，避免把 Package 当成随意分组标签。</li>
+<li>构建产物：保存构建版本、清单、Bundle、原生文件和构建报告；上传 CDN 前校验目录完整性，禁止只上传发生变化的文件却遗漏新清单。</li>
+<li>资源寻址：统一 Location 命名、标签和加载入口，业务层不要同时持有路径、GUID、Address 等多套寻址规则。</li>
+<li>生命周期：封装 <code>AssetHandle</code>、<code>SceneHandle</code> 的持有和释放，实例化对象、对象池、异步任务取消与句柄释放必须对应；切场景后用 Memory Profiler 验证资源确实可回收。</li>
+<li>下载与缓存：下载前统计文件数、大小和磁盘空间；支持进度、并发数、超时、重试、中断后复用已完成文件、蜂窝网络确认和无用缓存清理。</li>
+<li>诊断信息：日志至少包含应用版本、Package 名、运行模式、本地/远端资源版本、清单版本、失败文件、错误码、重试次数和 CDN 地址。</li>
+</ul>
+<h3 id="heading-2">需要掌握的工具</h3>
+<ul>
+<li><a href="https://docs.unity3d.com/Packages/com.unity.addressables@latest">Addressables 官方文档</a>：资源分组、远程目录、依赖、异步加载、内容更新。</li>
+<li><a href="https://www.yooasset.com/docs/Introduce">YooAsset 官方文档</a>：Package、资源清单、构建、下载、缓存和多运行模式。</li>
 <li>AssetBundle Browser 或自研 Bundle 检查器：查看 Bundle、依赖和重复资源。</li>
 <li>Addressables Analyze：检查重复依赖、资源分组和构建问题。</li>
 <li>Build Layout Report：分析资源构建结果、Bundle 体积和依赖来源。</li>
@@ -230,15 +279,15 @@
 <li>Texture Importer、Model Importer、Audio Importer：控制资源导入格式和体积。</li>
 <li>自研资源扫描器：检查命名、引用、贴图尺寸、材质数量和缺失资源。</li>
 </ul>
-<h3 id="heading-2">可继续细分方向</h3>
+<h3 id="heading-3">可继续细分方向</h3>
 <ul>
-<li>Addressables 与 AssetBundle 构建体系。</li>
+<li>Addressables、YooAsset 与 AssetBundle 构建体系。</li>
 <li>资源引用计数与生命周期。</li>
 <li>资源规范、导入规则和自动检查。</li>
 <li>首包、分包、活动包和下载缓存。</li>
 </ul>
 <p><a id="hot-update"></a></p>
-<h2 id="heading-3">热更新</h2>
+<h2 id="heading-4">热更新</h2>
 <ul>
 <li>资源热更：清单生成、差异比对、下载、校验、解压、替换、回滚。</li>
 <li>脚本热更：Lua、xLua、ILRuntime、HybridCLR 等方案的边界和成本。</li>
@@ -249,18 +298,32 @@
 <li>审核约束：iOS 审核、平台政策、热更内容范围和合规风险。</li>
 <li>安全校验：资源 hash、清单签名、关键配置校验、下载源防篡改。</li>
 </ul>
-<h3 id="heading-4">需要掌握的工具</h3>
+<h3 id="yooasset--1">YooAsset 资源热更流程</h3>
+<ol>
+<li>初始化 YooAsset，创建并设置默认 Package，根据开发、单机、联机或 WebGL 环境选择运行模式和服务实现。</li>
+<li>请求远端 Package 版本；请求失败时按产品策略重试、进入离线模式，或继续使用已经验证的本地版本。</li>
+<li>更新资源清单；只有新清单完整下载并通过校验后才能作为本次更新依据，不能覆盖仍可启动的本地版本信息。</li>
+<li>根据清单创建下载器，展示文件数量和总大小；检查网络类型、磁盘空间和 CDN 可用性后再开始下载。</li>
+<li>监听进度和失败回调，对超时、网络中断和单文件失败做有限重试；应用退到后台或进程被杀后应能基于缓存继续。</li>
+<li>下载完成后校验文件完整性，再进入资源加载流程；任何关键文件失败都不能进入半更新状态。</li>
+<li>启动成功后再清理过期缓存，并保留线上策略所需的可回退版本；缓存清理不能删除当前清单或仍被加载句柄引用的文件。</li>
+</ol>
+<p>YooAsset 负责资源版本、清单、下载和缓存等基础能力，但不会替项目自动完成灰度、业务版本兼容和发布回滚。服务端应能按应用版本、渠道和服务器返回对应的资源版本或 CDN 根地址；客户端必须定义“远端不可用”“本地无完整版本”“强制更新失败”三类状态的用户路径。</p>
+<p>如果同时使用 HybridCLR，可把热更新程序集、AOT 元数据补充文件及相关配置作为受版本控制的资源交付，但要在进入业务代码前完成下载、校验和加载。程序集版本必须与主包、资源、配置、协议建立兼容矩阵，不能仅因为 YooAsset 下载成功就认为脚本热更可安全执行。</p>
+<p>资源 hash 主要用于发现传输或缓存损坏，不等同于来源可信。涉及防篡改时还应使用可信 HTTPS/CDN、清单签名及公钥验签，并保护版本服务和回源权限。</p>
+<h3 id="heading-5">需要掌握的工具</h3>
 <ul>
 <li>Addressables Content Update：处理内容更新清单和差异构建。</li>
+<li>YooAsset：处理 Package 构建、版本清单、差异下载、缓存校验和多运行模式。</li>
 <li>HybridCLR、xLua、ILRuntime：评估和实现脚本热更新方案。</li>
 <li>CDN 控制台：管理资源分发、缓存刷新、回源和日志排查。</li>
 <li>hash/签名校验工具：校验清单、Bundle、补丁包完整性。</li>
 <li>灰度发布后台：按服务器、渠道、版本、比例控制热更范围。</li>
 <li>崩溃和日志平台：跟踪热更后异常、下载失败和版本不一致问题。</li>
 </ul>
-<h3 id="heading-5">可继续细分方向</h3>
+<h3 id="heading-6">可继续细分方向</h3>
 <ul>
-<li>资源热更新。</li>
+<li>YooAsset/Addressables 资源热更新。</li>
 <li>脚本热更新。</li>
 <li>配置热更新。</li>
 <li>版本兼容、灰度和回滚。</li>
@@ -273,7 +336,7 @@
 <li>监控：记录变体数量、包体变化、首次战斗/主城卡顿点。</li>
 <li>规范：新 Shader 或新 Keyword 必须说明使用范围和性能影响。</li>
 </ul>
-<h3 id="heading-6">需要掌握的工具</h3>
+<h3 id="heading-7">需要掌握的工具</h3>
 <ul>
 <li>Shader Variant Collection：收集和预热常用 Shader Variant。</li>
 <li>Unity Graphics Settings：管理预加载 Shader、Always Included Shaders。</li>
@@ -281,7 +344,7 @@
 <li>Build Report 或自研 Variant 统计工具：统计变体数量和包体影响。</li>
 <li>RenderDoc：确认渲染路径、材质参数和实际采样。</li>
 </ul>
-<h2 id="heading-7">资源问题排查</h2>
+<h2 id="heading-8">资源问题排查</h2>
 <ul>
 <li>Missing Reference：检查 Prefab 引用、GUID、Meta、资源路径和构建清单。</li>
 <li>重复资源：检查 Bundle 依赖、图集拆分、材质实例、字体和公共贴图。</li>
@@ -289,7 +352,7 @@
 <li>下载异常：检查 CDN、版本清单、缓存目录、磁盘空间、网络状态。</li>
 <li>包体膨胀：检查贴图格式、音频、动画曲线、Shader Variant、重复 Bundle。</li>
 </ul>
-<h2 id="heading-8">开发高级/资深验收标准</h2>
+<h2 id="heading-9">开发高级/资深验收标准</h2>
 <ul>
 <li>首包、分包、活动包的边界清楚。</li>
 <li>任意资源能追踪到来源、分组、依赖和使用方。</li>

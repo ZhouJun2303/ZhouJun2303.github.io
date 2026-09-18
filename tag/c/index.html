@@ -170,7 +170,7 @@
     <a href="/tags" class="page-back meta-text">&larr; 所有标签</a>
     <h1 class="page-title"><span class="page-title__hash">#</span>C#</h1>
     
-    <p class="page-subtitle meta-text">共 5 篇文章</p>
+    <p class="page-subtitle meta-text">共 6 篇文章</p>
     
   </div>
 
@@ -179,17 +179,35 @@
     
     <article class="post-card post-card--list">
   <div class="post-card__body">
+    <a href="/post/unity-roslyn-analyzer-iap-rule/" class="post-card__title-link">
+      <h3 class="post-card__title clamp-3">Unity Roslyn Analyzer 实战：首次接入与二次更新</h3>
+    </a>
+    <a href="/post/unity-roslyn-analyzer-iap-rule/" class="post-card__excerpt clamp-2">
+      背景
+有些工程规范不适合只靠 Code Review 或提交前脚本兜底。比如支付、登录、资源加载、埋点等关键入口，团队通常会约定只能从统一门面调用。如果业务代码直接调用底层接口，功能可能还能跑，但链路上的打点、弹窗、校验、风控或状态管...
+    </a>
+    <div class="post-card__meta meta-text">
+      2026-07-15
+      
+    </div>
+  </div>
+  
+</article>
+
+    
+    <article class="post-card post-card--list">
+  <div class="post-card__body">
     <a href="/post/unity-senior-developer-01-engine-csharp-architecture/" class="post-card__title-link">
       <h3 class="post-card__title clamp-3">Unity 开发高级/资深 01：引擎、C# 与客户端架构</h3>
     </a>
     <a href="/post/unity-senior-developer-01-engine-csharp-architecture/" class="post-card__excerpt clamp-2">
       返回总览
-
+相关图示：能力分层图
 
 Unity 引擎基础
 
 生命周期：Awake、OnEnable、Start、Update、LateUpdate、FixedUpdate、OnDisable、OnDestroy 的调用顺序和适用边界。
-场景与对象：Game...
+...
     </a>
     <div class="post-card__meta meta-text">
       2026-06-10
@@ -206,14 +224,13 @@ Unity 引擎基础
       <h3 class="post-card__title clamp-3">委托和事件</h3>
     </a>
     <a href="/post/wei-tuo-he-shi-jian/" class="post-card__excerpt clamp-2">
-      委托
+      先说结论
+委托和事件最容易混在一起，是因为事件本身就是基于委托做的。
+可以先这样记：
 
-使用delegate关键字来声明
-委托是一个函数指针数组，运行时保存一个或多个方式引用，可以为null
-委托是独立的，不依赖于事件
-包含Combine()和Remove()方法，用于将方法添加到调用类表
-可以作为方法参数传递
-...
+委托是一个类型安全的方法引用，可以保存一个或多个方法
+多播委托用 += 增加方法，用 -= 移除方法，调用时会按注册顺序执行
+事件是对委托字段的一...
     </a>
     <div class="post-card__meta meta-text">
       2023-03-25

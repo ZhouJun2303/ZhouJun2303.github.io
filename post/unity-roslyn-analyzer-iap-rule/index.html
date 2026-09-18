@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="/styles/main.min.css">
+
+
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+
+
+<style>:root { --heatmap-color: #39d353; }</style>
+
+
+
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('flavor-theme');
+      var theme = saved || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+      }
+    } catch (e) { }
+  })();
+</script>
+  <meta name="generator" content="Gridea Pro 1.2.2">
+  <title>Unity Roslyn Analyzer 实战：首次接入与二次更新 | 长胖是个梦想</title>
+  
+<meta property="og:title" content="Unity Roslyn Analyzer 实战：首次接入与二次更新" />
+<meta property="og:type" content="article" />
+
+
+<meta name="description" content="背景 有些工程规范不适合只靠 Code Review 或提交前脚本兜底。比如支付、登录、资源加载、埋点等关键入口，团队通常会约定只能从统一门面调用。如果业务代码直接调用底层接口，功能可能还能跑，但链路上的打点、弹窗、校验、风控或状态管理就可能被绕开。 这类问题最好的反馈位置是编译期：一写错，IDE 或 Unity 编译马上报错。 这次实战目标是：用 Unity 的 Roslyn Ana&amp;hellip;">
+<link rel="canonical" href="https://zhoujun2303.github.io/post/unity-roslyn-analyzer-iap-rule/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity Roslyn Analyzer 实战：首次接入与二次更新","url":"https://zhoujun2303.github.io/post/unity-roslyn-analyzer-iap-rule/","description":"背景 有些工程规范不适合只靠 Code Review 或提交前脚本兜底。比如支付、登录、资源加载、埋点等关键入口，团队通常会约定只能从统一门面调用。如果业务代码直接调用底层接口，功能可能还能跑，但链路上的打点、弹窗、校验、风控或状态管理就可能被绕开。 这类问题最好的反馈位置是编译期：一写错，IDE 或 Unity 编译马上报错。 这次实战目标是：用 Unity 的 Roslyn Ana\u0026hellip;","datePublished":"2026-07-15T12:10:00+08:00","dateModified":"2026-07-15T14:18:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-roslyn-analyzer-iap-rule/","name":"Unity Roslyn Analyzer 实战：首次接入与二次更新","position":2}]}</script>
+<meta property="og:title" content="Unity Roslyn Analyzer 实战：首次接入与二次更新">
+<meta property="og:description" content="背景 有些工程规范不适合只靠 Code Review 或提交前脚本兜底。比如支付、登录、资源加载、埋点等关键入口，团队通常会约定只能从统一门面调用。如果业务代码直接调用底层接口，功能可能还能跑，但链路上的打点、弹窗、校验、风控或状态管理就可能被绕开。 这类问题最好的反馈位置是编译期：一写错，IDE 或 Unity 编译马上报错。 这次实战目标是：用 Unity 的 Roslyn Ana&amp;hellip;">
+<meta property="og:url" content="https://zhoujun2303.github.io/post/unity-roslyn-analyzer-iap-rule/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="长胖是个梦想">
+<meta property="og:image" content="/images/avatar.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-roslyn-analyzer-iap-rule/">
+<meta name="twitter:title" content="Unity Roslyn Analyzer 实战：首次接入与二次更新">
+<meta name="twitter:description" content="背景 有些工程规范不适合只靠 Code Review 或提交前脚本兜底。比如支付、登录、资源加载、埋点等关键入口，团队通常会约定只能从统一门面调用。如果业务代码直接调用底层接口，功能可能还能跑，但链路上的打点、弹窗、校验、风控或状态管理就可能被绕开。 这类问题最好的反馈位置是编译期：一写错，IDE 或 Unity 编译马上报错。 这次实战目标是：用 Unity 的 Roslyn Ana&amp;hellip;">
+<meta name="twitter:image" content="/images/avatar.png">
+</head>
+<body class="flavor-theme">
+
+  <header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <div class="top-bar">
+
+      
+      <div class="top-bar__left">
+        
+        <a href="https://zhoujun2303.github.io" class="site-avatar-link" aria-label="返回首页">
+          <img class="site-avatar" src="/images/avatar.png" alt="长胖是个梦想" />
+        </a>
+        
+        <a href="https://zhoujun2303.github.io" class="site-name-link">长胖是个梦想</a>
+      </div>
+
+      
+      <nav class="top-bar__nav" id="sectionBar">
+        
+        
+        <a class="nav-item" href="/">首页</a>
+        
+        <a class="nav-item" href="/post">博客</a>
+        
+        <a class="nav-item" href="/memos">闪念</a>
+        
+        <a class="nav-item" href="/archives">归档</a>
+        
+        <a class="nav-item" href="/tags">标签</a>
+        
+        <a class="nav-item" href="/links">友链</a>
+        
+        <a class="nav-item" href="/post/about">关于</a>
+        
+        
+      </nav>
+
+      
+      <div class="top-bar__right">
+        <button class="btn-icon btn-search search-btn" id="btnSearch" type="button" aria-label="搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-sun" id="themeToggleSun" type="button"
+          aria-label="切换到浅色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1C12.5523 1 13 1.44772 13 2V4C13 4.55228 12.5523 5 12 5C11.4477 5 11 4.55228 11 4V2C11 1.44772 11.4477 1 12 1Z"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z"></path>
+            <path d="M13 20C13 19.4477 12.5523 19 12 19C11.4477 19 11 19.4477 11 20V22C11 22.5523 11.4477 23 12 23C12.5523 23 13 22.5523 13 22V20Z"></path>
+            <path d="M4.22282 4.22289C4.61335 3.83236 5.24651 3.83236 5.63704 4.22289L7.04704 5.63289C7.43756 6.02341 7.43756 6.65658 7.04704 7.0471C6.65651 7.43762 6.02335 7.43762 5.63283 7.0471L4.22282 5.6371C3.8323 5.24658 3.8323 4.61341 4.22282 4.22289Z"></path>
+            <path d="M18.367 16.9529C17.9765 16.5623 17.3433 16.5623 16.9528 16.9529C16.5623 17.3434 16.5623 17.9766 16.9528 18.3671L18.3628 19.7771C18.7533 20.1676 19.3865 20.1676 19.777 19.7771C20.1675 19.3866 20.1675 18.7534 19.777 18.3629L18.367 16.9529Z"></path>
+            <path d="M1 12C1 11.4477 1.44772 11 2 11H4C4.55228 11 5 11.4477 5 12C5 12.5523 4.55228 13 4 13H2C1.44772 13 1 12.5523 1 12Z"></path>
+            <path d="M20 11C19.4477 11 19 11.4477 19 12C19 12.5523 19.4477 13 20 13H22C22.5523 13 23 12.5523 23 12C23 11.4477 22.5523 11 22 11H20Z"></path>
+            <path d="M7.04704 16.9529C7.43756 17.3434 7.43756 17.9766 7.04704 18.3671L5.63704 19.7771C5.24651 20.1676 4.61335 20.1676 4.22282 19.7771C3.8323 19.3866 3.8323 18.7534 4.22283 18.3629L5.63283 16.9529C6.02335 16.5623 6.65651 16.5623 7.04704 16.9529Z"></path>
+            <path d="M19.777 5.6371C20.1675 5.24657 20.1675 4.61341 19.777 4.22289C19.3865 3.83236 18.7533 3.83236 18.3628 4.22289L16.9528 5.63289C16.5623 6.02341 16.5623 6.65658 16.9528 7.0471C17.3433 7.43762 17.9765 7.43762 18.367 7.0471L19.777 5.6371Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-moon" id="themeToggleMoon" type="button"
+          aria-label="切换到深色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C10.0222 2 8.08879 2.58649 6.4443 3.6853C4.79981 4.78412 3.51809 6.3459 2.76121 8.17317C2.00433 10.0004 1.8063 12.0111 2.19215 13.9509C2.578 15.8907 3.53041 17.6725 4.92894 19.0711C6.32746 20.4696 8.10929 21.422 10.0491 21.8079C11.9889 22.1937 13.9996 21.9957 15.8268 21.2388C17.6541 20.4819 19.2159 19.2002 20.3147 17.5557C21.4135 15.9112 22 13.9778 22 12C22 11.5955 21.7564 11.2309 21.3827 11.0761C21.009 10.9213 20.5789 11.0069 20.2929 11.2929C19.287 12.2988 17.9226 12.864 16.5 12.864C15.0774 12.864 13.713 12.2988 12.7071 11.2929C11.7012 10.287 11.136 8.92261 11.136 7.5C11.136 6.07739 11.7012 4.71304 12.7071 3.70711C12.9931 3.42111 13.0787 2.99099 12.9239 2.61732C12.7691 2.24364 12.4045 2 12 2ZM7.55544 5.34824C8.27036 4.87055 9.05353 4.51389 9.87357 4.28778C9.39271 5.27979 9.13604 6.37666 9.13604 7.5C9.13604 9.45304 9.91189 11.3261 11.2929 12.7071C12.6739 14.0881 14.547 14.864 16.5 14.864C17.6233 14.864 18.7202 14.6073 19.7122 14.1264C19.4861 14.9465 19.1295 15.7296 18.6518 16.4446C17.7727 17.7602 16.5233 18.7855 15.0615 19.391C13.5997 19.9965 11.9911 20.155 10.4393 19.8463C8.88743 19.5376 7.46197 18.7757 6.34315 17.6569C5.21447 16.538 4.4624 15.1126 4.15372 13.5607C3.84504 12.0089 4.00347 10.4003 4.60897 8.93853C5.21447 7.47672 6.23985 6.22729 7.55544 5.34824Z"></path>
+            <path d="M19 2C19.5523 2 20 2.44772 20 3V4H21C21.5523 4 22 4.44772 22 5C22 5.55228 21.5523 6 21 6H20V7C20 7.55228 19.5523 8 19 8C18.4477 8 18 7.55228 18 7V6H17C16.4477 6 16 5.55228 16 5C16 4.44772 16.4477 4 17 4H18V3C18 2.44772 18.4477 2 19 2Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon btn-nav-toggle mobile-only" id="btnNavToggle" type="button" aria-label="切换导航">
+          <div class="hamburger" id="hamburger">
+            <span class="hamburger__line hamburger__line--top"></span>
+            <span class="hamburger__line hamburger__line--bottom"></span>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+
+<div class="header-spacer"></div>
+
+<script>
+(function(){
+  var btn = document.getElementById('btnNavToggle');
+  var nav = document.getElementById('sectionBar');
+  var hamburger = document.getElementById('hamburger');
+  if (btn && nav) {
+    btn.addEventListener('click', function(){
+      nav.classList.toggle('top-bar__nav--open');
+      if (hamburger) hamburger.classList.toggle('is-active');
+    });
+    nav.querySelectorAll('.nav-item').forEach(function(item){
+      item.addEventListener('click', function(){
+        nav.classList.remove('top-bar__nav--open');
+        if (hamburger) hamburger.classList.remove('is-active');
+      });
+    });
+  }
+
+  var root = document.documentElement;
+  var applyTheme = function(theme, persist){
+    if (theme === 'light') {
+      root.classList.add('theme-light');
+    } else {
+      root.classList.remove('theme-light');
+    }
+    if (persist) {
+      try { localStorage.setItem('flavor-theme', theme); } catch (e) {}
+    }
+  };
+  document.querySelectorAll('.theme-toggle').forEach(function(el){
+    el.addEventListener('click', function(){
+      applyTheme(root.classList.contains('theme-light') ? 'dark' : 'light', true);
+    });
+  });
+})();
+</script>
+
+  <main class="site-main" role="main">
+    
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">Unity Roslyn Analyzer 实战：首次接入与二次更新</h1>
+    <div class="article-meta">
+      
+      
+      <a href="/category/unity/" class="article-meta__category">Unity</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
+      <span class="article-meta__item">2026-07-15</span>
+      
+      <span class="article-meta__sep">·</span>
+      <span class="article-meta__item">10 分钟阅读</span>
+      
+    </div>
+    
+    <div class="article-header__tags">
+      
+      <a href="/tag/unity/" class="tag-pill tag-pill--sm">Unity</a>
+      
+      <a href="/tag/c/" class="tag-pill tag-pill--sm">C#</a>
+      
+      <a href="/tag/gong-cheng-gui-fan/" class="tag-pill tag-pill--sm">工程规范</a>
+      
+    </div>
+    
+  </header>
+
+  
+
+  <div class="article-content">
+    <h2 id="heading">背景</h2>
+<p>有些工程规范不适合只靠 Code Review 或提交前脚本兜底。比如支付、登录、资源加载、埋点等关键入口，团队通常会约定只能从统一门面调用。如果业务代码直接调用底层接口，功能可能还能跑，但链路上的打点、弹窗、校验、风控或状态管理就可能被绕开。</p>
+<p>这类问题最好的反馈位置是编译期：一写错，IDE 或 Unity 编译马上报错。</p>
+<p>这次实战目标是：用 Unity 的 Roslyn Analyzer 写一条规则，把某个禁止直接调用的 API 变成编译错误。示例规则如下：</p>
+<pre><code class="language-csharp">GameEntity.IAP.Buy(...)
+</code></pre>
+<p>除统一入口文件外，其它 Hotfix 业务代码里一旦出现该直接调用，就报编译错误。</p>
+<p>最终效果类似：</p>
+<pre><code class="language-text">error HLWD001: 禁止在此处直接调用 GameEntity.IAP.Buy(...)；请通过统一入口触发支付
+</code></pre>
+<h2 id="-roslyn-analyzer-">一、首次接入 Roslyn Analyzer 怎么做</h2>
+<p>首次接入不要先写一堆规则。先选一个边界清晰、误报低、能稳定复现的工程约束，把整条链路跑通。</p>
+<p>推荐流程：</p>
+<ol>
+<li>明确规则口径。</li>
+<li>建立 Analyzer 源码项目。</li>
+<li>实现一条 <code>DiagnosticAnalyzer</code>。</li>
+<li>构建 Analyzer DLL。</li>
+<li>让 Unity 把 DLL 识别为 Roslyn Analyzer。</li>
+<li>用违规样例和合法样例验证。</li>
+<li>再接入真实项目编译。</li>
+</ol>
+<p>本次规则口径是：只允许统一入口文件调用 <code>GameEntity.IAP.Buy(...)</code>，其它业务代码都禁止直接调用。</p>
+<p>Analyzer 项目建议单独放在工具目录，例如：</p>
+<pre><code class="language-text">Tools/CodeAnalyzer/Analyzer/
+</code></pre>
+<p>Unity 侧只放最终产物：</p>
+<pre><code class="language-text">Assets/Analyzers/ProjectRules.Analyzer.dll
+</code></pre>
+<p>这样源码和 Unity 加载的 DLL 分开，后续维护更清楚。</p>
+<h2 id="unity-">二、Unity 侧首次接入要点</h2>
+<p>Unity 2022.3 支持把 Roslyn Analyzer DLL 作为编译期分析器加载。接入时有几个关键点：</p>
+<ol>
+<li>Analyzer DLL 必须在 <code>Assets</code> 目录下，例如：</li>
+</ol>
+<pre><code class="language-text">Assets/Analyzers/ProjectRules.Analyzer.dll
+</code></pre>
+<ol start="2">
+<li>
+<p>这个 DLL 是编译期工具，不是运行时代码，所以插件平台要禁用，避免被打进运行程序集。</p>
+</li>
+<li>
+<p>给 DLL 的 <code>.meta</code> 增加 Unity 识别标签：</p>
+</li>
+</ol>
+<pre><code class="language-yaml">labels:
+- RoslynAnalyzer
+</code></pre>
+<ol start="4">
+<li>Analyzer 项目建议目标框架使用：</li>
+</ol>
+<pre><code class="language-text">netstandard2.0
+</code></pre>
+<ol start="5">
+<li>Unity 2022.3 的 Roslyn 兼容性更接近 <code>Microsoft.CodeAnalysis 3.8</code>，不要随手引用过新的 4.x 版本，否则 Unity 编译链路可能加载失败。</li>
+</ol>
+<p>Unity 官方文档：</p>
+<pre><code class="language-text">https://docs.unity3d.com/2022.3/Documentation/Manual/roslyn-analyzers.html
+</code></pre>
+<p>如果 Unity 生成的 <code>.csproj</code> 里没有出现 <code>&lt;Analyzer Include=&quot;...&quot; /&gt;</code>，优先检查 DLL 的 <code>.meta</code> 是否有 <code>RoslynAnalyzer</code> 标签。</p>
+<h2 id="heading-1">三、规则的核心设计</h2>
+<p>规则 ID 要稳定：</p>
+<pre><code class="language-csharp">public const string DiagnosticId = &quot;HLWD001&quot;;
+</code></pre>
+<p>必须阻断编译的规则使用 Error：</p>
+<pre><code class="language-csharp">DiagnosticSeverity.Error
+</code></pre>
+<p>注册检查点：</p>
+<pre><code class="language-csharp">context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
+</code></pre>
+<p>为什么检查 <code>InvocationExpression</code>？因为目标是函数调用：</p>
+<pre><code class="language-csharp">GameEntity.IAP.Buy(productId);
+</code></pre>
+<p>它在语法树里大致是两层成员访问：</p>
+<pre><code class="language-text">Buy
+└── IAP
+    └── GameEntity
+</code></pre>
+<p>因此可以用 <code>MemberAccessExpressionSyntax</code> 做结构匹配，而不是用字符串搜索。</p>
+<h2 id="heading-2">四、文件范围和白名单</h2>
+<p>规则不应该扫所有 C# 文件，只扫业务热更新代码目录，例如：</p>
+<pre><code class="language-text">Assets/Scripts_Hotfix/
+</code></pre>
+<p>并放行统一入口文件，例如：</p>
+<pre><code class="language-text">Assets/Scripts_Hotfix/Modules/IAP/IAPEventCenter.cs
+</code></pre>
+<p>路径判断要统一分隔符：</p>
+<pre><code class="language-csharp">string normalizedPath = filePath.Replace('\\', '/');
+</code></pre>
+<p>然后判断：</p>
+<pre><code class="language-csharp">normalizedPath.IndexOf(&quot;Assets/Scripts_Hotfix/&quot;, StringComparison.OrdinalIgnoreCase) &gt;= 0
+</code></pre>
+<p>白名单文件直接 return：</p>
+<pre><code class="language-csharp">normalizedPath.EndsWith(
+    &quot;Assets/Scripts_Hotfix/Modules/IAP/IAPEventCenter.cs&quot;,
+    StringComparison.OrdinalIgnoreCase)
+</code></pre>
+<p>这样 Windows 和 macOS/Linux 路径都能兼容。</p>
+<h2 id="heading-3">五、核心匹配逻辑</h2>
+<p>示意代码：</p>
+<pre><code class="language-csharp">private static bool IsDirectIapBuyCall(ExpressionSyntax expression)
+{
+    if (!(expression is MemberAccessExpressionSyntax buyAccess))
+    {
+        return false;
+    }
+
+    if (buyAccess.Name.Identifier.ValueText != &quot;Buy&quot;)
+    {
+        return false;
+    }
+
+    if (!(buyAccess.Expression is MemberAccessExpressionSyntax iapAccess))
+    {
+        return false;
+    }
+
+    if (iapAccess.Name.Identifier.ValueText != &quot;IAP&quot;)
+    {
+        return false;
+    }
+
+    return iapAccess.Expression is IdentifierNameSyntax gameEntity
+        &amp;&amp; gameEntity.Identifier.ValueText == &quot;GameEntity&quot;;
+}
+</code></pre>
+<p>这条规则只处理直接调用：</p>
+<pre><code class="language-csharp">GameEntity.IAP.Buy(productId);
+</code></pre>
+<p>如果有人写：</p>
+<pre><code class="language-csharp">var iap = GameEntity.IAP;
+iap.Buy(productId);
+</code></pre>
+<p>这应该由另一条规则处理：禁止缓存 <code>GameEntity</code> / <code>GameQuery</code> 模块引用。规则拆开维护更清晰。</p>
+<h2 id="-analyzer-dll">六、构建 Analyzer DLL</h2>
+<p>如果能正常 restore，可以用普通 SDK 项目构建。但在一些本地环境里，NuGet 目录权限、缓存锁、离线环境会让 <code>dotnet restore</code> 不稳定。</p>
+<p>更稳的方案是准备一个构建脚本，直接调用本机 SDK 自带的 Roslyn 编译器：</p>
+<pre><code class="language-powershell">.\Tools\CodeAnalyzer\build-analyzer.ps1
+</code></pre>
+<p>脚本大致做这些事：</p>
+<ol>
+<li>定位 <code>csc.dll</code>。</li>
+<li>引用 Unity 兼容的 <code>Microsoft.CodeAnalysis.dll</code>。</li>
+<li>引用 <code>Microsoft.CodeAnalysis.CSharp.dll</code>。</li>
+<li>引用 <code>System.Collections.Immutable.dll</code>。</li>
+<li>使用 <code>netstandard2.0</code> reference assemblies。</li>
+<li>输出到 Unity 固定 analyzer 路径，例如：</li>
+</ol>
+<pre><code class="language-text">Assets/Analyzers/ProjectRules.Analyzer.dll
+</code></pre>
+<p>一个容易踩的坑：不要混用 <code>netstandard2.1</code> reference 去编译目标为 <code>netstandard2.0</code> 的 analyzer。能编过，但可能出现兼容警告。最好明确使用 <code>netstandard2.0</code> 的 reference assemblies。</p>
+<h2 id="heading-4">七、首次验证怎么做</h2>
+<p>不要为了验证去污染真实业务代码。可以临时构造两个样例文件。</p>
+<p>违规样例：</p>
+<pre><code class="language-text">.temp-analyzer-check/Assets/Scripts_Hotfix/Game/BadIapCall.cs
+</code></pre>
+<p>内容：</p>
+<pre><code class="language-csharp">namespace Demo
+{
+    public static class GameEntity
+    {
+        public static readonly IapModule IAP = new IapModule();
+    }
+
+    public sealed class IapModule
+    {
+        public void Buy(int productId) { }
+    }
+
+    public sealed class CallSite
+    {
+        public void Run()
+        {
+            GameEntity.IAP.Buy(1);
+        }
+    }
+}
+</code></pre>
+<p>预期：编译失败，出现 <code>HLWD001</code>。</p>
+<p>白名单样例：</p>
+<pre><code class="language-text">.temp-analyzer-check/Assets/Scripts_Hotfix/Modules/IAP/IAPEventCenter.cs
+</code></pre>
+<p>同样写：</p>
+<pre><code class="language-csharp">GameEntity.IAP.Buy(1);
+</code></pre>
+<p>预期：编译通过。</p>
+<p>最后清理临时目录，只保留 analyzer 源码、构建脚本和最终 DLL。</p>
+<h2 id="-roslyn-analyzer--1">八、二次更新 Roslyn Analyzer 怎么做</h2>
+<p>二次更新指的是：已有 Analyzer 已经接入 Unity，后面要新增规则、调整白名单、改错误文案或扩展检测范围。</p>
+<p>推荐流程：</p>
+<ol>
+<li>先改 Analyzer 源码，不直接改 DLL。</li>
+<li>每条新规则分配稳定 ID，例如：</li>
+</ol>
+<pre><code class="language-text">HLWD001
+HLWD002
+HLWD003
+</code></pre>
+<ol start="3">
+<li>根据强度选择级别：</li>
+</ol>
+<pre><code class="language-csharp">DiagnosticSeverity.Error
+DiagnosticSeverity.Warning
+</code></pre>
+<ol start="4">
+<li>如果只是调整已有规则，也要补对应违规样例和合法样例。</li>
+<li>运行构建脚本：</li>
+</ol>
+<pre><code class="language-powershell">.\Tools\CodeAnalyzer\build-analyzer.ps1
+</code></pre>
+<ol start="6">
+<li>确认 Unity 加载的是新 DLL。</li>
+<li>用临时样例验证：违规必须失败，合法必须通过。</li>
+<li>再检查真实项目中是否已有历史违规。</li>
+<li>清理临时验证文件。</li>
+<li>如有 CI 或本地测试脚本，把新规则的触发口径同步到文档里。</li>
+</ol>
+<p>二次更新最容易犯的错有两个：</p>
+<ol>
+<li>只改了源码，没有重建 DLL。</li>
+<li>只替换了 DLL，没有保留源码和构建脚本，导致下一次没人知道怎么维护。</li>
+</ol>
+<h2 id="heading-5">九、本次实战步骤回放</h2>
+<p>这次实际落地时按下面顺序完成：</p>
+<ol>
+<li>从测试约束里提取规则：非白名单文件禁止直接调用 <code>GameEntity.IAP.Buy(...)</code>。</li>
+<li>检查项目里是否已有 Analyzer DLL。</li>
+<li>发现 DLL 存在，但 Unity 工程里没有作为 <code>&lt;Analyzer&gt;</code> 引入。</li>
+<li>检查 <code>.meta</code>，发现缺少 <code>RoslynAnalyzer</code> 标签。</li>
+<li>新增 Analyzer 源码项目和规则源码。</li>
+<li>实现 <code>HLWD001</code>，匹配 <code>GameEntity.IAP.Buy(...)</code> 的直接调用。</li>
+<li>用文件路径过滤 Hotfix 范围，并放行统一入口文件。</li>
+<li>编写构建脚本，直接调用 Roslyn <code>csc.dll</code> 构建 Analyzer DLL。</li>
+<li>替换 Unity 侧 Analyzer DLL。</li>
+<li>给 <code>.meta</code> 补 <code>RoslynAnalyzer</code> 标签。</li>
+<li>构造临时违规样例，确认触发 <code>error HLWD001</code>。</li>
+<li>构造临时白名单样例，确认编译通过。</li>
+<li>全仓搜索现有调用，确认只剩统一入口内的合法调用。</li>
+<li>清理临时验证目录。</li>
+</ol>
+<h2 id="heading-6">十、结论</h2>
+<p>脚本检测适合兜底，Roslyn Analyzer 适合把规则前移。</p>
+<p>对于“只能从统一入口调用”的工程约束，Analyzer 的收益很明显：</p>
+<ol>
+<li>反馈更早，写错就报错。</li>
+<li>规则更稳定，不依赖人工 Review。</li>
+<li>团队新成员不需要记住所有隐性约定。</li>
+<li>CI 脚本仍然可以保留，作为最后一道兜底。</li>
+</ol>
+<p>这类规则不要一开始写得过大。先从一个明确、可验证、误报低的约束开始，例如禁止直接调用某个关键 API。跑通后，再逐步扩展到模块引用、生命周期、事件清理等更复杂的工程规范。</p>
+
+  </div>
+
+  
+  <nav class="post-nav">
+    
+    <a href="/post/gamerecord/" class="post-nav-card post-nav-card--prev">
+      
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">上一篇</span>
+        <span class="post-nav-card__title">GameRecord</span>
+      </div>
+      <span class="post-nav-card__arrow">&larr;</span>
+    </a>
+    
+    
+    <a href="/post/unity-senior-developer-skills/" class="post-nav-card post-nav-card--next">
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">下一篇</span>
+        <span class="post-nav-card__title">Unity 开发高级/资深技能总览</span>
+      </div>
+      
+      <div class="post-nav-card__img">
+        <img src="/post-images/unity-senior-developer-skill-map.svg" alt="Unity 开发高级/资深技能总览" loading="lazy" />
+      </div>
+      
+      <span class="post-nav-card__arrow">&rarr;</span>
+    </a>
+    
+  </nav>
+
+  
+  
+
+
+  
+    <section class="comment-section">
+  <h2 class="comment-section__title">评论</h2>
+  <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    var gitalk = new Gitalk({
+      clientID: 'ca79a66585e72af3bff6',
+      clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+      repo: 'zhoujun2303.github.io',
+      owner: 'zhoujun2303',
+      admin: ['zhoujun2303'],
+      id: location.pathname,
+      distractionFreeMode: false
+    });
+    gitalk.render('gitalk-container');
+  </script>
+</section>
+
+  
+
+
+
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+
+    
+    
+    <nav class="footer-nav" aria-label="页脚导航">
+      
+      <a class="footer-nav__link" href="/">首页</a>
+      
+      <a class="footer-nav__link" href="/post">博客</a>
+      
+      <a class="footer-nav__link" href="/memos">闪念</a>
+      
+      <a class="footer-nav__link" href="/archives">归档</a>
+      
+      <a class="footer-nav__link" href="/tags">标签</a>
+      
+      <a class="footer-nav__link" href="/links">友链</a>
+      
+      <a class="footer-nav__link" href="/post/about">关于</a>
+      
+    </nav>
+    
+
+    
+    <div class="footer-social">
+      
+      <a class="footer-social__link" href="https://github.com/ZhouJun2303" target="_blank" rel="noopener noreferrer"
+        aria-label="GitHub">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+      </a>
+      
+      
+      
+      <a class="footer-social__link" href="/feed.xml" aria-label="RSS">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6.18 15.64a2.18 2.18 0 110 4.36 2.18 2.18 0 010-4.36zM4 4.44A15.56 15.56 0 0119.56 20h-2.83A12.73 12.73 0 004 7.27V4.44zm0 5.66a9.9 9.9 0 019.9 9.9h-2.83A7.07 7.07 0 004 12.93V10.1z"/>
+        </svg>
+      </a>
+    </div>
+
+    
+    <div class="footer-copyright">
+      <p>&copy; 2026 长胖是个梦想. All rights reserved.</p>
+    </div>
+
+    
+    
+    <div class="footer-custom">
+      Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+    </div>
+    
+
+    
+    <div class="footer-powered">
+      <span>Powered by <a href="https://gridea.pro" target="_blank" rel="noopener noreferrer">Gridea Pro</a></span>
+    </div>
+
+  </div>
+</footer>
+
+  
+  <div class="search-overlay" id="searchOverlay" style="display:none;">
+  <div class="search-modal">
+    <div class="search-header">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索文章..." autocomplete="off" />
+      <span class="search-kbd">&#8984;K</span>
+      <button class="search-close" id="searchClose" type="button" aria-label="关闭搜索">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script src="/scripts/search.js"></script>
+  
+
+  
+
+  
+
+  
+
+<script>console.log("\n%c ✦ Gridea Pro v1.2.2 %c · Theme: flavor-theme v1.0.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+</body>
+</html>
