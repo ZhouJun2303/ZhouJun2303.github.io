@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="/styles/main.min.css">
+
+
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+
+
+<style>:root { --heatmap-color: #39d353; }</style>
+
+
+
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('flavor-theme');
+      var theme = saved || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+      }
+    } catch (e) { }
+  })();
+</script>
+  <meta name="generator" content="Gridea Pro 1.2.2">
+  <title>Unity 转微信小游戏指南 | 长胖是个梦想</title>
+  
+<meta property="og:title" content="Unity 转微信小游戏指南" />
+<meta property="og:type" content="article" />
+
+
+<meta name="description" content="这份指南面向已有 国际版 Unity 手游、希望低成本迁移到微信小游戏的项目。主线参考微信小游戏官方的「Unity 适配解决方案」与「快适配」文档，并结合一次真实项目（Unity 2021.3、中重度模拟经营类）从评估到上线的实践。全文按国际版 Unity 工具链书写，不涉及国内特供引擎与相关云服务。核心结论是：能转，但不是「一键转换」——核心玩法代码基本不用重写，但资源加载、&amp;hellip;">
+<link rel="canonical" href="https://zhoujun2303.github.io/post/unity-zhuan-wei-xin-xiao-you-xi-zhi-nan/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 转微信小游戏指南","url":"https://zhoujun2303.github.io/post/unity-zhuan-wei-xin-xiao-you-xi-zhi-nan/","description":"这份指南面向已有 国际版 Unity 手游、希望低成本迁移到微信小游戏的项目。主线参考微信小游戏官方的「Unity 适配解决方案」与「快适配」文档，并结合一次真实项目（Unity 2021.3、中重度模拟经营类）从评估到上线的实践。全文按国际版 Unity 工具链书写，不涉及国内特供引擎与相关云服务。核心结论是：能转，但不是「一键转换」——核心玩法代码基本不用重写，但资源加载、\u0026hellip;","datePublished":"2026-09-18T20:10:00+08:00","dateModified":"2026-09-18T20:30:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-zhuan-wei-xin-xiao-you-xi-zhi-nan/","name":"Unity 转微信小游戏指南","position":2}]}</script>
+<meta property="og:title" content="Unity 转微信小游戏指南">
+<meta property="og:description" content="这份指南面向已有 国际版 Unity 手游、希望低成本迁移到微信小游戏的项目。主线参考微信小游戏官方的「Unity 适配解决方案」与「快适配」文档，并结合一次真实项目（Unity 2021.3、中重度模拟经营类）从评估到上线的实践。全文按国际版 Unity 工具链书写，不涉及国内特供引擎与相关云服务。核心结论是：能转，但不是「一键转换」——核心玩法代码基本不用重写，但资源加载、&amp;hellip;">
+<meta property="og:url" content="https://zhoujun2303.github.io/post/unity-zhuan-wei-xin-xiao-you-xi-zhi-nan/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="长胖是个梦想">
+<meta property="og:image" content="/images/avatar.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-zhuan-wei-xin-xiao-you-xi-zhi-nan/">
+<meta name="twitter:title" content="Unity 转微信小游戏指南">
+<meta name="twitter:description" content="这份指南面向已有 国际版 Unity 手游、希望低成本迁移到微信小游戏的项目。主线参考微信小游戏官方的「Unity 适配解决方案」与「快适配」文档，并结合一次真实项目（Unity 2021.3、中重度模拟经营类）从评估到上线的实践。全文按国际版 Unity 工具链书写，不涉及国内特供引擎与相关云服务。核心结论是：能转，但不是「一键转换」——核心玩法代码基本不用重写，但资源加载、&amp;hellip;">
+<meta name="twitter:image" content="/images/avatar.png">
+</head>
+<body class="flavor-theme">
+
+  <header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <div class="top-bar">
+
+      
+      <div class="top-bar__left">
+        
+        <a href="https://zhoujun2303.github.io" class="site-avatar-link" aria-label="返回首页">
+          <img class="site-avatar" src="/images/avatar.png" alt="长胖是个梦想" />
+        </a>
+        
+        <a href="https://zhoujun2303.github.io" class="site-name-link">长胖是个梦想</a>
+      </div>
+
+      
+      <nav class="top-bar__nav" id="sectionBar">
+        
+        
+        <a class="nav-item" href="/">首页</a>
+        
+        <a class="nav-item" href="/post">博客</a>
+        
+        <a class="nav-item" href="/memos">闪念</a>
+        
+        <a class="nav-item" href="/archives">归档</a>
+        
+        <a class="nav-item" href="/tags">标签</a>
+        
+        <a class="nav-item" href="/links">友链</a>
+        
+        <a class="nav-item" href="/post/about">关于</a>
+        
+        
+      </nav>
+
+      
+      <div class="top-bar__right">
+        <button class="btn-icon btn-search search-btn" id="btnSearch" type="button" aria-label="搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-sun" id="themeToggleSun" type="button"
+          aria-label="切换到浅色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1C12.5523 1 13 1.44772 13 2V4C13 4.55228 12.5523 5 12 5C11.4477 5 11 4.55228 11 4V2C11 1.44772 11.4477 1 12 1Z"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z"></path>
+            <path d="M13 20C13 19.4477 12.5523 19 12 19C11.4477 19 11 19.4477 11 20V22C11 22.5523 11.4477 23 12 23C12.5523 23 13 22.5523 13 22V20Z"></path>
+            <path d="M4.22282 4.22289C4.61335 3.83236 5.24651 3.83236 5.63704 4.22289L7.04704 5.63289C7.43756 6.02341 7.43756 6.65658 7.04704 7.0471C6.65651 7.43762 6.02335 7.43762 5.63283 7.0471L4.22282 5.6371C3.8323 5.24658 3.8323 4.61341 4.22282 4.22289Z"></path>
+            <path d="M18.367 16.9529C17.9765 16.5623 17.3433 16.5623 16.9528 16.9529C16.5623 17.3434 16.5623 17.9766 16.9528 18.3671L18.3628 19.7771C18.7533 20.1676 19.3865 20.1676 19.777 19.7771C20.1675 19.3866 20.1675 18.7534 19.777 18.3629L18.367 16.9529Z"></path>
+            <path d="M1 12C1 11.4477 1.44772 11 2 11H4C4.55228 11 5 11.4477 5 12C5 12.5523 4.55228 13 4 13H2C1.44772 13 1 12.5523 1 12Z"></path>
+            <path d="M20 11C19.4477 11 19 11.4477 19 12C19 12.5523 19.4477 13 20 13H22C22.5523 13 23 12.5523 23 12C23 11.4477 22.5523 11 22 11H20Z"></path>
+            <path d="M7.04704 16.9529C7.43756 17.3434 7.43756 17.9766 7.04704 18.3671L5.63704 19.7771C5.24651 20.1676 4.61335 20.1676 4.22282 19.7771C3.8323 19.3866 3.8323 18.7534 4.22283 18.3629L5.63283 16.9529C6.02335 16.5623 6.65651 16.5623 7.04704 16.9529Z"></path>
+            <path d="M19.777 5.6371C20.1675 5.24657 20.1675 4.61341 19.777 4.22289C19.3865 3.83236 18.7533 3.83236 18.3628 4.22289L16.9528 5.63289C16.5623 6.02341 16.5623 6.65658 16.9528 7.0471C17.3433 7.43762 17.9765 7.43762 18.367 7.0471L19.777 5.6371Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-moon" id="themeToggleMoon" type="button"
+          aria-label="切换到深色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C10.0222 2 8.08879 2.58649 6.4443 3.6853C4.79981 4.78412 3.51809 6.3459 2.76121 8.17317C2.00433 10.0004 1.8063 12.0111 2.19215 13.9509C2.578 15.8907 3.53041 17.6725 4.92894 19.0711C6.32746 20.4696 8.10929 21.422 10.0491 21.8079C11.9889 22.1937 13.9996 21.9957 15.8268 21.2388C17.6541 20.4819 19.2159 19.2002 20.3147 17.5557C21.4135 15.9112 22 13.9778 22 12C22 11.5955 21.7564 11.2309 21.3827 11.0761C21.009 10.9213 20.5789 11.0069 20.2929 11.2929C19.287 12.2988 17.9226 12.864 16.5 12.864C15.0774 12.864 13.713 12.2988 12.7071 11.2929C11.7012 10.287 11.136 8.92261 11.136 7.5C11.136 6.07739 11.7012 4.71304 12.7071 3.70711C12.9931 3.42111 13.0787 2.99099 12.9239 2.61732C12.7691 2.24364 12.4045 2 12 2ZM7.55544 5.34824C8.27036 4.87055 9.05353 4.51389 9.87357 4.28778C9.39271 5.27979 9.13604 6.37666 9.13604 7.5C9.13604 9.45304 9.91189 11.3261 11.2929 12.7071C12.6739 14.0881 14.547 14.864 16.5 14.864C17.6233 14.864 18.7202 14.6073 19.7122 14.1264C19.4861 14.9465 19.1295 15.7296 18.6518 16.4446C17.7727 17.7602 16.5233 18.7855 15.0615 19.391C13.5997 19.9965 11.9911 20.155 10.4393 19.8463C8.88743 19.5376 7.46197 18.7757 6.34315 17.6569C5.21447 16.538 4.4624 15.1126 4.15372 13.5607C3.84504 12.0089 4.00347 10.4003 4.60897 8.93853C5.21447 7.47672 6.23985 6.22729 7.55544 5.34824Z"></path>
+            <path d="M19 2C19.5523 2 20 2.44772 20 3V4H21C21.5523 4 22 4.44772 22 5C22 5.55228 21.5523 6 21 6H20V7C20 7.55228 19.5523 8 19 8C18.4477 8 18 7.55228 18 7V6H17C16.4477 6 16 5.55228 16 5C16 4.44772 16.4477 4 17 4H18V3C18 2.44772 18.4477 2 19 2Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon btn-nav-toggle mobile-only" id="btnNavToggle" type="button" aria-label="切换导航">
+          <div class="hamburger" id="hamburger">
+            <span class="hamburger__line hamburger__line--top"></span>
+            <span class="hamburger__line hamburger__line--bottom"></span>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+
+<div class="header-spacer"></div>
+
+<script>
+(function(){
+  var btn = document.getElementById('btnNavToggle');
+  var nav = document.getElementById('sectionBar');
+  var hamburger = document.getElementById('hamburger');
+  if (btn && nav) {
+    btn.addEventListener('click', function(){
+      nav.classList.toggle('top-bar__nav--open');
+      if (hamburger) hamburger.classList.toggle('is-active');
+    });
+    nav.querySelectorAll('.nav-item').forEach(function(item){
+      item.addEventListener('click', function(){
+        nav.classList.remove('top-bar__nav--open');
+        if (hamburger) hamburger.classList.remove('is-active');
+      });
+    });
+  }
+
+  var root = document.documentElement;
+  var applyTheme = function(theme, persist){
+    if (theme === 'light') {
+      root.classList.add('theme-light');
+    } else {
+      root.classList.remove('theme-light');
+    }
+    if (persist) {
+      try { localStorage.setItem('flavor-theme', theme); } catch (e) {}
+    }
+  };
+  document.querySelectorAll('.theme-toggle').forEach(function(el){
+    el.addEventListener('click', function(){
+      applyTheme(root.classList.contains('theme-light') ? 'dark' : 'light', true);
+    });
+  });
+})();
+</script>
+
+  <main class="site-main" role="main">
+    
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">Unity 转微信小游戏指南</h1>
+    <div class="article-meta">
+      
+      
+      <a href="/category/unity/" class="article-meta__category">Unity</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
+      <span class="article-meta__item">2026-09-18</span>
+      
+      <span class="article-meta__sep">·</span>
+      <span class="article-meta__item">47 分钟阅读</span>
+      
+    </div>
+    
+    <div class="article-header__tags">
+      
+      <a href="/tag/unity/" class="tag-pill tag-pill--sm">Unity</a>
+      
+      <a href="/tag/xing-neng-you-hua/" class="tag-pill tag-pill--sm">性能优化</a>
+      
+      <a href="/tag/gou-jian-fa-bu/" class="tag-pill tag-pill--sm">构建发布</a>
+      
+      <a href="/tag/nei-cun-you-hua/" class="tag-pill tag-pill--sm">内存优化</a>
+      
+      <a href="/tag/kua-ping-tai/" class="tag-pill tag-pill--sm">跨平台</a>
+      
+    </div>
+    
+  </header>
+
+  
+
+  <div class="article-content">
+    <blockquote>
+<p>这份指南面向已有 <strong>国际版 Unity</strong> 手游、希望低成本迁移到微信小游戏的项目。主线参考微信小游戏官方的「Unity 适配解决方案」与「快适配」文档，并结合一次真实项目（Unity 2021.3、中重度模拟经营类）从评估到上线的实践。全文按国际版 Unity 工具链书写，不涉及国内特供引擎与相关云服务。核心结论是：<strong>能转，但不是「一键转换」</strong>——核心玩法代码基本不用重写，但资源加载、启动性能、内存峰值这三件事必须重做。</p>
+</blockquote>
+<h2 id="heading">目录</h2>
+<ul>
+<li><a href="#conclusion">一、先看结论</a></li>
+<li><a href="#differences">二、平台差异与性能预算</a></li>
+<li><a href="#roadmap">三、转换路线：五个阶段</a></li>
+<li><a href="#scheme">四、资源加载方案选型</a></li>
+<li><a href="#env">五、环境与工具链准备</a></li>
+<li><a href="#assets">六、资源加载改造（AB / AA 实操）</a></li>
+<li><a href="#startup">七、首包与启动优化</a></li>
+<li><a href="#memory">八、内存优化</a></li>
+<li><a href="#cpu-gpu">九、CPU / GPU 与运行性能</a></li>
+<li><a href="#code">十、代码层改造</a></li>
+<li><a href="#sdk">十一、微信 SDK 接入与原生 SDK 替换</a></li>
+<li><a href="#audio">十二、音频适配</a></li>
+<li><a href="#plugins">十三、插件兼容性与代码剥离</a></li>
+<li><a href="#slim">十四、包体瘦身</a></li>
+<li><a href="#test">十五、调试、性能测试与云测试</a></li>
+<li><a href="#release">十六、发布上线与现网监控</a></li>
+<li><a href="#pitfalls">十七、踩坑清单</a></li>
+<li><a href="#estimate">十八、工时估算与排期</a></li>
+<li><a href="#refs">十九、参考资料</a></li>
+</ul>
+<p><a id="conclusion"></a></p>
+<h2 id="heading-1">一、先看结论</h2>
+<ul>
+<li><strong>技术上可行</strong>：微信适配方案基于 WebAssembly，支持国际版 Unity 2018~2022，大部分第三方插件可以复用，核心逻辑不用重写。</li>
+<li><strong>成本主要在工程改造</strong>，不在玩法代码：资源加载方式、启动流程、内存模型、平台 SDK 四块需要系统改造。</li>
+<li><strong>优先级不能颠倒</strong>：先跑通（阶段二）→ 再压首包和启动（阶段四）→ 再压内存峰值 → 最后才是画面与体验打磨。一上来就优化画质，很容易在内存和启动上翻车。</li>
+<li><strong>内存是生死线</strong>：iOS 低档机超过 1G、中高档机超过 1.4G 就有大概率被系统 OOM 杀掉重启，这不是「卡不卡」的问题，是「活不活」的问题。</li>
+<li><strong>必须改掉 Resources 主路径</strong>：国际版 Unity 没有「资源自动流式托管」捷径，首包与内存要压下来，只能走 Addressable / AssetBundle + 自建 CDN。</li>
+<li><strong>收益是真实的</strong>：即点即玩、免安装、微信买量与社交裂变，这些都是原生 App 拿不到的。</li>
+</ul>
+<p><a id="differences"></a></p>
+<h2 id="heading-2">二、平台差异与性能预算</h2>
+<p>先理解差距，再定预算，最后才是动手优化。</p>
+<h3 id="21-">2.1 内存差异</h3>
+<ol>
+<li><strong>WASM 编译内存</strong>：导出目录 <code>webgl/Build/xxx.code.unityweb</code>（或 <code>code.wasm</code>）本身就有几十 MB，浏览器内核编译执行时还会产生更多内存，加上缓存与 JIT 优化，总体大致是 Wasm 文件大小的 <strong>10 倍左右</strong>。这块开销原生 App 完全没有。</li>
+<li><strong>Emscripten 文件系统</strong>：WebGL 出于沙盒机制无法访问本地文件系统，Emscripten 用 JS + IndexedDB 模拟了一套文件系统。Wasm 访问 JS 层，JS 层再定期与 IndexedDB 同步，所以 <strong>JS 中始终存有所有文件的一份 copy</strong>。这也是为什么官方反复强调「首包资源与 AssetBundle 都不要用 Unity 自带的文件 Cache」。</li>
+<li><strong>内存是「只增不减 + 有碎片」的</strong>：UnityHeap 扩容后不会缩回，单帧内瞬间分配过多对象极容易产生尖刺并触发崩溃。</li>
+</ol>
+<p>小程序进程内存可以用一个粗略的公式拆开：</p>
+<pre><code class="language-text">进程内存 ≈ 小游戏基础库 + Canvas + WASM 编译内存
+          + UnityHeap + Gfx 显存 + 音频 + JavaScript 堆
+</code></pre>
+<p>以 iOS 高性能模式下、代码包 30MB 的游戏为例：</p>
+<table>
+<thead>
+<tr>
+<th>组成</th>
+<th>典型占用</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>小游戏基础库</td>
+<td>100~150MB</td>
+<td>公共库 + 运行时容器</td>
+</tr>
+<tr>
+<td>Canvas</td>
+<td>70~80MB</td>
+<td>与设备物理分辨率相关，如 iPhone 11 Pro Max 约 80MB</td>
+</tr>
+<tr>
+<td>WASM 编译内存</td>
+<td>~300MB</td>
+<td>30MB 未压缩代码在 iOS 上约需 300MB 运行时编译内存</td>
+</tr>
+<tr>
+<td>UnityHeap</td>
+<td>256 / 496 / 768MB</td>
+<td>托管堆 + 本机堆 + 原生插件，按游戏重度预留</td>
+</tr>
+<tr>
+<td>Gfx 显存</td>
+<td>视纹理而定</td>
+<td>纹理与模型 Upload GPU 之后</td>
+</tr>
+<tr>
+<td>音频</td>
+<td>取决于并发数</td>
+<td>同时存在的音频建议不超过 20 个</td>
+</tr>
+<tr>
+<td>JavaScript 堆</td>
+<td>通常 &lt; 100MB</td>
+<td>若明显大于 UnityHeap，优先怀疑用了 Unity Cache 做文件缓存</td>
+</tr>
+</tbody>
+</table>
+<p>结论：基础内存（基础库 + Canvas + 编译内存）大约 500MB 是原生 App 没有的。<strong>如果游戏要支持低档机型、把内存压到 1G 以内，业务侧（UnityHeap + Gfx + 音频 + JS）就必须控制在 500MB 左右。</strong></p>
+<p><img src="/post-images/unity-weixin-minigame-memory.svg" alt="微信小游戏 Unity 内存构成与峰值红线" /></p>
+<p>官方建议的内存峰值红线：</p>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>低档机</th>
+<th>中高档机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Android</td>
+<td>&lt; 1.2G</td>
+<td>&lt; 1.5G</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td>&lt; 1G</td>
+<td>&lt; 1.4G</td>
+</tr>
+</tbody>
+</table>
+<p>iOS 低档机主要是 iPhone 6sp / 7 / 8（2G RAM），中高档机是 iPhone 7P / 8P / X / 11 及以上（3G RAM 起）。真机安全峰值建议控制在 1.2~1.3G。</p>
+<h3 id="22-cpu-">2.2 CPU 差异</h3>
+<ul>
+<li>Wasm 大约比原生 App <strong>慢 3 倍</strong>。</li>
+<li>Wasm <strong>是单线程的，且不支持 SIMD</strong>，所以 WebGL 小游戏的 CPU 性能天然低于原生。</li>
+<li>多线程 API 不可用，所有并发逻辑要用异步、分帧、协程来替代。</li>
+<li>结论：CPU 密集玩法（大量实时寻路、复杂物理、逐帧大量计算）要重新评估，必要时降规格或改成异步分帧。</li>
+</ul>
+<h3 id="23-gpu-">2.3 GPU 差异</h3>
+<ul>
+<li>WebGL 只支持 WebGL 1.0 / 2.0，功能大致对应 OpenGL ES 2.0 / 3.0。</li>
+<li>转换工具默认走 <strong>WebGL 1.0</strong>，WebGL 2.0 属于 beta/受限能力，依赖 iOS 高性能+ 与较高系统版本，<strong>上正式版要谨慎</strong>。</li>
+<li>移动端压缩纹理：Android 用 ETC2 / ASTC，iOS 用 ASTC，PC 端微信与开发者工具用 DXT / BC7（不支持时软解为 RGBA32）。</li>
+</ul>
+<h3 id="24--checklist">2.4 预算表（建议写进提测 Checklist）</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>目标</th>
+<th>红线</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>首包网络传输量</td>
+<td>3MB 左右</td>
+<td>不超过 5MB</td>
+</tr>
+<tr>
+<td>小游戏总包体</td>
+<td>—</td>
+<td>≤ 20MB</td>
+</tr>
+<tr>
+<td>WASM 代码包</td>
+<td>≤ 30MB</td>
+<td>分包后约为原始 1/3</td>
+</tr>
+<tr>
+<td>首屏启动</td>
+<td>5~10s</td>
+<td>越短越好</td>
+</tr>
+<tr>
+<td>内存峰值</td>
+<td>Android &lt; 1.2G / iOS &lt; 1G</td>
+<td>Android &lt; 1.5G / iOS &lt; 1.4G</td>
+</tr>
+<tr>
+<td>单资源文件</td>
+<td>2~5MB</td>
+<td>单请求 ≤ 100MB（超时 60s）</td>
+</tr>
+<tr>
+<td>同时播放音频</td>
+<td>≤ 20 个</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><a id="roadmap"></a></p>
+<h2 id="heading-3">三、转换路线：五个阶段</h2>
+<p>官方把接入拆成五个阶段，建议直接按这个节奏推进，每个阶段都有明确的准入条件，避免「边做边发现方案不行」。</p>
+<p><img src="/post-images/unity-weixin-minigame-roadmap.svg" alt="Unity 转微信小游戏：五阶段转换路线" /></p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>名称</th>
+<th>核心工作</th>
+<th>交付物 / 放行条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一</td>
+<td>兼容性评估</td>
+<td>引擎版本、渲染管线、网络协议、第三方插件、原生 SDK 盘点</td>
+<td>可行性结论 + 方案选型</td>
+</tr>
+<tr>
+<td>二</td>
+<td>项目转换</td>
+<td>安装插件、WebGL 导出、转换小游戏、资源上传 CDN</td>
+<td>真机能跑通主流程</td>
+</tr>
+<tr>
+<td>三</td>
+<td>平台能力接入</td>
+<td>WX SDK（登录/广告/分享/开放数据域/存储）、屏幕与输入法适配、安全域名</td>
+<td>平台功能可用，原生 SDK 已下线</td>
+</tr>
+<tr>
+<td>四</td>
+<td>体验调优</td>
+<td>首包与首帧、WASM 分包、压缩纹理、AB 卸载、内存峰值、音频</td>
+<td>各项指标进入预算表</td>
+</tr>
+<tr>
+<td>五</td>
+<td>发布上线</td>
+<td>审核发布、云测试验收、现网监控与版本更新</td>
+<td>上线并有人盯数据</td>
+</tr>
+</tbody>
+</table>
+<p><a id="scheme"></a></p>
+<h2 id="heading-4">四、资源加载方案选型</h2>
+<p>这是整个迁移里最贵、也最关键的决策。国际版 Unity 没有国内特供的「Resources 自动远端流式」能力，主线只能是 <strong>Addressable / AssetBundle + 自建对象存储与 CDN</strong>。先定方案再动工。</p>
+<h3 id="41-addressable">4.1 Addressable（推荐）</h3>
+<p>用 Addressable Assets System（AA）做按需加载、依赖解析与更新。</p>
+<ul>
+<li>官方指引：<a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/UsingAddressable.html">https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/UsingAddressable.html</a></li>
+<li>优势：
+<ul>
+<li>依赖与分组清晰，远程 Catalog / 更新链路成熟；</li>
+<li>原生 App 与小游戏可共用同一套资源体系；</li>
+<li>卸载与引用计数更好做，利于压内存峰值。</li>
+</ul>
+</li>
+<li>劣势：
+<ul>
+<li>初次接入要理清 Group、Label、Catalog 与远程路径；</li>
+<li>需要自己维护 CDN、缓存策略和版本更新。</li>
+</ul>
+</li>
+</ul>
+<h3 id="42-assetbundle">4.2 AssetBundle</h3>
+<p>直接用 AssetBundle（AB）做分包下载与加载，自行封装更新与依赖。</p>
+<ul>
+<li>官方指引：<a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/UsingAssetBundle.html">https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/UsingAssetBundle.html</a></li>
+<li>优势：
+<ul>
+<li>概念更薄，老项目若已有 AB 管线改造成本更低；</li>
+<li>对包体拆分与首包裁剪控制很直接。</li>
+</ul>
+</li>
+<li>劣势：
+<ul>
+<li>依赖、版本、缓存、回滚都要自己管；</li>
+<li>中重度项目后期维护成本通常高于 AA。</li>
+</ul>
+</li>
+</ul>
+<h3 id="43-">4.3 决策建议</h3>
+<table>
+<thead>
+<tr>
+<th>项目情况</th>
+<th>推荐</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新项目，或愿意一次性把资源体系做干净</td>
+<td>Addressable</td>
+<td>长期维护成本更低</td>
+</tr>
+<tr>
+<td>已有稳定 AB 管线，短期只要小游戏能跑</td>
+<td>AssetBundle</td>
+<td>改造面更可控</td>
+</tr>
+<tr>
+<td>需要同时支持原生 App 与小游戏</td>
+<td>Addressable 或统一 AB</td>
+<td>一套资源体系全平台复用</td>
+</tr>
+<tr>
+<td>中重度、内存压力大</td>
+<td>Addressable（细分组 + 及时卸载）</td>
+<td>分包与卸载粒度更可控</td>
+</tr>
+<tr>
+<td>仍大量使用 Resources / 一次性全量加载</td>
+<td>先迁 AA/AB，再谈优化</td>
+<td>Resources 会无条件进首包</td>
+</tr>
+</tbody>
+</table>
+<p><strong>经验</strong>：只要项目里 Resources 和「一次性加载全量资源」的逻辑比较多，AA/AB 改造就要按 2 周以上估。这部分是整条链路的水下冰山。</p>
+<h3 id="44--cdn">4.4 云存储与 CDN</h3>
+<ul>
+<li>对象存储：腾讯云 COS、又拍云 USS 等，用于托管远端资源。</li>
+<li>CDN：用于资源下载加速，例如腾讯云 CDN：<a href="https://buy.cloud.tencent.com/cdn_package">https://buy.cloud.tencent.com/cdn_package</a>。</li>
+<li><strong>CDN 必须开启 Brotli 或 gzip 压缩</strong>，否则首包资源体积会非常难看。</li>
+<li>小游戏框架默认以 HTTP/2 多路复用流式下载资源；CDN 未开启 HTTP/2 会自动降级为 HTTP/1.0，下载速度会明显变慢。</li>
+<li>安全域名（<code>request</code> / <code>download</code> / <code>socket</code>）必须在 MP 后台配置，否则正式版请求会被拦截。</li>
+</ul>
+<p><a id="env"></a></p>
+<h2 id="heading-5">五、环境与工具链准备</h2>
+<h3 id="51--unity">5.1 引擎版本（国际版 Unity）</h3>
+<p>下表只列国际版 Unity。统计口径会随官方更新，动手前以<a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/UnityVersion">推荐引擎版本</a>为准。</p>
+<table>
+<thead>
+<tr>
+<th>引擎版本</th>
+<th>压缩纹理</th>
+<th>相对编译体积</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2018</td>
+<td>仅 DXT，不支持 ETC2/ASTC</td>
+<td>100%</td>
+<td>不支持设置 dpr 分辨率</td>
+</tr>
+<tr>
+<td>2019</td>
+<td>仅 DXT，不支持 ETC2/ASTC</td>
+<td>100%</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2020</td>
+<td>DXT/ETC2，不支持 ASTC</td>
+<td>100%</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2021</td>
+<td>全支持 DXT/ETC2/ASTC</td>
+<td>80%</td>
+<td>需自己在 WebGL 设置里配 ASTC</td>
+</tr>
+<tr>
+<td>2022（推荐）</td>
+<td>全支持 DXT/ETC2/ASTC</td>
+<td>80%</td>
+<td>强烈建议 2022.3 LTS</td>
+</tr>
+</tbody>
+</table>
+<p>实践选择：</p>
+<ul>
+<li><strong>新项目</strong>：直接用 <strong>Unity 2022.3 LTS</strong>，压缩纹理、编译体积、迭代速度都更好；2022 还可配合 Memory Profiler 分析 WebGL 内存。</li>
+<li><strong>老项目</strong>：2018~2020 暂时不升也能上，但必须配合「微信压缩纹理工具」优化内存；2018 还改不了 dpr。有人力强烈建议升到 2022，编译也更快，利于迭代。</li>
+<li>2021.3 是可用的折中版本：支持 ASTC（移动端最广覆盖），编译体积约为老版本的 80%。<strong>注意这是「支持」不等于「默认开启」，要手动在纹理的 WebGL Settings 里配置格式。</strong></li>
+<li>从 <a href="https://unity.com/download">Unity Hub</a> 安装国际版时，必须勾选 <strong>WebGL Build Support</strong>。</li>
+</ul>
+<h3 id="52-">5.2 转换插件</h3>
+<p>国际版 Unity 安装微信官方 WX SDK / 转换工具即可，按官方安装指引操作。</p>
+<ul>
+<li>安装指引（Package Manager / UnityPackage）：<a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/SDKInstaller.html">https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/SDKInstaller.html</a></li>
+<li>Unity 2019+ 推荐：<code>Window → Package Manager → + → Add package from git URL</code>，URL 以安装指引页当前公布为准</li>
+<li>Unity 2018 或 Package Manager 不便时：用 <a href="https://game.weixin.qq.com/cgi-bin/gamewxagwasmsplitwap/getunityplugininfo?download=1">UnityPackage 离线包</a></li>
+<li>文档与设计稿仓库：<a href="https://github.com/wechat-miniprogram/minigame-unity-webgl-transform">https://github.com/wechat-miniprogram/minigame-unity-webgl-transform</a></li>
+<li>官方文档入口：<a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform.html">https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform.html</a></li>
+</ul>
+<h3 id="53-">5.3 微信开发者工具</h3>
+<ul>
+<li>使用 <strong>Stable 稳定版</strong>，<strong>不要用小游戏版 Minigame Build</strong>，避免稳定性问题。</li>
+<li>需要在 MP 平台开通的能力：
+<ul>
+<li>能力地图 → 生产提效包 → <strong>快适配</strong>；</li>
+<li>能力地图 → 研发能力 → 生产提效包 → <strong>高性能模式</strong>（iOS 性能不足时必开）；</li>
+<li>开发设置 → <strong>服务器域名</strong>（request / download / socket）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="54-">5.4 目录结构与调试</h3>
+<p>转换后会得到两类产物：</p>
+<pre><code class="language-text">minigame/    ← 小游戏包，用微信开发者工具打开
+webgl/       ← 资源目录，上传到 CDN
+├── Build/            code / framework / data / symbols
+├── StreamingAssets/  AssetBundle / Addressables
+├── Assets/
+└── texture-config.js
+</code></pre>
+<ul>
+<li>PC 端开发者工具可以用登录态/测试 Token 直接跳过登录，方便本地调试；这类凭据不要写进仓库，放在项目内部文档或本地配置里。</li>
+<li>调试技巧：先用 JS 直接改 <code>minigame</code> 里的 JS 验证问题，确认后再改 Unity 工程用 C# SDK 落地，迭代最快。</li>
+</ul>
+<p><a id="assets"></a></p>
+<h2 id="ab--aa-">六、资源加载改造（AB / AA 实操）</h2>
+<h3 id="61--loading">6.1 首包只放 Loading</h3>
+<p>首包资源（<code>webgl/Build</code> 下 data 文件）主要由以下内容组成：</p>
+<ul>
+<li><code>unity default resources</code>：引擎默认资源（Arial 字体、默认 mesh、纹理等）；</li>
+<li><code>il2cppmetadata</code>：IL2CPP 生成的类与方法信息；</li>
+<li><code>unity builtin_extra</code>：Always Included 的 Shader；</li>
+<li>BuildSettings 里所有 active 的场景；</li>
+<li>Resources 目录里的资源及其引用链；</li>
+<li>全局设置及引用到的资源（如 splash 图）。</li>
+</ul>
+<p>首包原则：</p>
+<ol>
+<li><strong>只保留 Splash / Loading 场景</strong>，不要勾选任何其他场景；</li>
+<li><strong>不要把字体打进首包</strong>（字体压缩率极低），中文用 2~3MB 以内的精简字体；</li>
+<li>不要往 Resources 放资源，该目录会被无条件打进首包；</li>
+<li>首包压缩后体积以 3MB 左右最佳，不超过 5MB。</li>
+</ol>
+<h3 id="62-addressable-">6.2 Addressable 改造</h3>
+<p>Addressable 是官方推荐的迁移路径，最小改造量的做法：</p>
+<ol>
+<li><code>Resources.Load</code> → <code>Addressables.LoadAssetAsync&lt;T&gt;</code>；</li>
+<li>直接 <code>Instantiate(prefab)</code> → <code>AssetReference.InstantiateAsync()</code>，否则预制体及其全部依赖必须在场景加载前就绪，会严重拖慢初始化；</li>
+<li>每个场景单独作为一个 Addressable Group，用 <code>Addressables.LoadSceneAsync</code> 动态加载；</li>
+<li>用 Tools → Analyze 检查冗余，必要时「Check Duplicate Bundle Dependencies → Fix Selected Rules」自动消除重复依赖；</li>
+<li>iOS 内存压力大时，把 Provider 换成 <strong>WXAssetBundleProvider</strong>（<code>WXAssetBundleProvider.cs</code> 放进 <code>WX-WASM-SDK-V2/Runtime/</code>，并让该目录引用 <code>Unity.ResourceManager</code>），可以显著减轻 iOS 内存压力。</li>
+</ol>
+<p>异步写法三种任选：</p>
+<pre><code class="language-csharp">// 回调
+Addressables.LoadAssetAsync&lt;Texture2D&gt;(&quot;mytexture&quot;).Completed += handle =&gt; { /* ... */ };
+
+// 协程
+var handle = Addressables.LoadAssetAsync&lt;Texture2D&gt;(&quot;mytexture&quot;);
+if (!handle.IsDone) yield return handle;
+if (handle.Status == AsyncOperationStatus.Succeeded) { var tex = handle.Result; }
+
+// await
+var handle = Addressables.LoadAssetAsync&lt;Texture2D&gt;(&quot;mytexture&quot;);
+await handle.Task;
+</code></pre>
+<h3 id="63-assetbundle-">6.3 AssetBundle 打包参数</h3>
+<pre><code class="language-csharp">BuildAssetBundleOptions.AppendHashToAssetBundleName   // 文件名带 hash
+| BuildAssetBundleOptions.ChunkBasedCompression       // LZ4，加载速度与体积均衡
+| BuildAssetBundleOptions.DisableWriteTypeTree        // 不需要兼容新旧 Unity 时，减小体积、加快加载
+</code></pre>
+<ul>
+<li><code>AppendHashToAssetBundleName</code>：小游戏底层缓存与淘汰以 hash 为依据，<strong>这是资源更新能生效的关键</strong>。</li>
+<li><code>ChunkBasedCompression</code>（LZ4）：相比 LZMA 加载更快，体积略大，综合最优。</li>
+<li><code>DisableWriteTypeTree</code>：不需要新老引擎兼容时开启，体积更小、加载更快、内存更低。</li>
+<li>严禁使用 <code>WWW.LoadFromCacheOrDownload</code>、<code>LoadFromFile</code> 等缓存 API，直接用 <code>UnityWebRequestAssetBundle</code> 按需异步加载，缓存的判断与淘汰由适配层负责。</li>
+</ul>
+<h3 id="64-shader-">6.4 Shader 丢失</h3>
+<p>AB 资源加载后 Shader 丢失是高频问题，两种解法：</p>
+<ol>
+<li>把用到但没被引用的 Shader 放入 <strong>Always Included Shaders</strong>；</li>
+<li>收集并设置 <strong>ShaderVariantCollection</strong>，配合 Shader 异步 Warmup。</li>
+</ol>
+<p>另外注意：场景或 AB 中静态摆放的物件如果没单独设为 Addressable，会随场景打进同一个 bundle，容易造成重复冗余，务必用 Analyze 检查。</p>
+<h3 id="65-ab-">6.5 AB 缓存机制与更新</h3>
+<p>小游戏底层对 bundle 有缓存：<strong>只要 bundle 包名不变，缓存过就不会再拉取</strong>，即使更新了资源或换了 CDN 路径也一样。所以必须靠文件名里的 hash 让 URL 变化，从而触发重新下载。</p>
+<p>关键配置（<code>Assets/WX-WASM-SDK-V2/Editor/MiniGameConfig.asset</code>）：</p>
+<pre><code class="language-text">bundlePathIdentifier: StreamingAssets;bundles      // 命中该路径标识符的才自动缓存
+bundleHashLength: 32                               // 文件名中 hash 的长度，默认 32
+bundleExcludeExtensions: .json;.hash               // 这些后缀不缓存
+texturesHashLength: 8                              // 压缩纹理工具产物的 hash 长度
+maxStorage: 200                                    // 最大缓存容量（MB），接近阈值自动回收
+</code></pre>
+<p>注意事项：</p>
+<ul>
+<li><strong>配置文件不要带缓存</strong>：AA 的 <code>catalog.json</code> / <code>setting.json</code>、AB 的 AssetBundleManifest 都不带 hash，一旦被 CDN 缓存就会永远加载旧资源。两种做法：每次发版更换 CDN 路径（<code>Version_1</code> / <code>Version_2</code>），或对这些文件在源站/CDN 设置 <code>no-cache</code>。</li>
+<li>缓存命中判定依赖「资源下载 URL 包含 DATA_CDN」且路径包含 <code>bundlePathIdentifier</code>，配置不对就完全不缓存。</li>
+<li><strong>不同电脑打出来的 AB hash 可能不一致</strong>，跟各自 <code>Library</code> 目录下的缓存有关，联调时以同一条流水线产出的包为准。</li>
+<li>除非清楚小程序的更新机制，<strong>不要删除旧版本资源</strong>，否则老版本用户可能直接报错。</li>
+</ul>
+<h3 id="66-ab-">6.6 AB 卸载策略</h3>
+<ul>
+<li>现在的 AB 分包逻辑通常不好区分「哪些该留、哪些该卸」，要提前设计卸载规则。</li>
+<li>常见触发点：弹窗关闭、场景切换。切换场景时统一卸载不再被引用的 bundle。</li>
+<li>业务侧一律按「未缓存、需要从网络下载」去写异步逻辑，适配层会判断缓存；不要自己写缓存判断。</li>
+</ul>
+<h3 id="67-cdn-">6.7 CDN 与服务端注意事项</h3>
+<ol>
+<li>对 <code>.txt</code> 后缀（首资源包）<strong>开启 Brotli 或 gzip</strong>；</li>
+<li>资源下载并发数为 10，超过自动排队；</li>
+<li>单个请求最大 100MB、超时默认 60s，但<strong>建议单文件控制在 2~5MB</strong>；</li>
+<li>网络与安全域名、跨域、SSL 参考官方「网络通信适配」文档。</li>
+</ol>
+<p><a id="startup"></a></p>
+<h2 id="heading-6">七、首包与启动优化</h2>
+<h3 id="71-">7.1 先量化，再优化</h3>
+<p>把 <code>unity-namespace.js</code> 里的 <code>hideTimeLogModal</code> 设为 <code>false</code>，就能看到启动 timelog。启动主要由三部分决定：</p>
+<ol>
+<li><strong>首包资源下载</strong>：资源越大越慢，绝大部分玩家下载速度约 2MB/s，还有不少 &lt;300KB/s 的低速用户；</li>
+<li><strong>WASM 代码下载与编译</strong>：代码包影响着下载时长与初始化编译时间，转换工具会把它 br 压缩到原 <code>code</code> 包的约 20%；</li>
+<li><strong>引擎初始化与首帧逻辑</strong>：典型 3~6s，且这段是 <strong>CPU 密集、网络空闲</strong>，正是预下载的黄金窗口。</li>
+</ol>
+<h3 id="72-">7.2 首包瘦身</h3>
+<ul>
+<li>用 <strong>AssetStudio</strong> 检查 data 首包与 AB 的资源内容，找出错误打包和冗余：<a href="https://github.com/Perfare/AssetStudio">https://github.com/Perfare/AssetStudio</a></li>
+<li>用 <strong>BuildReportTool</strong> 看每次构建各资源的占用，用 <strong>Asset Hunter</strong> 清理无用资源。</li>
+<li>首资源包也可以勾选「压缩首包资源」（Brotli），代价是首次启动可能多约 200ms，主要用于「小游戏包内加载」时省包体。</li>
+</ul>
+<h3 id="73-wasm-">7.3 WASM 代码分包</h3>
+<p>把原来一个 wasm 拆成「启动主包 + 延迟加载子包」，可以同时降低启动下载时间、编译时间和运行内存。</p>
+<ul>
+<li>官方文档：<a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/WasmSplit.html">https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/WasmSplit.html</a></li>
+<li>工具链：
+<ul>
+<li>微信开发者工具安装 <code>wasmCodeSplit</code> 扩展插件（按 wasm 文件名的 md5 区分版本）；</li>
+<li>CI 集成用 <code>wasmsplit-ci</code>：<a href="https://github.com/wechat-miniprogram/wasmsplit-ci">https://github.com/wechat-miniprogram/wasmsplit-ci</a></li>
+</ul>
+</li>
+<li>基本流程：
+<ol>
+<li>Unity 导出时开启 <strong>Profiling Funcs</strong>，保留 <code>webgl.wasm.symbols.unityweb</code>；</li>
+<li>开发者工具里点「启用代码分包」，输入版本描述，上传代码包；</li>
+<li>等待预处理，选择是否增量分包；</li>
+<li>分别用 Android 与 iOS 真机收集函数；</li>
+<li>生成 profile 包测试，确认没有 <code>wait for func</code> 或 <code>fetch js</code>；</li>
+<li>生成 <strong>release 包</strong>发布。</li>
+</ol>
+</li>
+<li>CI 用法：</li>
+</ul>
+<pre><code class="language-bash">wasmsplit-ci init -p &lt;项目路径&gt; -k &lt;私钥.pem&gt; -d &lt;版本描述&gt;
+wasmsplit-ci getinfo -p &lt;项目路径&gt; -k &lt;私钥.pem&gt;
+wasmsplit-ci dosplit -p &lt;项目路径&gt; -k &lt;私钥.pem&gt; --release
+# 增量分包时，init 追加 -r &lt;参考版本的 code MD5&gt;
+</code></pre>
+<ul>
+<li>产出目录：<code>wasmcode</code>（主包）、<code>wasmcode1</code>（Android 子包）、<code>wasmcode2</code>（部分方案下的 iOS 子包）、<code>webgl.wasm.symbols.unityweb</code>（符号文件，保留用于还原函数名）。</li>
+<li><strong>注意</strong>：分包每次发版都要重新走一遍收集与生成，建议放到发版流水线，不要等上线前手忙脚乱。</li>
+</ul>
+<h3 id="74-">7.4 预下载</h3>
+<p>在引擎初始化这段「网络空闲期」提前把后续资源下载好并缓存到本地，下次用到时直接读缓存。</p>
+<ul>
+<li>配置：导出面板的预下载列表，或运行时通过 C# <code>WX.SetPreloadList(list)</code>、JS <code>GameGlobal.manager.setPreloadList(list)</code> 动态设置；</li>
+<li>并发：引擎初始化前默认 10 个并发，初始化后降为 1 个，可用 <code>WX.PreloadConcurrent</code> / <code>GameGlobal.manager.setConcurrent</code> 调整；</li>
+<li>原则：
+<ol>
+<li>预下载总体积控制在 3~5MB；</li>
+<li>文件数量 ≤ 10 个；</li>
+<li>必须是插件会自动缓存的文件，否则下载无效；</li>
+<li>按优先级排序，越重要的越靠前；</li>
+<li>预下载 URL 必须和后续加载 URL 完全一致，否则命中不了缓存。</li>
+</ol>
+</li>
+</ul>
+<h3 id="75-">7.5 首帧逻辑</h3>
+<ol>
+<li><code>MonoBehaviour</code> 的首帧 <code>Awake</code> / <code>Start</code> 逻辑要尽可能少，优先把画面呈现出来；</li>
+<li>初始场景不宜过大，能显示 Splash 即可；</li>
+<li>后续配置与主场景加载要分帧，<strong>切勿在 <code>Start</code> / <code>Awake</code> 里同步阻塞</strong>；</li>
+<li>首帧耗时可以用 Android CPU Profiler 逐帧定位。</li>
+</ol>
+<h3 id="76-">7.6 启动封面</h3>
+<p>Unity WebGL 启动需要时间，微信支持配置封面图/视频作为过渡，可自定义封面内容、加载文案样式、进度条样式、自动隐藏时机。这是留存的第一道防线，不要留默认白屏。</p>
+<p><a id="memory"></a></p>
+<h2 id="heading-7">八、内存优化</h2>
+<p>内存优化的思路是：<strong>先测准峰值，再逐个消掉大头</strong>。官方给出了最容易出问题的几个位置，基本按这个顺序排查。</p>
+<h3 id="81--unityheap-">8.1 设置合理的 UnityHeap 预留</h3>
+<ul>
+<li>该值只表示对 UnityHeap 峰值的预留，避免运行中扩容产生尖刺；</li>
+<li>取值方法：
+<ol>
+<li>导出面板勾选「显示性能面板」，或把 <code>unity-namespace.js</code> 的 <code>enableProfileStats</code> 打开（<strong>提审版本必须关掉</strong>）；</li>
+<li>游戏跑一段时间，观察 <code>DynamicMemory</code> 峰值；</li>
+<li><code>UnityHeap = DynamicMemory + 少量静态内存（通常 &lt;10MB）</code>，预留比峰值多 50~100MB。</li>
+</ol>
+</li>
+<li>参考值：超休闲 256 / 中度（模拟经营、卡牌成长）496 / 重度（SLG、MMO）768；</li>
+<li><strong>不要贪大</strong>：
+<ul>
+<li><code>UnityHeap ≥ 1024MB</code> 时，大部分设备会直接启动失败；</li>
+<li><code>UnityHeap ≥ 500MB</code> 时，32 位微信（约 5% 用户）与 iOS 普通模式大概率启动失败。</li>
+</ul>
+</li>
+</ul>
+<h3 id="82--wasm-">8.2 降低 WASM 编译内存</h3>
+<ul>
+<li><strong>代码分包工具能把编译内存降低 50% 以上</strong>，这是单项收益最大的优化；</li>
+<li>删除多余插件，减少不必要的引擎模块（物理、数据统计等）。</li>
+</ul>
+<h3 id="83--gpu-">8.3 减少 GPU 显存</h3>
+<ol>
+<li>用压缩纹理（ASTC）替代 RGBA/DXT，既降显存也降运行时解压开销；</li>
+<li>Unity 2021 及以上直接用引擎 ASTC；2018~2020 必须用微信压缩纹理工具；</li>
+<li>关闭 HDR：标准管线在 Graphics Settings → tier2 取消 Use HDR，URP 在 renderer 配置里取消；</li>
+<li>GPU 压力大的游戏开 <strong>iOS 高性能+模式</strong>，可显著降低 GPU 内存。</li>
+</ol>
+<h3 id="84--assetbundle-">8.4 首包与 AssetBundle 内存</h3>
+<ul>
+<li>首资源包<strong>永远占用内存且无法释放</strong>，所以首包越小越好；</li>
+<li>AB 被使用时会在 Unity Native 内存中解压，<strong>AB 越大瞬时峰值越高</strong>，要拆小并及时释放；</li>
+<li>绝对避免首包和 AB 使用 Unity 自带的文件 Cache；</li>
+<li>检查是否有「切场景不卸载」「弹窗关闭不卸载」导致的泄漏。</li>
+</ul>
+<h3 id="85-">8.5 音频内存</h3>
+<ul>
+<li>不要用 FMOD 播放长音频（如 BGM），FMOD 全部走 WebAudio，占用内存大；</li>
+<li>控制音效数量，同时存在的音频不超过 20 个；</li>
+<li>尽量强制单声道，双声道会产生 2 倍内存消耗。</li>
+</ul>
+<h3 id="86-">8.6 运行时内存告警</h3>
+<p>注册内存告警监听，收到告警后主动清理：</p>
+<pre><code class="language-javascript">wx.onMemoryWarning(function () {
+    // 收到内存告警，主动触发 GC 并释放可释放的资源
+    wx.triggerGC();
+});
+</code></pre>
+<p>再配合业务侧的「释放非当前场景资源、清理对象池、丢弃临时纹理」等逻辑。</p>
+<h3 id="87-">8.7 内存检测工具</h3>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>工具</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>进程级</td>
+<td>PerfDog / Xcode Instrument / Android Studio</td>
+<td>看真机进程总内存（iOS 高性能模式看 WebContent 进程）</td>
+</tr>
+<tr>
+<td>UnityHeap</td>
+<td>性能面板、ProfilingMemory</td>
+<td>托管堆 / 本机堆 / 分配器细节</td>
+</tr>
+<tr>
+<td>引擎与资源</td>
+<td>Unity Profiler</td>
+<td>定位具体资源与对象</td>
+</tr>
+<tr>
+<td>JS 堆</td>
+<td>微信开发者工具 Chrome DevTools 的 Performance / Memory</td>
+<td>发现异常的 JS 内存（优先怀疑 Unity Cache 缓存文件）</td>
+</tr>
+<tr>
+<td>云测</td>
+<td>小游戏云测试</td>
+<td>多机型内存峰值分布与曲线</td>
+</tr>
+<tr>
+<td>其他</td>
+<td>SoloPi、UWA 微信小游戏工具</td>
+<td>真机性能与内存分析</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>常见误区：Unity Profiler 里只看到 200MB+ 并不代表没问题。Profiler 只覆盖「引擎可监控内存」，不包含小游戏公共库、Canvas、WASM 编译与容器内存。<strong>必须以真机进程内存为准。</strong></p>
+</blockquote>
+<h3 id="88-ios-">8.8 iOS 内存排查步骤</h3>
+<ol>
+<li>测试内存时不要开 development、profilingmem；</li>
+<li>必须用代码分包 + 压缩纹理；</li>
+<li>用 PerfDog 或 Instruments 看 WebContent 进程内存，安全峰值 1.2~1.3G；</li>
+<li>若离 1.5G 上限还很远就崩溃，优先检查 UnityHeap 预留是否足够；</li>
+<li>打开性能面板看 <code>DynamicMemory</code> 峰值，建议不要超过 500M；</li>
+<li>用 PerfDog 看 Android 的 GL / Gfx 显存，显存压力大就开高性能+；</li>
+<li>以上都做完还有问题，带着详细数据找平台侧分析。</li>
+</ol>
+<p><a id="cpu-gpu"></a></p>
+<h2 id="cpu--gpu-">九、CPU / GPU 与运行性能</h2>
+<h3 id="91-">9.1 打包设置对性能的影响</h3>
+<ul>
+<li><strong>IL2CPP Code Generation</strong>：
+<ul>
+<li>Faster Runtime（OptimizeSpeed）：性能更高；使用 HybridCLR 时只能用这个；</li>
+<li>Faster (Small) Build（OptimizeSize）：包体小约 15%，性能略差；转换面板的 <code>Il2CppOptimizeSize</code> 勾选即对应此项，<strong>官方默认推荐</strong>。游戏中若有大量泛型集合高频访问，建议 OptimizeSpeed。</li>
+</ul>
+</li>
+<li><strong>Managed Stripping Level</strong>：官方建议 High，配合 Strip Engine Code 可大幅减小代码包。本项目实际折中用了 Medium，<strong>代码包从 24.4MB 降到 13.9MB，减少约 45%</strong>。</li>
+<li><strong>Enable Exceptions</strong>：Player Settings → Publishing Settings 里设为 <code>None</code> 或 <code>Explicitly Thrown Exceptions Only</code>，可减小包体、提升性能。</li>
+<li><strong>Strip Engine Code</strong>：开启，配合防剥离配置（见第十三节）。</li>
+<li><strong>Profiling Funcs</strong>：只在调试时勾选，正式服必须关闭，否则代码包会带可读函数名，白白增大体积。</li>
+<li><strong>WebGL 2.0</strong>：beta 能力，iOS 15.5 以下问题较多，建议先关闭并充分测试。</li>
+</ul>
+<h3 id="92-ios-">9.2 iOS 高性能模式与高性能+</h3>
+<p><strong>高性能模式</strong>：</p>
+<ul>
+<li>条件：iOS ≥ 14.0、基础库 ≥ 2.23.1、微信 ≥ 8.0.18，满足率约 90%，不满足则回退普通模式；</li>
+<li>开通：MP → 能力地图 → 研发能力 → 生产提效包 → 开通高性能模式；</li>
+<li>配置：<code>game.json</code> 设置 <code>&quot;iOSHighPerformance&quot;: true</code>；</li>
+<li>内存限制：低端机（6s/7/8，2G RAM）1G，中高端机（7P/8P/X 及以上，3G+）1.5G，安全值 1.2~1.3G；</li>
+<li>判断是否生效：删除本地小游戏（开发版/体验版/正式版）重新进入，打开调试看 vConsole 日志中 <code>game start</code> 的 <code>render</code> 字段为 <code>h5</code> 即高性能模式。</li>
+</ul>
+<p><strong>高性能+模式</strong>：</p>
+<ul>
+<li>是高性能模式的升级，渲染挪回微信进程，渲染效果与渲染内存都更好，<strong>建议 WebGL2、内存压力大的游戏开启</strong>；</li>
+<li>条件：微信 ≥ 8.0.45、iOS ≥ 14（iOS 14 还需微信 ≥ 8.0.49），必须先开高性能模式；</li>
+<li>配置：<code>&quot;iOSHighPerformance&quot;: true, &quot;iOSHighPerformance+&quot;: true</code>；</li>
+<li>判断：</li>
+</ul>
+<pre><code class="language-javascript">// 高性能模式（安卓无此属性）
+if (GameGlobal.isIOSHighPerformanceMode) { /* ... */ }
+// 高性能+模式
+if (GameGlobal.isIOSHighPerformanceModePlus) { /* ... */ }
+</code></pre>
+<p><strong>必须注意的坑</strong>：高性能模式在启动初始阶段存在一次 CPU 高峰（用于 WebAssembly 编译优化），长期运行 CPU 明显低于普通模式，但<strong>前期会非常卡</strong>。所以要针对启动阶段单独做优化，不能只看平均值。</p>
+<h3 id="93--cpu-">9.3 渲染与 CPU 优化清单</h3>
+<ul>
+<li>压缩纹理按设备选择（移动端 ASTC，PC DXT/BC7）；</li>
+<li>关闭 HDR，限制纹理 maxsize（平台下建议不超过 1024），UI 不开 Mipmap（会多 1/3 内存）；</li>
+<li>关闭 Read/Write Enabled（会同时占显存与 CPU 内存）；</li>
+<li>NPOT 纹理无法使用压缩纹理，导入时要改成 2 的次方；</li>
+<li>减少每帧 Update 数量、合并 Canvas、控制同屏对象数、减少频繁 UI 开关；</li>
+<li>使用 Unity Profiler 与 Android CPU Profiler 逐帧定位，重点看 <code>PlayerLoop</code>、GC、Shader 编译、资源实例化。</li>
+</ul>
+<p><a id="code"></a></p>
+<h2 id="heading-8">十、代码层改造</h2>
+<h3 id="101-">10.1 同步改异步</h3>
+<p>所有「加载完资源立刻使用」的逻辑都要改成异步：</p>
+<ul>
+<li>动态加载资源的实例化必须等异步加载完成；</li>
+<li>引导、弹窗依赖的配置与预制体要改为按需异步触发（本项目就是把引导触发整体异步化，否则首帧被阻塞）；</li>
+<li>需要防点击的界面要有 loading 遮罩，避免异步期间重复触发。</li>
+</ul>
+<p>估时参考：3 天起，逻辑越重越多。</p>
+<h3 id="102-">10.2 本地数据存取</h3>
+<ul>
+<li>WebGL 下没有可靠的「退出时自动保存」，需要<strong>手动调用 <code>PlayerPrefs.Save()</code></strong>；</li>
+<li>保存时机：监听 <code>wx.onAppHide()</code>（小游戏切后台）主动落盘；</li>
+<li>不要用 <code>System.File</code>，微信文件存储有容量上限（默认 200MB，满足条件可申请提升到 1G）。</li>
+</ul>
+<pre><code class="language-javascript">wx.onAppHide(function () {
+    // 通知游戏侧保存存档
+});
+</code></pre>
+<h3 id="103-">10.3 网络层</h3>
+<p>WebGL 环境下 JS 无法直接访问 IP 套接字，因此：</p>
+<ul>
+<li><code>System.Net</code>（尤其是 <code>System.Net.Sockets</code>）、<code>UnityEngine.Network*</code> 全部不可用；</li>
+<li>HTTP 请求统一改为 <strong>UnityWebRequest</strong>；</li>
+<li>全双工通信改用 <strong>WebSocket</strong>，推荐开源插件 UnityWebSocket（注意用 v2.8.3 及以上，UPM 模式下低版本会报 <code>missing function: WebSocketSetOnOpen</code>）；</li>
+<li>服务端若是纯 TCP，需要加一层 WSS ↔ TCP 代理；</li>
+<li>正式版必须配置安全域名，真机预览可临时「开启调试」跳过校验，开发者工具在「详情 → 本地设置」里控制。</li>
+</ul>
+<h3 id="104-">10.4 多线程与文件系统</h3>
+<ul>
+<li><strong>不支持多线程</strong>，删除线程用法，改用异步、分帧、协程；</li>
+<li>不支持 <code>System.File</code> 直接读写，文件存储通过 WX SDK；</li>
+<li>Lua 支持标准 Lua 与常见 Binding（xlua/tolua 等），但不支持 LuaJIT，需真机验证性能；PuerTS 需要 iOS 14.5 以上。</li>
+</ul>
+<h3 id="105-unity--js-">10.5 Unity 与 JS 互调</h3>
+<p>在 <code>Assets/Plugins/WebGL</code> 下新建 <code>xx.jslib</code>：</p>
+<pre><code class="language-javascript">mergeInto(LibraryManager.library, {
+    JSTestCall: function (str) {
+        console.log(str);
+    }
+});
+</code></pre>
+<p>打包后 JS 脚本会被拷贝到小游戏工程里，可继续在 JS 侧调试。</p>
+<h3 id="106-">10.6 功能与交互调整</h3>
+<ul>
+<li><strong>关闭按钮位置</strong>：现有 UI 的关闭按钮容易与微信小游戏自带的关闭按钮位置冲突，需要重新排布；</li>
+<li><strong>支付</strong>：去掉 Google Play / App Store 支付相关逻辑，按需接入微信小游戏支付；</li>
+<li>首包加载阶段只显示静态图或进度条，不要做动画；</li>
+<li>打点、广告、支付等与原生强相关的功能在小游戏版本上按需关闭或替换。</li>
+</ul>
+<p><a id="sdk"></a></p>
+<h2 id="-sdk--sdk-">十一、微信 SDK 接入与原生 SDK 替换</h2>
+<p>官方提供 C# 版 WX SDK，能力覆盖：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>能力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>登录</td>
+<td>微信登录、用户信息</td>
+</tr>
+<tr>
+<td>设备</td>
+<td>存储、震动、字体（<code>GetWXFont</code>）</td>
+</tr>
+<tr>
+<td>开放数据</td>
+<td>开放数据域（<code>ShowOpenData</code> / <code>HideOpenData</code>）、排行榜、关系链</td>
+</tr>
+<tr>
+<td>广告</td>
+<td>Banner（<code>CreateFixedBottomMiddleBannerAd</code>）、激励视频等</td>
+</tr>
+<tr>
+<td>音频</td>
+<td><code>PreDownloadAudios</code></td>
+</tr>
+<tr>
+<td>社交</td>
+<td>游戏圈/聊天组件（<code>CreateMiniGameChat</code>）</td>
+</tr>
+<tr>
+<td>插件</td>
+<td><code>SetDataCDN</code>、<code>SetPreloadList</code>、<code>PreloadConcurrent</code></td>
+</tr>
+<tr>
+<td>其他</td>
+<td><code>InitSDK</code>、<code>CanIUse</code>、<code>SetDevicePixelRatio</code>、<code>ReportGameStart</code>、<code>HideLoadingPage</code>、<code>OnLaunchProgress</code></td>
+</tr>
+</tbody>
+</table>
+<p>接入顺序建议：</p>
+<ol>
+<li><strong>登录</strong>：先打通接口与后端验证，再补全功能；</li>
+<li><strong>广告</strong>：激励视频是主要变现，必须与打点、存档、发奖逻辑联调，重点测「看完/中途退出/重复观看」；</li>
+<li><strong>打点上报</strong>：替换原生的打点 SDK，并补上启动留存等关键埋点（官方 Unity Loader 已提供基础上报，游戏内关键帧需要自己上报）；</li>
+<li><strong>分享与排行榜</strong>：涉及开放数据域，注意渲染层级与权限；</li>
+<li><strong>设备能力</strong>：存储、震动、字体。</li>
+</ol>
+<p><strong>原生 SDK 替换</strong>：广告换成微信小游戏广告能力，打点换成小游戏侧统计或自建上报，支付按需接微信小游戏支付。估时约 3 天。</p>
+<p><strong>联调准备</strong>：准备好运营方与自己的小游戏 AppID、正式/测试 CDN 地址，登录、支付、广告这类能力通常需要后台配置与白名单。</p>
+<p><a id="audio"></a></p>
+<h2 id="heading-9">十二、音频适配</h2>
+<p>UnityAudio 已经自动适配微信小游戏，<strong>优先用 UnityAudio</strong>，不要一上来就全量替换：</p>
+<ul>
+<li>长音频走 <code>InnerAudio</code>，短音频走 <code>WebAudio</code>，插件按文件大小自动切换；</li>
+<li>FMOD 可用，但<strong>全部走 WebAudio</strong>，大文件（BGM）会占用很大内存，不推荐；</li>
+<li>推荐格式：mp3 或 aac，双端兼容最好；</li>
+<li>同时播放的音频数量过多会引起卡顿，<strong>建议限制在 20 个以内</strong>。</li>
+</ul>
+<p>如果确有需要（比如长音频内存压力大），再勾选「使用微信音频 API」并手动替换：</p>
+<pre><code class="language-csharp">var audio = WX.CreateInnerAudioContext(new InnerAudioContextParam() { src = &quot;Audio/bgm.mp3&quot;, needDownload = true });
+audio.OnCanplay(() =&gt; { audio.Play(); });
+
+// 批量预下载
+string[] list = { &quot;Audio/0.wav&quot;, &quot;Audio/1.wav&quot;, &quot;Audio/2.wav&quot; };
+WX.PreDownloadAudios(list, (res) =&gt; { /* res == 0 表示成功 */ });
+</code></pre>
+<ul>
+<li>使用 CDN 地址时，<code>InnerAudioContext</code> 实例最多同时存在 10 个；本地文件最多 32 个，因此建议先 <code>needDownload</code> 下载再用；</li>
+<li>播放完成后需要销毁再重建实例；</li>
+<li>必须等 <code>onCanplay</code> 之后再 <code>Play</code>；</li>
+<li>已知问题：iOS 17.5+ 退后台回来音效可能无法继续播放；<code>operateAudio:fail jsapi has no permission</code> 在退后台时偶现，可忽略；部分机型微信 8.0.51 前循环播放有问题。遇到问题先升级插件与微信版本。</li>
+</ul>
+<p><strong>踩坑记录</strong>：某些机型（例如部分 Google Play 版微信客户端）播放音效会报 <code>SystemError(gameSDKScrptError) Yc is not a constructor...</code>，先排查客户端版本与插件版本，多数通过升级解决。</p>
+<p><a id="plugins"></a></p>
+<h2 id="heading-10">十三、插件兼容性与代码剥离</h2>
+<h3 id="131-">13.1 兼容性清单（实测）</h3>
+<table>
+<thead>
+<tr>
+<th>插件</th>
+<th>结论</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A* Pathfinding</td>
+<td>✅ 可用</td>
+<td>—</td>
+</tr>
+<tr>
+<td>DOTween</td>
+<td>✅ 可用</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Spine</td>
+<td>✅ 可用</td>
+<td>建议一个 spine 资源打一个 AB 组</td>
+</tr>
+<tr>
+<td>Full Serializer</td>
+<td>❓ 待验证</td>
+<td>反射较多，注意防剥离</td>
+</tr>
+<tr>
+<td>Variation</td>
+<td>❌ 不可用</td>
+<td>需替换</td>
+</tr>
+<tr>
+<td>FMOD</td>
+<td>⚠️ 可用但有条件</td>
+<td>长音频会吃内存，不推荐</td>
+</tr>
+<tr>
+<td>Lua / xLua / tolua</td>
+<td>✅ 可用</td>
+<td>不支持 LuaJIT</td>
+</tr>
+<tr>
+<td>PuerTS</td>
+<td>✅ 可用</td>
+<td>需 iOS 14.5+</td>
+</tr>
+<tr>
+<td>UnityWebSocket</td>
+<td>✅ 可用</td>
+<td>需 v2.8.3+，否则 UPM 下缺导出</td>
+</tr>
+</tbody>
+</table>
+<h3 id="132-">13.2 代码剥离与防剥离</h3>
+<p>调整剥离等级后，IL2CPP 会把「看起来没人用」的类型裁掉，以下情况必须做防剥离：</p>
+<ol>
+<li><strong>预制体上挂载的脚本</strong>；</li>
+<li><strong>通过反射调用的类与成员</strong>；</li>
+<li><strong><code>Activator.CreateInstance</code> 动态创建的类</strong>；</li>
+<li>注册表/工厂模式里按名字创建的类。</li>
+</ol>
+<p>做法：配置 <code>link.xml</code> 保留程序集或类型，或对相关程序集整体设置 <code>preserve=&quot;all&quot;</code>。项目实践：剥离等级调到 Medium + 防剥离处理后，代码包 24.4MB → 13.9MB（约 -45%），同时保证了运行期不报 <code>MissingMethodException</code>。</p>
+<p><a id="slim"></a></p>
+<h2 id="heading-11">十四、包体瘦身</h2>
+<h3 id="141-">14.1 代码侧</h3>
+<ul>
+<li>剥离等级：官方建议 High，实际按项目风险取 Medium / High；</li>
+<li>IL2CPP 选 OptimizeSize（体积优先）；</li>
+<li>Enable Exceptions 设为 None / Explicitly；</li>
+<li>Profiling Funcs 只留调试包；</li>
+<li>WASM 代码分包。</li>
+</ul>
+<h3 id="142-">14.2 资源侧</h3>
+<p>AB 压缩实测记录（中重度项目，供参考）：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>体积</th>
+<th>手段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原始</td>
+<td>170M</td>
+<td>—</td>
+</tr>
+<tr>
+<td>第一轮</td>
+<td>158M</td>
+<td>LZ4 + 去除 TypeTree + 设置 Shader 变体</td>
+</tr>
+<tr>
+<td>第二轮</td>
+<td>56M</td>
+<td>字体精简 + 贴图转 ASTC + 整理 AB 分组（防止 bundle 过多）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注意</strong>：第三方统计的 56M 是压缩前，最终网络传输还要叠加 CDN 的 Brotli/gzip。</p>
+<h3 id="143-">14.3 纹理优化</h3>
+<p>用转换工具自带的「资源优化工具」（菜单栏 → 微信小游戏 → 资源优化工具）批量扫描处理：</p>
+<ul>
+<li>关闭 Read/Write Enabled；</li>
+<li>关闭不必要的 Mipmap（UI 尤其不要开）；</li>
+<li>合理设置 maxsize（建议不超过 1024，可用「自动减半」）；</li>
+<li>修改纹理压缩格式；</li>
+<li>NPOT 纹理改成 2 的次方。</li>
+</ul>
+<h3 id="144-">14.4 压缩纹理</h3>
+<ul>
+<li>Unity 2021+：在纹理的 WebGL Settings 里直接配 ASTC，支持 8x8 / 6x6 / 5x5 / 4x4，默认推荐 8x8；4x4 最清晰但内存更高；<strong>不支持 ASTC HDR</strong>。</li>
+<li>Unity 2018~2020：必须用「微信压缩纹理工具」，按设备 GPU 支持情况按需下载对应格式。</li>
+<li>配置好后在「微信小游戏 → 包体瘦身 → 压缩纹理」执行处理；调试模式只生成 ASTC，正式发布用全量模式。</li>
+<li>重度游戏（MMO/SLG）内存压力大时，可结合 WXAssetBundle 减少 AB 体积带来的文件内存。</li>
+</ul>
+<h3 id="145-">14.5 字体</h3>
+<ul>
+<li>去掉用不到的字，做精简字体；</li>
+<li>中文必须自定义字体，控制在 2~3MB 以内，否则会明显拖慢启动。</li>
+</ul>
+<p><a id="test"></a></p>
+<h2 id="heading-12">十五、调试、性能测试与云测试</h2>
+<h3 id="151-">15.1 调试手段</h3>
+<ul>
+<li>微信开发者工具：看 Console、Network（确认首包实际传输量）、Performance / Memory；注意它<strong>不校验安全域名与 SSL</strong>，与真机行为有差异，必须在真机复测。</li>
+<li>真机调试：右上角菜单「开启调试」→ vConsole。</li>
+<li>启动 timelog：<code>unity-namespace.js</code> 的 <code>hideTimeLogModal = false</code>。</li>
+<li>性能面板：导出面板勾选「显示性能面板」或 <code>enableProfileStats = true</code>（<strong>提审版本关闭</strong>）。</li>
+<li>错误排查参考官方「开发错误调试与排查」，按开发者工具 / 真机 Android / iOS / PC Windows 分别看日志堆栈。</li>
+</ul>
+<h3 id="152-">15.2 性能测试工具</h3>
+<ul>
+<li><strong>PerfDog</strong>（<a href="https://perfdog.qq.com/">https://perfdog.qq.com/</a>）：真机 CPU / 内存 / FPS / 卡顿率，iOS 以 XcodeMemory 为准；</li>
+<li>微信开发者工具自带性能监控面板；</li>
+<li>小游戏云测试（自动化多机型）；</li>
+<li>SoloPi、UWA 微信小游戏工具；</li>
+<li>Android Studio / Xcode Instruments。</li>
+</ul>
+<blockquote>
+<p>自带的 PerfDog 小游戏内插件稳定性较差，不建议作为主手段。</p>
+</blockquote>
+<h3 id="153-">15.3 云测试评分模型</h3>
+<p>云测试从 4 个维度 14 项指标打分，权重如下（评测标准更新时间 2025-06-18）：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>指标</th>
+<th>权重</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>启动性能</td>
+<td>总启动耗时</td>
+<td>0.34</td>
+</tr>
+<tr>
+<td></td>
+<td>游戏代码注入耗时</td>
+<td>0.33</td>
+</tr>
+<tr>
+<td></td>
+<td>首屏渲染耗时</td>
+<td>0.33</td>
+</tr>
+<tr>
+<td>运行性能</td>
+<td>CPU 占比</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td></td>
+<td>内存峰值</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td></td>
+<td>FPS</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td></td>
+<td>卡顿率均值</td>
+<td>0.25</td>
+</tr>
+<tr>
+<td>网络性能</td>
+<td>downloadFile / request / uploadFile / sendSocketMessage 失败率</td>
+<td>各 0.25</td>
+</tr>
+<tr>
+<td>兼容性</td>
+<td>黑屏率</td>
+<td>0.33</td>
+</tr>
+<tr>
+<td></td>
+<td>JS 错误数</td>
+<td>0.33</td>
+</tr>
+<tr>
+<td></td>
+<td>启动失败</td>
+<td>0.34</td>
+</tr>
+</tbody>
+</table>
+<p>评分规则：达到「优秀范围」100 分，「平台建议范围」80 分，「达标范围」60 分，低于达标 0 分。</p>
+<p>测试方法：</p>
+<ul>
+<li>启动性能：录屏分帧，取 10 次平均；</li>
+<li>运行性能：完整跑主流程对局 5~10 分钟，PerfDog 记录并上传，每机型测 3 组再取平均，内存峰值取最大值。</li>
+</ul>
+<p>报告看点：内存峰值的 Top 机型分布、细分内存（total / graphics / native / private-other）、单机内存曲线拐点（定位异常场景）。</p>
+<h3 id="154-">15.4 机型档位</h3>
+<p>平台把设备按 CPU / GPU / 内存分为高、中、低三档，覆盖 99% 以上用户。测试要覆盖三档，<strong>低档机是内存与卡顿的主要暴雷区</strong>。</p>
+<p><a id="release"></a></p>
+<h2 id="heading-13">十六、发布上线与现网监控</h2>
+<ul>
+<li>审核发布参考 MP 的小游戏接入指南自助完成。</li>
+<li>版本更新与缓存：
+<ul>
+<li>每次发版更换 CDN 路径（如 <code>Version_1</code> → <code>Version_2</code>）是最省心的做法；</li>
+<li>不带 hash 的配置文件（<code>catalog.json</code> / <code>setting.json</code> / Manifest）设置 <code>no-cache</code>；</li>
+<li><strong>不要删除旧版本资源</strong>，否则老版本用户运行会报错。</li>
+</ul>
+</li>
+<li>关键监控项：启动耗时分布、内存峰值、内存 Crash 率、JS 错误数、黑屏率、下载与请求失败率。</li>
+<li>上线后持续看微信公众平台的运行数据，出现异常优先对照云测试报告定位档位与机型。</li>
+<li>iOS 高性能模式需要在 MP 后台设置最低可用客户端版本，开关是可靠的（开发版可能强制进入，线上以该开关为准）。</li>
+</ul>
+<p><a id="pitfalls"></a></p>
+<h2 id="heading-14">十七、踩坑清单</h2>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>原因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AB 加载后 Shader 丢失</td>
+<td>Shader 没被打进包/被剥离</td>
+<td>Always Included Shaders 或 ShaderVariantCollection</td>
+</tr>
+<tr>
+<td>更新了资源但客户端还是旧的</td>
+<td>bundle 包名不变命中旧缓存</td>
+<td><code>AppendHashToAssetBundleName</code>；配置文件不缓存；发版换 CDN 路径</td>
+</tr>
+<tr>
+<td>不同电脑打出的 AB hash 不同</td>
+<td><code>Library</code> 缓存差异</td>
+<td>统一流水线出包，不要混用本地包</td>
+</tr>
+<tr>
+<td>首包资源下载慢</td>
+<td>没开 Brotli/gzip 或首包太大</td>
+<td>强制开压缩；首包压到 3~5MB</td>
+</tr>
+<tr>
+<td>iOS 内存过大闪退</td>
+<td>WASM 编译 + 纹理 + 首包常驻</td>
+<td>代码分包 + 压缩纹理 + 减小首包 + 合理 UnityHeap</td>
+</tr>
+<tr>
+<td>离 1.5G 还很远就崩</td>
+<td>UnityHeap 预留不足或单帧分配尖刺</td>
+<td>提高预留（但别超 500）、避免场景/AB 过大、避免单帧大量分配</td>
+</tr>
+<tr>
+<td>iOS 开高性能后前期很卡</td>
+<td>启动阶段有 WASM 编译 CPU 高峰</td>
+<td>单独优化启动段，不要只看平均帧率</td>
+</tr>
+<tr>
+<td>切场景/关弹窗后内存不降</td>
+<td>AB 未卸载、对象池未清</td>
+<td>设计卸载规则，切场景统一释放</td>
+</tr>
+<tr>
+<td>音效报 <code>Yc is not a constructor</code></td>
+<td>客户端/插件版本问题</td>
+<td>升级微信与转换插件版本</td>
+</tr>
+<tr>
+<td>UPM 接入 UnityWebSocket 报 <code>missing function: WebSocketSetOnOpen</code></td>
+<td>低版本导出配置不全</td>
+<td>升级到 v2.8.3+</td>
+</tr>
+<tr>
+<td>剥离后运行期报缺失类型</td>
+<td>反射/Activator 使用的类被裁</td>
+<td>link.xml 防剥离，预制体脚本单独保留</td>
+</tr>
+<tr>
+<td>存档丢失</td>
+<td>WebGL 没有退出时自动保存</td>
+<td>手动 <code>PlayerPrefs.Save()</code> + <code>wx.onAppHide()</code></td>
+</tr>
+<tr>
+<td>首帧卡顿、白屏</td>
+<td>Start/Awake 同步阻塞</td>
+<td>首帧逻辑最小化，配置分帧加载，配封面图</td>
+</tr>
+<tr>
+<td>关闭按钮与微信按钮重叠</td>
+<td>布局冲突</td>
+<td>重新排布 UI 安全区与关闭按钮位置</td>
+</tr>
+</tbody>
+</table>
+<p><a id="estimate"></a></p>
+<h2 id="heading-15">十八、工时估算与排期</h2>
+<p>按中重度项目（已有 AB/AA 基础、无复杂网络同步）估算：</p>
+<table>
+<thead>
+<tr>
+<th>工作项</th>
+<th>估时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>资源加载方式改造（AA/AB + 分包 + 下载框架）</td>
+<td>2 周+</td>
+</tr>
+<tr>
+<td>首包加载优化</td>
+<td>4 天</td>
+</tr>
+<tr>
+<td>同步代码改异步</td>
+<td>3 天</td>
+</tr>
+<tr>
+<td>本地数据存取修改</td>
+<td>1 天</td>
+</tr>
+<tr>
+<td>网络层修改</td>
+<td>0 天（如无 socket 需求）</td>
+</tr>
+<tr>
+<td>微信 SDK 接入</td>
+<td>1 周</td>
+</tr>
+<tr>
+<td>原生 SDK 替换（广告/打点）</td>
+<td>3 天</td>
+</tr>
+<tr>
+<td>资源压缩 / 降低包体</td>
+<td>2 天</td>
+</tr>
+<tr>
+<td>WASM 代码分包</td>
+<td>2 天</td>
+</tr>
+<tr>
+<td>音频优化</td>
+<td>2 天</td>
+</tr>
+<tr>
+<td>功能调整（关闭按钮、支付等）</td>
+<td>1 天</td>
+</tr>
+</tbody>
+</table>
+<p><strong>汇总：功能开发约 6 周 3 天（1.5 个月+）。加上后期适配、打磨优化、联调、云测试与发版，总工期约 2 个月。</strong></p>
+<p>排期建议：</p>
+<ol>
+<li>前两周集中打通「资源加载 + 真机跑通主流程」，这是风险最高的一段，必须尽早暴露问题；</li>
+<li>第三周开始接入平台能力与 SDK，同时并行做代码剥离与资源瘦身；</li>
+<li>第四到六周做启动、内存、音频优化；</li>
+<li>最后两周做云测试、修复、发版与现网监控。</li>
+</ol>
+<p><a id="refs"></a></p>
+<h2 id="heading-16">十九、参考资料</h2>
+<p>官方文档（国际版 Unity）：</p>
+<ul>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform.html">微信小游戏 Unity 适配解决方案</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/SDKInstaller.html">微信 SDK 安装（Package Manager / UnityPackage）</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/Guide.html">Unity 游戏接入微信小游戏指南</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/StartupOptimization.html">提升游戏启动速度</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/OptimizationMemory.html">优化内存</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/UsingAddressable.html">使用 Addressable Assets System 进行资源按需加载</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/UsingAssetBundle.html">使用 AssetBundle 进行资源按需加载</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/DataCDN.html">资源部署与缓存</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/FileCache.html">资源缓存</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/UsingPreload.html">使用预下载功能</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/WasmSplit.html">代码分包</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/CompressedTexture.html">压缩纹理优化</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/AudioAndVideo.html">音视频适配</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/UsingNetworking.html">网络通信适配</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/iOSOptimization.html">iOS 高性能与高性能+模式</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/performance/perf-high-performance-plus.html">高性能+模式</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/UnityVersion">推荐引擎版本</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/game-engine/unity-webgl-transform/Design/AssetDescription.html">MiniGameConfig.asset 配置文件说明</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/performance/perf-mesure">评测标准</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/minigame-testtool/scoring_system">测量指标（云测试评分）</a></li>
+<li><a href="https://developers.weixin.qq.com/minigame/dev/guide/performance/perf-action-memory-cloud-profile.html">使用云测服务检测内存</a></li>
+</ul>
+<p>工具与仓库：</p>
+<ul>
+<li><a href="https://github.com/wechat-miniprogram/minigame-unity-webgl-transform">minigame-unity-webgl-transform（官方文档与转换方案仓库）</a></li>
+<li><a href="https://github.com/wechat-miniprogram/wasmsplit-ci">wasmsplit-ci（代码分包 CI 工具）</a></li>
+<li><a href="https://unity.com/download">Unity 国际版下载（Unity Hub）</a></li>
+<li><a href="https://perfdog.qq.com/">PerfDog</a></li>
+<li><a href="https://github.com/Perfare/AssetStudio">AssetStudio</a></li>
+</ul>
+<p>相关笔记：</p>
+<ul>
+<li><a href="/post/unity-senior-developer-08-performance-memory-package/">性能、内存与包体</a></li>
+<li><a href="/post/wen-li-nei-cun-you-hua/">纹理内存优化</a></li>
+<li><a href="/post/unity-profiler/">Unity Profiler</a></li>
+<li><a href="/post/unity-zi-dong-hua-gou-jian/">Unity 工程构建自动化</a></li>
+</ul>
+
+  </div>
+
+  
+  <nav class="post-nav">
+    
+    <a href="/post/gamerecord/" class="post-nav-card post-nav-card--prev">
+      
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">上一篇</span>
+        <span class="post-nav-card__title">GameRecord</span>
+      </div>
+      <span class="post-nav-card__arrow">&larr;</span>
+    </a>
+    
+    
+    <a href="/post/unity-roslyn-analyzer-iap-rule/" class="post-nav-card post-nav-card--next">
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">下一篇</span>
+        <span class="post-nav-card__title">Unity Roslyn Analyzer 实战：首次接入与二次更新</span>
+      </div>
+      
+      <span class="post-nav-card__arrow">&rarr;</span>
+    </a>
+    
+  </nav>
+
+  
+  
+
+
+  
+    <section class="comment-section">
+  <h2 class="comment-section__title">评论</h2>
+  <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    var gitalk = new Gitalk({
+      clientID: 'ca79a66585e72af3bff6',
+      clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+      repo: 'zhoujun2303.github.io',
+      owner: 'zhoujun2303',
+      admin: ['zhoujun2303'],
+      id: location.pathname,
+      distractionFreeMode: false
+    });
+    gitalk.render('gitalk-container');
+  </script>
+</section>
+
+  
+
+
+
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+
+    
+    
+    <nav class="footer-nav" aria-label="页脚导航">
+      
+      <a class="footer-nav__link" href="/">首页</a>
+      
+      <a class="footer-nav__link" href="/post">博客</a>
+      
+      <a class="footer-nav__link" href="/memos">闪念</a>
+      
+      <a class="footer-nav__link" href="/archives">归档</a>
+      
+      <a class="footer-nav__link" href="/tags">标签</a>
+      
+      <a class="footer-nav__link" href="/links">友链</a>
+      
+      <a class="footer-nav__link" href="/post/about">关于</a>
+      
+    </nav>
+    
+
+    
+    <div class="footer-social">
+      
+      <a class="footer-social__link" href="https://github.com/ZhouJun2303" target="_blank" rel="noopener noreferrer"
+        aria-label="GitHub">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+      </a>
+      
+      
+      
+      <a class="footer-social__link" href="/feed.xml" aria-label="RSS">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6.18 15.64a2.18 2.18 0 110 4.36 2.18 2.18 0 010-4.36zM4 4.44A15.56 15.56 0 0119.56 20h-2.83A12.73 12.73 0 004 7.27V4.44zm0 5.66a9.9 9.9 0 019.9 9.9h-2.83A7.07 7.07 0 004 12.93V10.1z"/>
+        </svg>
+      </a>
+    </div>
+
+    
+    <div class="footer-copyright">
+      <p>&copy; 2026 长胖是个梦想. All rights reserved.</p>
+    </div>
+
+    
+    
+    <div class="footer-custom">
+      Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+    </div>
+    
+
+    
+    <div class="footer-powered">
+      <span>Powered by <a href="https://gridea.pro" target="_blank" rel="noopener noreferrer">Gridea Pro</a></span>
+    </div>
+
+  </div>
+</footer>
+
+  
+  <div class="search-overlay" id="searchOverlay" style="display:none;">
+  <div class="search-modal">
+    <div class="search-header">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索文章..." autocomplete="off" />
+      <span class="search-kbd">&#8984;K</span>
+      <button class="search-close" id="searchClose" type="button" aria-label="关闭搜索">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script src="/scripts/search.js"></script>
+  
+
+  
+
+  
+
+  
+
+<script>console.log("\n%c ✦ Gridea Pro v1.2.2 %c · Theme: flavor-theme v1.0.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+</body>
+</html>

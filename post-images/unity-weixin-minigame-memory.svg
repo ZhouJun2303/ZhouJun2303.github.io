@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-label="微信小游戏 Unity 内存构成与峰值红线">
+  <rect width="1200" height="720" fill="#f7fafc"/>
+  <rect x="40" y="40" width="1120" height="640" rx="28" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="600" y="96" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="34" font-weight="700" fill="#1f2937">微信小游戏 Unity 内存构成与峰值红线</text>
+  <text x="600" y="130" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="17" fill="#64748b">内存优化不是减少一处，而是把峰值压到红线以内</text>
+
+  <g font-family="Arial, 'PingFang SC', sans-serif">
+    <rect x="110" y="170" width="180" height="50" fill="#fecaca"/>
+    <rect x="110" y="220" width="180" height="27" fill="#fed7aa"/>
+    <rect x="110" y="247" width="180" height="116" fill="#fde68a"/>
+    <rect x="110" y="363" width="180" height="192" fill="#bbf7d0"/>
+    <rect x="110" y="555" width="180" height="31" fill="#bfdbfe"/>
+    <rect x="110" y="586" width="180" height="54" fill="#ddd6fe"/>
+    <rect x="110" y="170" width="180" height="470" rx="12" fill="none" stroke="#94a3b8" stroke-width="2"/>
+
+    <text x="200" y="201" text-anchor="middle" font-size="14" font-weight="700" fill="#7f1d1d">基础库 130M</text>
+    <text x="200" y="240" text-anchor="middle" font-size="14" font-weight="700" fill="#7c2d12">Canvas 70M</text>
+    <text x="200" y="312" text-anchor="middle" font-size="14" font-weight="700" fill="#78350f">WASM 编译 300M</text>
+    <text x="200" y="465" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">UnityHeap</text>
+    <text x="200" y="576" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">Gfx 80M</text>
+    <text x="200" y="618" text-anchor="middle" font-size="14" font-weight="700" fill="#4c1d95">音频/JS 120M</text>
+
+    <g font-size="13" fill="#334155">
+      <line x1="292" y1="195" x2="304" y2="195" stroke="#94a3b8"/>
+      <text x="310" y="199">小游戏基础库：公共库 + 运行时容器，约 100~150M</text>
+
+      <line x1="292" y1="233" x2="304" y2="233" stroke="#94a3b8"/>
+      <text x="310" y="237">Canvas 画布：与设备物理分辨率相关</text>
+
+      <line x1="292" y1="305" x2="304" y2="305" stroke="#94a3b8"/>
+      <text x="310" y="300">WASM 编译与 JIT：代码包越大越贵</text>
+      <text x="310" y="320" fill="#b91c1c">30M 未压缩代码 ≈ 300M 运行时编译内存</text>
+
+      <line x1="292" y1="459" x2="304" y2="459" stroke="#94a3b8"/>
+      <text x="310" y="454">UnityHeap：托管堆 + 本机堆 + 原生插件</text>
+      <text x="310" y="474" fill="#b91c1c">只增不减、有碎片，峰值最危险</text>
+
+      <line x1="292" y1="570" x2="304" y2="570" stroke="#94a3b8"/>
+      <text x="310" y="574">Gfx 显存：纹理与模型 Upload 之后</text>
+
+      <line x1="292" y1="613" x2="304" y2="613" stroke="#94a3b8"/>
+      <text x="310" y="617">音频 / JS 堆 / 网络临时内存</text>
+    </g>
+    <text x="200" y="664" text-anchor="middle" font-size="13" fill="#64748b">以 iOS 高性能模式、30M 代码包的中重度游戏为例</text>
+
+    <rect x="640" y="170" width="500" height="145" rx="16" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+    <text x="664" y="202" font-size="18" font-weight="700" fill="#991b1b">峰值红线（真机进程内存）</text>
+    <g font-size="14" fill="#7f1d1d">
+      <text x="664" y="234">iOS：低档机 &lt; 1.0G，中高档机 &lt; 1.4G</text>
+      <text x="664" y="260">Android：低档机 &lt; 1.2G，中高档机 &lt; 1.5G</text>
+      <text x="664" y="286" fill="#b91c1c">安全峰值 1.2~1.3G，超了随时可能被 OOM</text>
+    </g>
+
+    <rect x="640" y="331" width="500" height="145" rx="16" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+    <text x="664" y="363" font-size="18" font-weight="700" fill="#92400e">UnityHeap 预留内存</text>
+    <g font-size="14" fill="#78350f">
+      <text x="664" y="395">超休闲 256 / 中度 496 / 重度 768（单位 MB）</text>
+      <text x="664" y="421">取值略高于性能面板 DynamicMemory 峰值 50~100M</text>
+      <text x="664" y="447" fill="#b91c1c">≥500：32 位微信与 iOS 普通模式大概率启动失败</text>
+    </g>
+
+    <rect x="640" y="492" width="500" height="148" rx="16" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+    <text x="664" y="524" font-size="18" font-weight="700" fill="#166534">优化优先级</text>
+    <g font-size="14" fill="#14532d">
+      <text x="664" y="556">① WASM 代码分包：编译内存可降 50% 以上</text>
+      <text x="664" y="582">② 压缩纹理（ASTC）：显存与下载带宽一起降</text>
+      <text x="664" y="608">③ 减小首包、AB 按需加载并及时释放</text>
+      <text x="664" y="634">④ 音频单声道、限制同时播放数量</text>
+    </g>
+  </g>
+</svg>

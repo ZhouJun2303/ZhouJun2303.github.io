@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="/styles/main.min.css">
+
+
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+
+
+<style>:root { --heatmap-color: #39d353; }</style>
+
+
+
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('flavor-theme');
+      var theme = saved || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+      }
+    } catch (e) { }
+  })();
+</script>
+  <meta name="generator" content="Gridea Pro 1.2.2">
+  <title>Unity 开发高级/资深 10-01：原生交互与桥接（Java / Objective-C / 微信 JS） | 长胖是个梦想</title>
+  
+<meta property="og:title" content="Unity 开发高级/资深 10-01：原生交互与桥接（Java / Objective-C / 微信 JS）" />
+<meta property="og:type" content="article" />
+
+
+<meta name="description" content="返回 10：构建发布、CI/CD 与 SDK 返回总览 相关图示：工具速查总览 原生&amp;hellip;">
+<link rel="canonical" href="https://zhoujun2303.github.io/post/unity-senior-developer-10-01-native-bridge/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 开发高级/资深 10-01：原生交互与桥接（Java / Objective-C / 微信 JS）","url":"https://zhoujun2303.github.io/post/unity-senior-developer-10-01-native-bridge/","description":"返回 10：构建发布、CI/CD 与 SDK 返回总览 相关图示：工具速查总览 原生\u0026hellip;","datePublished":"2026-09-18T20:30:00+08:00","dateModified":"2026-09-18T20:30:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-senior-developer-10-01-native-bridge/","name":"Unity 开发高级/资深 10-01：原生交互与桥接（Java / Objective-C / 微信 JS）","position":2}]}</script>
+<meta property="og:title" content="Unity 开发高级/资深 10-01：原生交互与桥接（Java / Objective-C / 微信 JS）">
+<meta property="og:description" content="返回 10：构建发布、CI/CD 与 SDK 返回总览 相关图示：工具速查总览 原生&amp;hellip;">
+<meta property="og:url" content="https://zhoujun2303.github.io/post/unity-senior-developer-10-01-native-bridge/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="长胖是个梦想">
+<meta property="og:image" content="/images/avatar.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-senior-developer-10-01-native-bridge/">
+<meta name="twitter:title" content="Unity 开发高级/资深 10-01：原生交互与桥接（Java / Objective-C / 微信 JS）">
+<meta name="twitter:description" content="返回 10：构建发布、CI/CD 与 SDK 返回总览 相关图示：工具速查总览 原生&amp;hellip;">
+<meta name="twitter:image" content="/images/avatar.png">
+</head>
+<body class="flavor-theme">
+
+  <header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <div class="top-bar">
+
+      
+      <div class="top-bar__left">
+        
+        <a href="https://zhoujun2303.github.io" class="site-avatar-link" aria-label="返回首页">
+          <img class="site-avatar" src="/images/avatar.png" alt="长胖是个梦想" />
+        </a>
+        
+        <a href="https://zhoujun2303.github.io" class="site-name-link">长胖是个梦想</a>
+      </div>
+
+      
+      <nav class="top-bar__nav" id="sectionBar">
+        
+        
+        <a class="nav-item" href="/">首页</a>
+        
+        <a class="nav-item" href="/post">博客</a>
+        
+        <a class="nav-item" href="/memos">闪念</a>
+        
+        <a class="nav-item" href="/archives">归档</a>
+        
+        <a class="nav-item" href="/tags">标签</a>
+        
+        <a class="nav-item" href="/links">友链</a>
+        
+        <a class="nav-item" href="/post/about">关于</a>
+        
+        
+      </nav>
+
+      
+      <div class="top-bar__right">
+        <button class="btn-icon btn-search search-btn" id="btnSearch" type="button" aria-label="搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-sun" id="themeToggleSun" type="button"
+          aria-label="切换到浅色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1C12.5523 1 13 1.44772 13 2V4C13 4.55228 12.5523 5 12 5C11.4477 5 11 4.55228 11 4V2C11 1.44772 11.4477 1 12 1Z"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z"></path>
+            <path d="M13 20C13 19.4477 12.5523 19 12 19C11.4477 19 11 19.4477 11 20V22C11 22.5523 11.4477 23 12 23C12.5523 23 13 22.5523 13 22V20Z"></path>
+            <path d="M4.22282 4.22289C4.61335 3.83236 5.24651 3.83236 5.63704 4.22289L7.04704 5.63289C7.43756 6.02341 7.43756 6.65658 7.04704 7.0471C6.65651 7.43762 6.02335 7.43762 5.63283 7.0471L4.22282 5.6371C3.8323 5.24658 3.8323 4.61341 4.22282 4.22289Z"></path>
+            <path d="M18.367 16.9529C17.9765 16.5623 17.3433 16.5623 16.9528 16.9529C16.5623 17.3434 16.5623 17.9766 16.9528 18.3671L18.3628 19.7771C18.7533 20.1676 19.3865 20.1676 19.777 19.7771C20.1675 19.3866 20.1675 18.7534 19.777 18.3629L18.367 16.9529Z"></path>
+            <path d="M1 12C1 11.4477 1.44772 11 2 11H4C4.55228 11 5 11.4477 5 12C5 12.5523 4.55228 13 4 13H2C1.44772 13 1 12.5523 1 12Z"></path>
+            <path d="M20 11C19.4477 11 19 11.4477 19 12C19 12.5523 19.4477 13 20 13H22C22.5523 13 23 12.5523 23 12C23 11.4477 22.5523 11 22 11H20Z"></path>
+            <path d="M7.04704 16.9529C7.43756 17.3434 7.43756 17.9766 7.04704 18.3671L5.63704 19.7771C5.24651 20.1676 4.61335 20.1676 4.22282 19.7771C3.8323 19.3866 3.8323 18.7534 4.22283 18.3629L5.63283 16.9529C6.02335 16.5623 6.65651 16.5623 7.04704 16.9529Z"></path>
+            <path d="M19.777 5.6371C20.1675 5.24657 20.1675 4.61341 19.777 4.22289C19.3865 3.83236 18.7533 3.83236 18.3628 4.22289L16.9528 5.63289C16.5623 6.02341 16.5623 6.65658 16.9528 7.0471C17.3433 7.43762 17.9765 7.43762 18.367 7.0471L19.777 5.6371Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-moon" id="themeToggleMoon" type="button"
+          aria-label="切换到深色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C10.0222 2 8.08879 2.58649 6.4443 3.6853C4.79981 4.78412 3.51809 6.3459 2.76121 8.17317C2.00433 10.0004 1.8063 12.0111 2.19215 13.9509C2.578 15.8907 3.53041 17.6725 4.92894 19.0711C6.32746 20.4696 8.10929 21.422 10.0491 21.8079C11.9889 22.1937 13.9996 21.9957 15.8268 21.2388C17.6541 20.4819 19.2159 19.2002 20.3147 17.5557C21.4135 15.9112 22 13.9778 22 12C22 11.5955 21.7564 11.2309 21.3827 11.0761C21.009 10.9213 20.5789 11.0069 20.2929 11.2929C19.287 12.2988 17.9226 12.864 16.5 12.864C15.0774 12.864 13.713 12.2988 12.7071 11.2929C11.7012 10.287 11.136 8.92261 11.136 7.5C11.136 6.07739 11.7012 4.71304 12.7071 3.70711C12.9931 3.42111 13.0787 2.99099 12.9239 2.61732C12.7691 2.24364 12.4045 2 12 2ZM7.55544 5.34824C8.27036 4.87055 9.05353 4.51389 9.87357 4.28778C9.39271 5.27979 9.13604 6.37666 9.13604 7.5C9.13604 9.45304 9.91189 11.3261 11.2929 12.7071C12.6739 14.0881 14.547 14.864 16.5 14.864C17.6233 14.864 18.7202 14.6073 19.7122 14.1264C19.4861 14.9465 19.1295 15.7296 18.6518 16.4446C17.7727 17.7602 16.5233 18.7855 15.0615 19.391C13.5997 19.9965 11.9911 20.155 10.4393 19.8463C8.88743 19.5376 7.46197 18.7757 6.34315 17.6569C5.21447 16.538 4.4624 15.1126 4.15372 13.5607C3.84504 12.0089 4.00347 10.4003 4.60897 8.93853C5.21447 7.47672 6.23985 6.22729 7.55544 5.34824Z"></path>
+            <path d="M19 2C19.5523 2 20 2.44772 20 3V4H21C21.5523 4 22 4.44772 22 5C22 5.55228 21.5523 6 21 6H20V7C20 7.55228 19.5523 8 19 8C18.4477 8 18 7.55228 18 7V6H17C16.4477 6 16 5.55228 16 5C16 4.44772 16.4477 4 17 4H18V3C18 2.44772 18.4477 2 19 2Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon btn-nav-toggle mobile-only" id="btnNavToggle" type="button" aria-label="切换导航">
+          <div class="hamburger" id="hamburger">
+            <span class="hamburger__line hamburger__line--top"></span>
+            <span class="hamburger__line hamburger__line--bottom"></span>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+
+<div class="header-spacer"></div>
+
+<script>
+(function(){
+  var btn = document.getElementById('btnNavToggle');
+  var nav = document.getElementById('sectionBar');
+  var hamburger = document.getElementById('hamburger');
+  if (btn && nav) {
+    btn.addEventListener('click', function(){
+      nav.classList.toggle('top-bar__nav--open');
+      if (hamburger) hamburger.classList.toggle('is-active');
+    });
+    nav.querySelectorAll('.nav-item').forEach(function(item){
+      item.addEventListener('click', function(){
+        nav.classList.remove('top-bar__nav--open');
+        if (hamburger) hamburger.classList.remove('is-active');
+      });
+    });
+  }
+
+  var root = document.documentElement;
+  var applyTheme = function(theme, persist){
+    if (theme === 'light') {
+      root.classList.add('theme-light');
+    } else {
+      root.classList.remove('theme-light');
+    }
+    if (persist) {
+      try { localStorage.setItem('flavor-theme', theme); } catch (e) {}
+    }
+  };
+  document.querySelectorAll('.theme-toggle').forEach(function(el){
+    el.addEventListener('click', function(){
+      applyTheme(root.classList.contains('theme-light') ? 'dark' : 'light', true);
+    });
+  });
+})();
+</script>
+
+  <main class="site-main" role="main">
+    
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">Unity 开发高级/资深 10-01：原生交互与桥接（Java / Objective-C / 微信 JS）</h1>
+    <div class="article-meta">
+      
+      
+      <a href="/category/unity/" class="article-meta__category">Unity</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
+      <span class="article-meta__item">2026-09-18</span>
+      
+      <span class="article-meta__sep">·</span>
+      <span class="article-meta__item">38 分钟阅读</span>
+      
+    </div>
+    
+    <div class="article-header__tags">
+      
+      <a href="/tag/unity/" class="tag-pill tag-pill--sm">Unity</a>
+      
+      <a href="/tag/kai-fa-gao-ji-zi-shen/" class="tag-pill tag-pill--sm">开发高级/资深</a>
+      
+      <a href="/tag/sdk/" class="tag-pill tag-pill--sm">SDK</a>
+      
+      <a href="/tag/kua-ping-tai/" class="tag-pill tag-pill--sm">跨平台</a>
+      
+    </div>
+    
+  </header>
+
+  
+
+  <div class="article-content">
+    <p><a href="/post/unity-senior-developer-10-build-release-cicd-sdk/">返回 10：构建发布、CI/CD 与 SDK</a></p>
+<p><a href="/post/unity-senior-developer-skills/">返回总览</a></p>
+<p>相关图示：<a href="/post/unity-senior-developer-skills/#toolchain-map">工具速查总览</a></p>
+<blockquote>
+<p>原生交互（Native Bridge）是 Unity 客户端和平台能力之间的接缝。登录、支付、广告、推送、相册、定位、权限、分享、打开第三方 App、小游戏里的微信能力，最终都要落到一次跨语言调用上。这篇把 C# 与 Java/Kotlin、Objective-C/Swift、WebGL 与微信小游戏 JS 的调用方式、回调模型、线程模型、打包配置和常见坑整理成可复用的工程规范。</p>
+</blockquote>
+<p><a id="bridge-overview"></a></p>
+<h2 id="heading">为什么原生交互是资深必修</h2>
+<p>桥接层难，不是难在某个 API，而是它一次跨了四道边界：</p>
+<ul>
+<li>跨运行时：C#（托管/IL2CPP）和 Java（ART）、Objective-C（运行时）、JavaScript（JS 引擎）不是一回事。</li>
+<li>跨线程：原生的回调经常不在 Unity 主线程，Unity API 又只能在主线程调。</li>
+<li>跨内存模型：托管堆、Java 堆/全局引用、Objective-C 引用计数、WASM 线性内存各管各的，谁分配谁释放要讲清楚。</li>
+<li>跨构建系统：Gradle、Xcode、Emscripten/微信适配层，任何一层的配置错了，编辑器里能跑，真机上直接挂。</li>
+</ul>
+<p>所以桥接层出问题，通常只有三类症状：</p>
+<ul>
+<li>调不通：类找不到、方法签名不对、so/aar/framework 没打进包、被裁剪或混淆。</li>
+<li>回调丢或崩：回调线程不对、对象已销毁、delegate 被 GC、Java 全局引用泄漏。</li>
+<li>发不出去：权限、隐私清单、Manifest 合并、域名白名单、审核规则。</li>
+</ul>
+<p>资深开发的判断标准，是能把这三类问题分层定位，而不是在业务代码里打补丁。</p>
+<p><a id="bridge-architecture"></a></p>
+<h2 id="heading-1">桥接层应该长什么样</h2>
+<p>不要让业务代码直接 <code>new AndroidJavaClass(...)</code> 或 <code>DllImport</code>。正确做法是加一层平台能力抽象：</p>
+<pre><code class="language-text">业务层（登录 / 支付 / 广告 / 分享）
+        ↓ 只依赖接口，不碰平台 API
+平台能力接口（ILoginService / IPayService / IPlatform）
+        ↓ 按平台选择实现
+Android 实现      iOS 实现      WebGL/微信 实现     Editor Mock
+        ↓
+Java / Kotlin   OC / Swift    JS / jslib
+</code></pre>
+<p>对应的目录与程序集边界，可以这样拆：</p>
+<pre><code class="language-text">Runtime/Platform/IPlatform.cs            接口定义，纯 C#
+Runtime/Platform/PlatformManager.cs      平台选择与初始化
+Runtime/Platform/Android/*.cs            AndroidJavaObject 实现
+Runtime/Platform/iOS/*.cs                DllImport + 回调实现
+Runtime/Platform/WebGL/*.cs              jslib 实现 + 微信封装
+Runtime/Platform/Editor/EditorPlatform.cs 编辑器 Mock，保证编辑器能跑通流程
+</code></pre>
+<p>这样做的收益很直接：业务层能写单元测试，编辑器不用真机就能跑通登录/支付的假流程，换渠道 SDK 时只改一个实现，出问题也能一眼看出是业务、桥接层还是原生 SDK 的锅。</p>
+<p><a id="bridge-generic"></a></p>
+<h2 id="heading-2">跨语言通信的通用规则</h2>
+<p>不管跨哪种语言，有几条规律是共通的。</p>
+<p><strong>调用方向决定模型。</strong></p>
+<ul>
+<li>C# → 原生：同步调用，可以有返回值。异常必须在这一侧被捕获并转换，不能让原生异常穿透回来。</li>
+<li>原生 → C#：回调或事件，异步、跨线程，必须解决“回到主线程 + 对象可能已销毁 + 回调可能重复/丢失”三个问题。</li>
+</ul>
+<p><strong>线程是最高频的崩溃来源。</strong></p>
+<p>Unity 绝大多数 API 只能在主线程调用。Java 回调、Objective-C 的 GCD、JS 事件都可能在其他线程或时机触发。统一做法是：桥接层只把数据投递到主线程队列，由主线程统一派发。C# 侧一个通用派发器就够：</p>
+<pre><code class="language-csharp">public class MainThreadDispatcher : MonoBehaviour
+{
+    static readonly ConcurrentQueue&lt;Action&gt; Queue = new ConcurrentQueue&lt;Action&gt;();
+
+    public static void Post(Action action)
+    {
+        Queue.Enqueue(action);
+    }
+
+    void Update()
+    {
+        while (Queue.TryDequeue(out var action))
+        {
+            try { action?.Invoke(); }
+            catch (Exception e) { Debug.LogException(e); }
+        }
+    }
+}
+</code></pre>
+<p><strong>字符串统一按 UTF-8 约定。</strong> Android 的 JNI、iOS 的 <code>const char*</code>、WebGL 的 Emscripten 内存，都以 UTF-8 为事实标准。中文、Emoji、超长字符串是重灾区，遇到乱码或截断，先查编码，再查长度和缓冲区。</p>
+<p><strong>生命周期成对。</strong> 注册回调就要有反注册，<code>Acquire</code> 就要有 <code>Dispose</code>，<code>new AndroidJavaObject</code> 就要考虑释放。桥接层最常见的泄漏不是托管内存，而是 Java 全局引用、Objective-C 的 block 循环引用、C# delegate 被原生长期持有。</p>
+<p><strong>异常转成错误码。</strong> 原生抛异常时，桥接层要 <code>try/catch</code> 并转成项目统一错误码 + 日志，而不是让异常穿透到业务层甚至直接崩。</p>
+<p><strong>性能上不要每帧调。</strong> 每次跨语言调用都有固定开销，字符串和数组编组更贵。高频数据（如触摸、传感器）应该批量传，或者直接在 C# 侧实现，不要每帧穿过桥接层。</p>
+<p><strong>平台宏隔离。</strong> 桥接代码几乎都要包在 <code>#if</code> 里，并用 Editor Mock 兜底：</p>
+<pre><code class="language-csharp">#if UNITY_ANDROID &amp;&amp; !UNITY_EDITOR
+    // Android 实现
+#elif UNITY_IOS &amp;&amp; !UNITY_EDITOR
+    // iOS 实现
+#elif UNITY_WEBGL &amp;&amp; WEIXINMINIGAME &amp;&amp; !UNITY_EDITOR
+    // 微信小游戏实现
+#else
+    // Editor / 其他平台 Mock
+#endif
+</code></pre>
+<p>各平台桥接方式可以先看这张对照表：</p>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>C# 调原生</th>
+<th>原生调 C#</th>
+<th>原生代码位置</th>
+<th>打包配置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Android</td>
+<td><code>AndroidJavaClass</code> / <code>AndroidJavaObject</code></td>
+<td><code>AndroidJavaProxy</code>、<code>UnitySendMessage</code></td>
+<td><code>Assets/Plugins/Android</code> 的 AAR/Jar</td>
+<td>Manifest、Gradle、ProGuard</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td><code>[DllImport(&quot;__Internal&quot;)]</code> + <code>extern &quot;C&quot;</code></td>
+<td>函数指针 + <code>MonoPInvokeCallback</code>、<code>UnitySendMessage</code></td>
+<td><code>Assets/Plugins/iOS</code> 的 <code>.m/.mm/.framework</code></td>
+<td>Info.plist、Entitlements、隐私清单</td>
+</tr>
+<tr>
+<td>WebGL</td>
+<td><code>[DllImport(&quot;__Internal&quot;)]</code> + jslib</td>
+<td><code>SendMessage</code></td>
+<td><code>Assets/Plugins/WebGL/*.jslib</code></td>
+<td>WebGL 模板、压缩、内存</td>
+</tr>
+<tr>
+<td>微信小游戏</td>
+<td>适配 SDK 的 <code>WX</code> 封装 / 自写 jslib</td>
+<td><code>SendMessage</code> + 回调</td>
+<td><code>Assets/WX-WASM-SDK</code></td>
+<td>域名白名单、分包、隐私接口</td>
+</tr>
+<tr>
+<td>C++ 插件</td>
+<td><code>[DllImport]</code> + <code>extern &quot;C&quot;</code></td>
+<td>函数指针</td>
+<td>各平台原生库</td>
+<td>符号导出、运行时依赖</td>
+</tr>
+</tbody>
+</table>
+<p><a id="bridge-android"></a></p>
+<h2 id="c--java--kotlinandroid">C# 与 Java / Kotlin（Android）</h2>
+<p>Android 的桥接本质是 JNI 的封装，Unity 提供了三种高层方式。</p>
+<h3 id="-androidjavaclass--androidjavaobject--java">用 AndroidJavaClass / AndroidJavaObject 调 Java</h3>
+<pre><code class="language-csharp">// 静态类
+using (var buildVersion = new AndroidJavaClass(&quot;android.os.Build$VERSION&quot;))
+{
+    int sdkInt = buildVersion.GetStatic&lt;int&gt;(&quot;SDK_INT&quot;);
+    Debug.Log($&quot;Android API Level: {sdkInt}&quot;);
+}
+
+// 拿到当前 Activity，再调它的实例方法
+using (var unityPlayer = new AndroidJavaClass(&quot;com.unity3d.player.UnityPlayer&quot;))
+using (var activity = unityPlayer.GetStatic&lt;AndroidJavaObject&gt;(&quot;currentActivity&quot;))
+using (var context = activity.Call&lt;AndroidJavaObject&gt;(&quot;getApplicationContext&quot;))
+{
+    // 示例：调一个渠道 SDK 的静态方法
+    using (var sdk = new AndroidJavaClass(&quot;com.example.sdk.ChannelSdk&quot;))
+    {
+        sdk.CallStatic(&quot;init&quot;, context, &quot;your_app_id&quot;);
+    }
+}
+</code></pre>
+<p>几个必须记住的点：</p>
+<ul>
+<li>内部类用 <code>$</code> 连接，比如 <code>android.os.Build$VERSION</code>。</li>
+<li><code>Call&lt;T&gt;</code>、<code>Get&lt;T&gt;</code>、<code>GetStatic&lt;T&gt;</code> 的 <code>T</code> 只支持基本类型、<code>string</code>、<code>AndroidJavaObject</code>/<code>AndroidJavaClass</code> 以及它们的数组。自定义 C# 类型不能直接传。</li>
+<li>方法有重载、或者参数类型有歧义时，显式传 JNI 签名：</li>
+</ul>
+<pre><code class="language-csharp">// javap -s -p YourClass 可以打印方法签名
+// (Ljava/lang/String;I)V 表示 (String, int) -&gt; void
+javaObj.Call(&quot;doSomething&quot;, &quot;(Ljava/lang/String;I)V&quot;, &quot;abc&quot;, 1);
+</code></pre>
+<ul>
+<li><code>AndroidJavaObject</code> 持有的是 JNI 全局引用，长期持有会占用资源。用完 <code>Dispose()</code>，或者放进 <code>using</code>。频繁调用的对象（Activity、SDK 单例）应该在平台层缓存一次，而不是每帧 new。</li>
+</ul>
+<h3 id="-androidjavaproxy--java-">用 AndroidJavaProxy 接收 Java 回调</h3>
+<p>Java 侧定义一个接口，C# 侧实现它：</p>
+<pre><code class="language-java">// Java（放在 AAR/Jar 里）
+public interface ILoginCallback {
+    void onSuccess(String token);
+    void onFail(int code, String message);
+}
+</code></pre>
+<pre><code class="language-csharp">// C#：接口名必须和 Java 完全一致，方法名和参数类型也必须一致
+class LoginCallbackProxy : AndroidJavaProxy
+{
+    readonly Action&lt;string&gt; onSuccess;
+    readonly Action&lt;int, string&gt; onFail;
+
+    public LoginCallbackProxy(Action&lt;string&gt; onSuccess, Action&lt;int, string&gt; onFail)
+        : base(&quot;com.example.sdk.ILoginCallback&quot;)
+    {
+        this.onSuccess = onSuccess;
+        this.onFail = onFail;
+    }
+
+    public void onSuccess(string token) =&gt; MainThreadDispatcher.Post(() =&gt; onSuccess(token));
+    public void onFail(int code, string message) =&gt; MainThreadDispatcher.Post(() =&gt; onFail(code, message));
+}
+
+// 调用
+using (var sdk = new AndroidJavaClass(&quot;com.example.sdk.LoginSdk&quot;))
+{
+    sdk.CallStatic(&quot;login&quot;, new LoginCallbackProxy(
+        token =&gt; Debug.Log($&quot;登录成功: {token}&quot;),
+        (code, msg) =&gt; Debug.LogError($&quot;登录失败: {code} {msg}&quot;)));
+}
+</code></pre>
+<p>要点：</p>
+<ul>
+<li><code>base(&quot;...&quot;)</code> 里的接口名必须是 Java 全限定名，嵌套接口用 <code>$</code>，比如 <code>android.content.DialogInterface$OnClickListener</code>。</li>
+<li>这个接口必须能在打包进去的 AAR/Jar 里找到，不能只存在于你本地的 Java 源码里。</li>
+<li>参数类型映射：Java <code>int</code> → C# <code>int</code>，Java <code>String</code> → C# <code>string</code>，Java <code>boolean</code> → C# <code>bool</code>，其他 Java 对象 → <code>AndroidJavaObject</code>。</li>
+<li>Java 回调线程不保证是主线程，所以在代理方法里立刻 <code>MainThreadDispatcher.Post</code>。</li>
+</ul>
+<h3 id="-unitysendmessage--java--unity">用 UnitySendMessage 从 Java 回 Unity</h3>
+<p>有时候回调信息很简单，不想写 Proxy，可以在 Java 侧直接发消息给 Unity 的一个 GameObject：</p>
+<pre><code class="language-java">// Java
+public void onPayResult(String orderId, int code) {
+    UnityPlayer.UnitySendMessage(&quot;SdkManager&quot;, &quot;OnPayResult&quot;, orderId + &quot;|&quot; + code);
+}
+
+// 如果回调在子线程，要先回主线程
+activity.runOnUiThread(() -&gt;
+    UnityPlayer.UnitySendMessage(&quot;SdkManager&quot;, &quot;OnPayResult&quot;, orderId + &quot;|&quot; + code));
+</code></pre>
+<pre><code class="language-csharp">// C#：方法必须是 public void，且只能接收一个 string 参数
+void OnPayResult(string payload)
+{
+    var parts = payload.Split('|');
+    string orderId = parts[0];
+    int code = int.Parse(parts[1]);
+}
+</code></pre>
+<p><code>UnitySendMessage</code> 的限制要记清楚：目标 GameObject 必须处于激活状态并存在于场景中，方法名和 GameObject 名是硬编码字符串，改名就断，参数只能是一个字符串。复杂数据要自己序列化（JSON 或自定义分隔符）。</p>
+<h3 id="-activity-">自定义 Activity 与生命周期</h3>
+<p>需要处理 <code>onActivityResult</code>、权限回调、生命周期时，要继承 <code>UnityPlayerActivity</code>：</p>
+<pre><code class="language-java">public class MyActivity extends UnityPlayerActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UnityPlayer.UnitySendMessage(&quot;SdkManager&quot;, &quot;OnActivityResult&quot;,
+            requestCode + &quot;|&quot; + resultCode);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // 把结果转成业务能识别的字符串再发给 Unity
+    }
+}
+</code></pre>
+<p>Manifest 放在 <code>Assets/Plugins/Android/AndroidManifest.xml</code>（Custom Main Manifest），把 activity 的 <code>android:name</code> 指向自定义类。注意：</p>
+<ul>
+<li>自定义 Activity 后，<code>currentActivity</code> 拿到的是它，<code>UnityPlayer.currentActivity</code> 也是它。</li>
+<li>不要随意改动包名和 Unity 默认 Activity 的结构，否则可能启动黑屏。</li>
+<li><code>onCreate</code>、<code>onResume</code>、<code>onPause</code>、<code>onDestroy</code> 是 Unity 生命周期和原生 SDK 生命周期的交汇点，SDK 的 <code>onResume</code>/<code>onPause</code> 漏调会导致广告、统计、推送行为异常。</li>
+</ul>
+<h3 id="-manifest">权限与 Manifest</h3>
+<p>Android 6.0+ 的权限要运行时申请，Manifest 只是声明：</p>
+<pre><code class="language-csharp">#if UNITY_ANDROID &amp;&amp; !UNITY_EDITOR
+using (var unityPlayer = new AndroidJavaClass(&quot;com.unity3d.player.UnityPlayer&quot;))
+using (var activity = unityPlayer.GetStatic&lt;AndroidJavaObject&gt;(&quot;currentActivity&quot;))
+{
+    activity.Call(&quot;requestPermissions&quot;,
+        new string[] { &quot;android.permission.CAMERA&quot; }, 1001);
+}
+#endif
+</code></pre>
+<p>Manifest 声明示例：</p>
+<pre><code class="language-xml">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.CAMERA&quot; /&gt;
+&lt;uses-permission android:name=&quot;android.permission.POST_NOTIFICATIONS&quot; /&gt;
+</code></pre>
+<p>要跟上平台变化：Android 13 的通知权限 <code>POST_NOTIFICATIONS</code>、Android 14 的前台服务类型、<code>targetSdk</code> 提升后的行为变更，都会让“之前好好的”SDK 突然失效。</p>
+<h3 id="aar--jar-">AAR / Jar 接入与打包配置</h3>
+<ul>
+<li>库文件放 <code>Assets/Plugins/Android/</code>，Unity 会自动打进包。</li>
+<li>有子依赖或需要 <code>implementation</code> 时，启用 <code>mainTemplate.gradle</code>（Custom Main Gradle Template）和 <code>gradleTemplate.properties</code>，把依赖写进去。</li>
+<li>需要改 Manifest 时，启用 Custom Main Manifest，而不是改导出后的工程。</li>
+<li><code>targetSdk</code>/<code>minSdk</code> 在 Player Settings 里统一，别让不同 AAR 的 Manifest 各写一套。</li>
+<li>要支持 64 位（<code>ARM64</code>），否则上不了 Google Play。</li>
+<li>Android 的 Debug/Release 包名、签名、渠道参数集中到构建脚本和渠道配置里，不要散落在代码中。</li>
+</ul>
+<h3 id="r8--proguard-">R8 / ProGuard 与混淆</h3>
+<p>开启 Minify 后，反射和 JNI 调用的类、方法可能被裁掉或改名，典型报错是 <code>ClassNotFoundException</code>、<code>NoSuchMethodError</code>。做法是在 <code>Assets/Plugins/Android/proguard-user.txt</code> 里保留 SDK 和 JNI 相关类：</p>
+<pre><code class="language-text">-keep class com.example.sdk.** { *; }
+-keep class com.unity3d.player.** { *; }
+-keepclassmembers class * {
+    native &lt;methods&gt;;
+}
+-keepclasseswithmembers class * {
+    @android.webkit.JavascriptInterface &lt;methods&gt;;
+}
+</code></pre>
+<h3 id="android-">Android 常见坑</h3>
+<ul>
+<li>在子线程直接改 Unity 对象 → 崩溃或随机异常，务必回主线程。</li>
+<li><code>AndroidJavaObject</code> 每次 new 都产生 JNI 引用，高频调用要缓存并 <code>Dispose</code>。</li>
+<li>混淆把 JNI 方法名改掉 → <code>NoSuchMethodError</code>。</li>
+<li><code>AndroidJavaProxy</code> 的接口没打进 AAR → 运行时报找不到接口。</li>
+<li><code>UnitySendMessage</code> 的 GameObject 未激活或被销毁 → 回调静默丢失。</li>
+<li>只测了 Editor 或 32 位包 → 真机 / 64 位 / <code>arm64</code> 才暴露问题。</li>
+<li>渠道 SDK 的 Application 类冲突 → Manifest 合并失败，需要用 <code>tools:replace</code> 处理。</li>
+</ul>
+<p><a id="bridge-ios"></a></p>
+<h2 id="c--objective-c--swiftios">C# 与 Objective-C / Swift（iOS）</h2>
+<p>iOS 的桥接走的是 C 函数符号，不是像 Android 那样的运行时查找。</p>
+<h3 id="dllimport--extern-c">基本链路：DllImport + extern &ldquo;C&rdquo;</h3>
+<p>C# 侧：</p>
+<pre><code class="language-csharp">public static class NativeBridge
+{
+#if UNITY_IOS &amp;&amp; !UNITY_EDITOR
+    [DllImport(&quot;__Internal&quot;)]
+    private static extern void _InitSdk(string appId);
+
+    [DllImport(&quot;__Internal&quot;)]
+    private static extern int _Pay(string orderId, int amount);
+
+    public static void InitSdk(string appId) =&gt; _InitSdk(appId);
+    public static int Pay(string orderId, int amount) =&gt; _Pay(orderId, amount);
+#else
+    public static void InitSdk(string appId) { }
+    public static int Pay(string orderId, int amount) =&gt; 0;
+#endif
+}
+</code></pre>
+<p>原生侧 <code>Assets/Plugins/iOS/MyBridge.mm</code>：</p>
+<pre><code class="language-objc">#import &lt;Foundation/Foundation.h&gt;
+#import &quot;UnityInterface.h&quot;
+
+extern &quot;C&quot; void _InitSdk(const char* appId) {
+    NSString* appIdStr = [NSString stringWithUTF8String:appId];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 初始化渠道 SDK
+    });
+}
+
+extern &quot;C&quot; int _Pay(const char* orderId, int amount) {
+    return 0;
+}
+</code></pre>
+<p>要点：</p>
+<ul>
+<li><code>extern &quot;C&quot;</code> 阻止 C++ 名称修饰，否则符号对不上。</li>
+<li><code>.m</code>/<code>.mm</code> 放 <code>Assets/Plugins/iOS</code>，Unity 会自动加入 Xcode 工程并编译。</li>
+<li>iOS 下 <code>string</code> 默认按 UTF-8 传到 <code>const char*</code>（Mono/IL2CPP 在 iOS 上把 ANSI 当作 UTF-8），所以中文能正常处理。</li>
+<li>原生返回字符串比较麻烦，通常用 <code>UnitySendMessage</code> 回传，或者返回 <code>char*</code> 再用 <code>Marshal.PtrToStringAnsi</code>（注意谁分配谁释放）。</li>
+</ul>
+<h3 id="-c--monopinvokecallback">回调 C#：函数指针 + MonoPInvokeCallback</h3>
+<p>原生要回调 C#，用函数指针最直接：</p>
+<pre><code class="language-csharp">public delegate void NativeCallback(string message);
+
+public static class NativeBridge
+{
+#if UNITY_IOS &amp;&amp; !UNITY_EDITOR
+    [DllImport(&quot;__Internal&quot;)]
+    private static extern void _RegisterCallback(NativeCallback callback);
+
+    // 保持强引用，防止被 GC
+    static NativeCallback callbackRef;
+
+    public static void Register(Action&lt;string&gt; onMessage)
+    {
+        callbackRef = message =&gt; MainThreadDispatcher.Post(() =&gt; onMessage(message));
+        _RegisterCallback(callbackRef);
+    }
+#else
+    public static void Register(Action&lt;string&gt; onMessage) { }
+#endif
+}
+</code></pre>
+<pre><code class="language-objc">// MyBridge.mm
+#import &lt;Foundation/Foundation.h&gt;
+#import &quot;UnityInterface.h&quot;
+
+typedef void (*NativeCallback)(const char* message);
+static NativeCallback gCallback = NULL;
+
+extern &quot;C&quot; void _RegisterCallback(NativeCallback callback) {
+    gCallback = callback;
+}
+
+// 原生某处触发回调
+- (void)onLoginResult:(NSString*)token {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (gCallback != NULL) {
+            gCallback([token UTF8String]);
+        }
+    });
+}
+</code></pre>
+<p>最关键的坑：IL2CPP 是 AOT 编译，函数指针回调必须在 C# 侧标注：</p>
+<pre><code class="language-csharp">[AOT.MonoPInvokeCallback(typeof(NativeCallback))]
+static void OnNativeCallback(string message) { /* ... */ }
+</code></pre>
+<p>漏了 <code>MonoPInvokeCallback</code>，真机上会报 <code>Attempting to call method ... which was not compiled with MonoPInvokeCallback attribute</code> 然后崩溃。另外 delegate 必须是静态方法或者被静态字段强引用，否则会被 GC 回收，表现为跑一段时间后偶发崩溃。</p>
+<h3 id="unitysendmessage-">UnitySendMessage 从原生回调</h3>
+<p>字符串回传最省事的还是 <code>UnitySendMessage</code>：</p>
+<pre><code class="language-objc">#import &quot;UnityInterface.h&quot;
+
+extern &quot;C&quot; void _RequestPay(const char* orderId) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UnitySendMessage(&quot;SdkManager&quot;, &quot;OnPayResult&quot;,
+            [[NSString stringWithFormat:@&quot;%s|0&quot;, orderId] UTF8String]);
+    });
+}
+</code></pre>
+<p>规则和 Android 一样：GameObject 要激活，方法只有一个 string 参数，非主线程要先 <code>dispatch_async(dispatch_get_main_queue())</code>。</p>
+<h3 id="swift-">Swift 怎么桥接</h3>
+<p>Swift 不能直接 <code>DllImport</code>，因为它没有稳定的 C 符号和名称修饰约定。两种做法：</p>
+<ul>
+<li>用 Objective-C 包装层：Swift 类标 <code>@objc</code>、继承 <code>NSObject</code>，方法标 <code>@objc</code>，再用一个 <code>.mm</code> 文件把 C 函数转发给它。最稳，兼容性最好。</li>
+<li>用 <code>@_cdecl(&quot;name&quot;)</code>（Swift 5.4+）直接导出 C 符号：</li>
+</ul>
+<pre><code class="language-swift">@_cdecl(&quot;_SwiftHello&quot;)
+public func SwiftHello(_ name: UnsafePointer&lt;CChar&gt;?) {
+    let s = name.map { String(cString: $0) } ?? &quot;&quot;
+    DispatchQueue.main.async {
+        UnitySendMessage(&quot;SdkManager&quot;, &quot;OnHello&quot;, s)
+    }
+}
+</code></pre>
+<p>注意 <code>.swift</code> 文件 Unity 不会自动加入 Xcode 编译目标，实际项目更常见的做法是把 Swift 代码打成 <code>.framework</code>/<code>.xcframework</code> 再接入，而不是直接丢源码。</p>
+<h3 id="framework">Framework、静态库与依赖管理</h3>
+<ul>
+<li>二进制放 <code>Assets/Plugins/iOS/</code>，<code>.framework</code>、<code>.xcframework</code>、<code>.a</code> 都可以。</li>
+<li>需要 <code>-ObjC</code>、<code>-all_load</code> 链接标志时，用构建后处理脚本加，别手改 Xcode。</li>
+<li>Swift 库要处理运行时库（<code>Always Embed Swift Standard Libraries</code>）和签名。</li>
+<li>依赖用 EDM4U（External Dependency Manager）管理，iOS 走 CocoaPods、Android 走 Gradle，避免手动维护 <code>Dependencies.xml</code> 之外的东西。</li>
+<li>二进制分发的库，优先要 <code>.xcframework</code>（同时含真机和模拟器切片），旧的 <code>.framework</code> 在 Apple Silicon 上容易出现架构不匹配。</li>
+</ul>
+<h3 id="infoplistentitlements-">Info.plist、Entitlements 与隐私</h3>
+<p>Xcode 工程每次构建都会重新生成，手改一定被覆盖。正确做法是用 <code>IPostprocessBuildWithReport</code> 在 <code>OnPostprocessBuild</code> 里脚本化修改：</p>
+<pre><code class="language-csharp">using UnityEditor;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
+using UnityEditor.iOS.Xcode;
+using System.IO;
+
+public class IOSPostProcess : IPostprocessBuildWithReport
+{
+    public int callbackOrder =&gt; 0;
+
+    public void OnPostprocessBuild(BuildReport report)
+    {
+        if (report.summary.platform != BuildTarget.iOS) return;
+
+        string projPath = PBXProject.GetPBXProjectPath(report.summary.outputPath);
+        var proj = new PBXProject();
+        proj.ReadFromFile(projPath);
+
+        // 1. Info.plist：相机、相册、ATT、跳转白名单
+        string plistPath = Path.Combine(report.summary.outputPath, &quot;Info.plist&quot;);
+        var plist = new PlistDocument();
+        plist.ReadFromFile(plistPath);
+        plist.root.SetString(&quot;NSCameraUsageDescription&quot;, &quot;用于扫描二维码&quot;);
+        plist.root.SetString(&quot;NSUserTrackingUsageDescription&quot;, &quot;用于广告归因&quot;);
+        plist.WriteToFile(plistPath);
+
+        // 2. 添加系统框架、链接标志、Embed Framework
+        // 3. 修改 entitlements / capabilities
+        proj.WriteToFile(projPath);
+    }
+}
+</code></pre>
+<p>常被审核和权限卡住的键：</p>
+<ul>
+<li><code>NSCameraUsageDescription</code>、<code>NSPhotoLibraryUsageDescription</code>、<code>NSMicrophoneUsageDescription</code>。</li>
+<li><code>NSUserTrackingUsageDescription</code> + ATT 弹窗（iOS 14.5+）。</li>
+<li><code>LSApplicationQueriesSchemes</code>（微信、支付宝等跳转白名单）。</li>
+<li><code>aps-environment</code>（推送）、Associated Domains、Sign in with Apple 等 Entitlements。</li>
+<li><code>PrivacyInfo.xcprivacy</code> 隐私清单（iOS 17+），声明 Required Reason API 和数据收集类型。</li>
+<li>尽量别为了省事整体关闭 ATS（<code>NSAllowsArbitraryLoads</code>），审核和安全性都会出问题。</li>
+</ul>
+<h3 id="ios-">iOS 常见坑</h3>
+<ul>
+<li>忘记 <code>MonoPInvokeCallback</code> → 真机崩溃。</li>
+<li>delegate 被 GC 回收 → 偶发崩溃，保持静态强引用。</li>
+<li>非主线程调 Unity API → 崩溃或警告。</li>
+<li>Objective-C block 循环引用、ARC/非 ARC 混编 → 内存泄漏或崩溃。</li>
+<li>手改 Xcode 工程 → 下次构建被覆盖，必须脚本化。</li>
+<li>类被 strip 掉（缺 <code>-ObjC</code>/<code>-all_load</code>）→ 运行时找不到类。</li>
+<li>广告/统计 SDK 用 <code>UIApplication</code> 私有行为 → 审核被拒。</li>
+<li>隐私描述文案和实际行为不一致 → 隐私审核被拒。</li>
+</ul>
+<p><a id="bridge-webgl-wechat"></a></p>
+<h2 id="c--javascriptwebgl--">C# 与 JavaScript（WebGL / 微信小游戏）</h2>
+<p>WebGL 和微信小游戏共用一套 jslib 机制，区别在于 JS 侧调用的是浏览器 API 还是微信的 <code>wx.*</code> API。</p>
+<h3 id="jslib-">jslib 机制</h3>
+<p>JS 侧放 <code>Assets/Plugins/WebGL/MyLib.jslib</code>：</p>
+<pre><code class="language-javascript">mergeInto(LibraryManager.library, {
+    JsLog: function (ptr) {
+        console.log(UTF8ToString(ptr));
+    },
+
+    JsAdd: function (a, b) {
+        return a + b;
+    },
+
+    JsCallAsync: function (namePtr, valuePtr) {
+        var name = UTF8ToString(namePtr);
+        var value = UTF8ToString(valuePtr);
+        // 异步操作完成后回调 Unity
+        setTimeout(function () {
+            SendMessage('SdkManager', 'OnJsResult', name + '|' + value);
+        }, 100);
+    }
+});
+</code></pre>
+<p>C# 侧调用：</p>
+<pre><code class="language-csharp">public static class JsBridge
+{
+#if UNITY_WEBGL &amp;&amp; !UNITY_EDITOR
+    [DllImport(&quot;__Internal&quot;)] private static extern void JsLog(string msg);
+    [DllImport(&quot;__Internal&quot;)] private static extern int JsAdd(int a, int b);
+    [DllImport(&quot;__Internal&quot;)] private static extern void JsCallAsync(string name, string value);
+
+    public static void Log(string msg) =&gt; JsLog(msg);
+    public static int Add(int a, int b) =&gt; JsAdd(a, b);
+    public static void CallAsync(string name, string value) =&gt; JsCallAsync(name, value);
+#else
+    public static void Log(string msg) =&gt; Debug.Log(msg);
+    public static int Add(int a, int b) =&gt; a + b;
+    public static void CallAsync(string name, string value) { }
+#endif
+}
+</code></pre>
+<p>要点：</p>
+<ul>
+<li><code>.jslib</code> 只在 WebGL 生效，Editor 必须有 C# 兜底实现，否则编辑器会报 <code>EntryPointNotFoundException</code>。</li>
+<li>C# <code>string</code> 传到 JS 是一个指针，JS 侧用 <code>UTF8ToString(ptr)</code> 读取。JS 里如果 <code>_malloc</code> 了内存，记得 <code>_free</code>。</li>
+<li>JS 调 C# 用全局 <code>SendMessage('GameObject', 'Method', value)</code>；旧代码里的 <code>gameInstance.SendMessage</code> / <code>unityInstance.SendMessage</code> 也能用，但依赖 GameObject 名和方法名这个约定不变。</li>
+<li>WebGL 基本是单线程，jslib 里不要做重计算或同步阻塞，否则整帧卡住。</li>
+<li><code>Application.ExternalCall</code> / <code>Application.ExternalEval</code> 已废弃，不要再用。</li>
+</ul>
+<h3 id="heading-3">微信小游戏适配</h3>
+<p>Unity 项目导出微信小游戏，走的是「Unity WebGL + 微信小游戏适配 SDK（WX-WASM-SDK）」，导出后用微信开发者工具打开。从评估、资源加载、启动性能到上线的完整迁移实践，见 <a href="/post/unity-zhuan-wei-xin-xiao-you-xi-zhi-nan/">Unity 转微信小游戏指南</a>；这里只讲 JS 桥接本身。注意：</p>
+<ul>
+<li>平台宏通常是 <code>UNITY_WEBGL &amp;&amp; WEIXINMINIGAME</code>，配合 <code>!UNITY_EDITOR</code> 使用。</li>
+<li>适配层提供 C# 的 <code>WX</code> 封装，覆盖登录、支付、广告、分享、系统信息、生命周期、存储、键盘等能力，底层对应微信的 <code>wx.*</code> API。</li>
+<li>能力对应关系大致是：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>C# 侧（适配 SDK 封装）</th>
+<th>底层微信 API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>登录</td>
+<td><code>WX.Login</code> / 登录回调</td>
+<td><code>wx.login</code></td>
+</tr>
+<tr>
+<td>支付</td>
+<td><code>WX.RequestMidasPayment</code></td>
+<td><code>wx.requestMidasPayment</code></td>
+</tr>
+<tr>
+<td>广告</td>
+<td><code>WX.CreateRewardedVideoAd</code> / 播放回调</td>
+<td><code>wx.createRewardedVideoAd</code></td>
+</tr>
+<tr>
+<td>分享</td>
+<td><code>WX.ShareAppMessage</code></td>
+<td><code>wx.shareAppMessage</code></td>
+</tr>
+<tr>
+<td>系统信息</td>
+<td><code>WX.GetSystemInfoSync</code></td>
+<td><code>wx.getSystemInfoSync</code></td>
+</tr>
+<tr>
+<td>生命周期</td>
+<td><code>WX.OnShow</code> / <code>WX.OnHide</code></td>
+<td><code>wx.onShow</code> / <code>wx.onHide</code></td>
+</tr>
+<tr>
+<td>存储</td>
+<td><code>WX.StorageSet*</code> / <code>WX.StorageGet*</code></td>
+<td><code>wx.setStorageSync</code> 等</td>
+</tr>
+<tr>
+<td>网络</td>
+<td><code>WX.Request</code> / <code>WX.DownloadFile</code></td>
+<td><code>wx.request</code> / <code>wx.downloadFile</code></td>
+</tr>
+<tr>
+<td>键盘</td>
+<td><code>WX.OnKeyboardInput</code> / <code>WX.ShowKeyboard</code></td>
+<td>微信原生键盘</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>开放数据域（排行榜）：它是一个独立的 JS 运行环境，不能直接访问主域对象。主域通过 <code>WX.GetOpenDataContext()</code> 拿上下文，用 <code>postMessage</code> 通信，渲染靠 <code>SubContextView</code> 组件。开放数据域里只能用微信提供的那套子域 API。</li>
+<li>包体与资源：微信小游戏对首包/分包大小有硬限制，Unity 资源要做分包和远程加载；首次启动要展示明确的加载进度，不能黑屏。</li>
+<li>域名白名单：<code>request</code>、<code>downloadFile</code>、<code>uploadFile</code>、<code>socket</code> 都要在微信后台配置合法域名，否则请求直接失败，且报错信息不直观。</li>
+<li>隐私与合规：微信小游戏有独立的隐私协议和授权接口，涉及用户信息、广告、支付时要按平台要求接。</li>
+<li>版本匹配：适配 SDK 版本要和 Unity 版本匹配，升级 Unity 时同步升级适配层，否则会出现导出失败或运行时诡异问题。</li>
+</ul>
+<h3 id="webgl--">WebGL / 微信常见坑</h3>
+<ul>
+<li>jslib 只在 WebGL 生效，Editor 没兜底 → 编辑器直接报错。</li>
+<li>JS 侧字符串/数组内存没释放 → WASM 内存持续增长。</li>
+<li><code>SendMessage</code> 依赖字符串名字，改 GameObject/方法名后回调静默失效。</li>
+<li>微信环境里 <code>localStorage</code> 不通用，要用微信存储接口或 <code>FileSystemManager</code>。</li>
+<li>用了 Unity 在 WebGL 不支持的特性（多线程、<code>System.Net</code> 同步阻塞、部分图形 API）→ 打包失败或运行异常。</li>
+<li>域名白名单没配 → 请求失败但不报“白名单”关键字，容易误判为网络问题。</li>
+<li>适配层和引擎版本不匹配 → 导出或启动阶段出问题。</li>
+</ul>
+<p><a id="bridge-other"></a></p>
+<h2 id="heading-4">其他常见桥接</h2>
+<h3 id="c--c-">C# 与 C++ 原生插件</h3>
+<pre><code class="language-csharp">[StructLayout(LayoutKind.Sequential)]
+public struct NativeVec3 { public float x, y, z; }
+
+[DllImport(&quot;mylib&quot;, CallingConvention = CallingConvention.Cdecl)]
+private static extern int Compute([In] NativeVec3[] input, int count, IntPtr output);
+</code></pre>
+<pre><code class="language-cpp">// mylib.cpp
+extern &quot;C&quot; __declspec(dllexport) int Compute(const NativeVec3* input, int count, float* output) {
+    // ...
+    return 0;
+}
+</code></pre>
+<ul>
+<li>库文件按平台放 <code>Assets/Plugins/&lt;平台&gt;/</code>，<code>.dll</code>、<code>.so</code>、<code>.bundle</code>、<code>.a</code>。</li>
+<li>结构体要 <code>LayoutKind.Sequential</code>，注意对齐和平台差异。</li>
+<li>数组/结构体编组可用 <code>Marshal.Copy</code>、<code>GCHandle.Alloc(pinned)</code>、<code>Marshal.AllocHGlobal</code>，注意 native 内存谁分配谁释放。</li>
+<li>回调函数指针同样需要 <code>MonoPInvokeCallback</code>（IL2CPP）。</li>
+<li>平台库会有依赖库，Windows 要一起拷，Android 要保证 ABI 齐全，iOS 要链接进去。</li>
+</ul>
+<h3 id="c--luaxlua--tolua">C# 与 Lua（xLua / tolua）</h3>
+<ul>
+<li>通过 <code>LuaEnv</code> 执行脚本，<code>LuaTable</code> 读写表，<code>LuaFunction.Call</code> 调用函数。</li>
+<li>用 <code>[CSharpCallLua]</code> / <code>[LuaCallCSharp]</code> 配置生成胶水代码，避免运行时反射带来的性能和兼容问题。</li>
+<li>委托和接口的桥接、<code>LuaEnv.Tick()</code>、GC 时机、热更边界都要提前约定。</li>
+<li>这类桥接常见于热更新方案，重点是“热更代码和 C# 接口的版本兼容”，而不是单次调用。</li>
+</ul>
+<h3 id="c--webview">C# 与 WebView</h3>
+<ul>
+<li>UniWebView 之类的插件可以打开网页并双向通信：C# 调 <code>EvaluateJavaScript</code>，网页通过 message 回到 Unity 的 <code>OnMessageReceived</code>。</li>
+<li>原生 WebView 盖在 Unity 上时，层级、输入穿透、返回键、关闭时机、透明背景都要单独处理。</li>
+<li>登录、支付、H5 活动常用这套，安全上要注意别把 token 明文塞进 URL。</li>
+</ul>
+<p><a id="bridge-engineering"></a></p>
+<h2 id="heading-5">把桥接做成工程能力</h2>
+<p>上面都是单点技术，真正决定项目稳定性的是这几条工程约定：</p>
+<ul>
+<li>平台能力接口化：业务只依赖接口，用 Editor Mock 在编辑器里跑通全流程。</li>
+<li>回调统一主线程派发：所有原生回调先进主线程队列，再由业务处理。</li>
+<li>回调注册表：注册/反注册成对，支持一次性回调，超时自动清理，避免“回调了但对象已销毁”。</li>
+<li>错误码统一：把 Java 异常、iOS 错误、JS 错误、微信 errCode 转成项目错误码。</li>
+<li>日志规范化：桥接层统一记录方向、方法、参数长度、耗时、错误码；<strong>不要打印 token、订单敏感信息</strong>。</li>
+<li>打包配置集中：AppId、渠道号、环境地址从构建参数注入，代码里不硬编码。</li>
+<li>空实现兜底：Editor、不支持平台、SDK 初始化失败都要有可运行的降级路径。</li>
+<li>可测试：平台实现可 mock，核心业务逻辑用纯 C# 单测覆盖。</li>
+</ul>
+<p>一个桥接调用应该长这样，而不是直接写进业务：</p>
+<pre><code class="language-csharp">public interface IPayService
+{
+    void Pay(string orderId, int amount, Action&lt;PayResult&gt; onResult);
+}
+
+// 业务层
+payService.Pay(orderId, amount, result =&gt;
+{
+    if (result.Success) OnPaySuccess(result.OrderId);
+    else OnPayFail(result.Code, result.Message);
+});
+</code></pre>
+<p><a id="bridge-tools"></a></p>
+<h2 id="heading-6">需要掌握的工具</h2>
+<ul>
+<li>Android Studio、Gradle、ADB、Logcat：调试 Java/Kotlin、AAR、Manifest 合并、崩溃和 ANR。</li>
+<li><code>jadx</code>、<code>apktool</code>：反查 AAR/Jar 里的类名、接口、方法签名，确认 <code>AndroidJavaProxy</code> 的接口名和参数类型。</li>
+<li><code>javap -s -p</code>：打印 Java 方法签名，用于 JNI 重载调用。</li>
+<li>ProGuard/R8 规则：防止 JNI 和反射相关类被裁剪、改名。</li>
+<li>Xcode、Device Console、Instruments：调试 <code>.mm/.m</code>、Framework、签名、崩溃和性能。</li>
+<li><code>nm</code>、<code>otool</code>、<code>file</code>：检查二进制符号、架构切片和导出函数，定位“符号对不上”。</li>
+<li>EDM4U、CocoaPods、Swift Package Manager：管理 Android/iOS 的第三方依赖。</li>
+<li>Unity 构建后处理（<code>IPostprocessBuildWithReport</code>）：脚本化修改 Info.plist、Entitlements、Gradle、Manifest。</li>
+<li>微信开发者工具、vConsole、Chrome DevTools：调试 WebGL 与微信小游戏的 JS 侧。</li>
+<li>WX-WASM-SDK：Unity 导出微信小游戏的适配层。</li>
+<li>Charles / Wireshark：排查 SDK 网络、支付回调和域名白名单问题。</li>
+</ul>
+<p><a id="bridge-subtopics"></a></p>
+<h2 id="heading-7">可继续细分方向</h2>
+<ul>
+<li>Android 原生桥接：JNI 签名、AAR/Jar、Proxy 回调、自定义 Activity、权限、混淆。</li>
+<li>iOS 原生桥接：<code>DllImport</code>、<code>MonoPInvokeCallback</code>、Framework/xcframework、Info.plist 与隐私合规。</li>
+<li>WebGL 与微信小游戏桥接：jslib、<code>wx.*</code> 能力、开放数据域、分包与域名白名单。</li>
+<li>C++ / Lua / WebView 桥接：原生插件、热更脚本层、H5 双向通信。</li>
+<li>桥接工程化：接口抽象、主线程派发、回调注册表、错误码与日志规范。</li>
+</ul>
+<p><a id="bridge-checklist"></a></p>
+<h2 id="heading-8">开发高级/资深判断标准</h2>
+<ul>
+<li>能否画出 C# → 平台实现 → 原生 → 回调的完整链路，并说清每一跳的线程。</li>
+<li>桥接层是否接口化、可 mock、能在 Editor 跑通流程。</li>
+<li>回调是否统一回主线程，是否有超时、取消、防重复。</li>
+<li>注册/反注册是否成对，是否存在 Java 全局引用、delegate、block 的泄漏。</li>
+<li>打包配置、权限、隐私清单是否脚本化、可追溯，而不是手改导出工程。</li>
+<li>出现问题时，能否快速判断是 C#、桥接层、原生 SDK 还是打包配置的锅。</li>
+</ul>
+
+  </div>
+
+  
+  <nav class="post-nav">
+    
+    <div class="post-nav-card post-nav-card--empty">
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">上一篇</span>
+        <span class="post-nav-card__empty-text">没有上一篇了~</span>
+      </div>
+    </div>
+    
+    
+    <div class="post-nav-card post-nav-card--empty post-nav-card--next">
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">下一篇</span>
+        <span class="post-nav-card__empty-text">没有下一篇了~</span>
+      </div>
+    </div>
+    
+  </nav>
+
+  
+  
+
+
+  
+    <section class="comment-section">
+  <h2 class="comment-section__title">评论</h2>
+  <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    var gitalk = new Gitalk({
+      clientID: 'ca79a66585e72af3bff6',
+      clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+      repo: 'zhoujun2303.github.io',
+      owner: 'zhoujun2303',
+      admin: ['zhoujun2303'],
+      id: location.pathname,
+      distractionFreeMode: false
+    });
+    gitalk.render('gitalk-container');
+  </script>
+</section>
+
+  
+
+
+
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+
+    
+    
+    <nav class="footer-nav" aria-label="页脚导航">
+      
+      <a class="footer-nav__link" href="/">首页</a>
+      
+      <a class="footer-nav__link" href="/post">博客</a>
+      
+      <a class="footer-nav__link" href="/memos">闪念</a>
+      
+      <a class="footer-nav__link" href="/archives">归档</a>
+      
+      <a class="footer-nav__link" href="/tags">标签</a>
+      
+      <a class="footer-nav__link" href="/links">友链</a>
+      
+      <a class="footer-nav__link" href="/post/about">关于</a>
+      
+    </nav>
+    
+
+    
+    <div class="footer-social">
+      
+      <a class="footer-social__link" href="https://github.com/ZhouJun2303" target="_blank" rel="noopener noreferrer"
+        aria-label="GitHub">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+      </a>
+      
+      
+      
+      <a class="footer-social__link" href="/feed.xml" aria-label="RSS">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6.18 15.64a2.18 2.18 0 110 4.36 2.18 2.18 0 010-4.36zM4 4.44A15.56 15.56 0 0119.56 20h-2.83A12.73 12.73 0 004 7.27V4.44zm0 5.66a9.9 9.9 0 019.9 9.9h-2.83A7.07 7.07 0 004 12.93V10.1z"/>
+        </svg>
+      </a>
+    </div>
+
+    
+    <div class="footer-copyright">
+      <p>&copy; 2026 长胖是个梦想. All rights reserved.</p>
+    </div>
+
+    
+    
+    <div class="footer-custom">
+      Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+    </div>
+    
+
+    
+    <div class="footer-powered">
+      <span>Powered by <a href="https://gridea.pro" target="_blank" rel="noopener noreferrer">Gridea Pro</a></span>
+    </div>
+
+  </div>
+</footer>
+
+  
+  <div class="search-overlay" id="searchOverlay" style="display:none;">
+  <div class="search-modal">
+    <div class="search-header">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索文章..." autocomplete="off" />
+      <span class="search-kbd">&#8984;K</span>
+      <button class="search-close" id="searchClose" type="button" aria-label="关闭搜索">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script src="/scripts/search.js"></script>
+  
+
+  
+
+  
+
+  
+
+<script>console.log("\n%c ✦ Gridea Pro v1.2.2 %c · Theme: flavor-theme v1.0.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+</body>
+</html>

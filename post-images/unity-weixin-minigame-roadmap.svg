@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-label="Unity 转微信小游戏五阶段转换路线">
+  <rect width="1200" height="720" fill="#f7fafc"/>
+  <rect x="40" y="40" width="1120" height="640" rx="28" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="600" y="96" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="34" font-weight="700" fill="#1f2937">Unity 转微信小游戏：五阶段转换路线</text>
+  <text x="600" y="130" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="17" fill="#64748b">先跑通，再做启动与包体，最后才是体验打磨</text>
+
+  <g font-family="Arial, 'PingFang SC', sans-serif">
+    <g stroke="#94a3b8" stroke-width="3" fill="#94a3b8">
+      <path d="M256 300 L274 300" fill="none"/>
+      <path d="M274 292 L286 300 L274 308 Z" stroke="none"/>
+      <path d="M478 300 L496 300" fill="none"/>
+      <path d="M496 292 L508 300 L496 308 Z" stroke="none"/>
+      <path d="M700 300 L718 300" fill="none"/>
+      <path d="M718 292 L730 300 L718 308 Z" stroke="none"/>
+      <path d="M922 300 L940 300" fill="none"/>
+      <path d="M940 292 L952 300 L940 308 Z" stroke="none"/>
+    </g>
+
+    <g>
+      <rect x="58" y="168" width="196" height="268" rx="18" fill="#ecfeff" stroke="#06b6d4" stroke-width="2"/>
+      <circle cx="88" cy="200" r="17" fill="#06b6d4"/>
+      <text x="88" y="206" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">01</text>
+      <text x="112" y="206" font-size="17" font-weight="700" fill="#155e75">兼容性评估</text>
+      <text x="78" y="248" font-size="19" font-weight="700" fill="#155e75">能不能转</text>
+      <text x="78" y="276" font-size="13" fill="#0f766e">先评估再动工</text>
+      <g font-size="13" fill="#155e75">
+        <circle cx="83" cy="304" r="3" fill="#06b6d4"/><text x="94" y="309">引擎版本与压缩纹理</text>
+        <circle cx="83" cy="332" r="3" fill="#06b6d4"/><text x="94" y="337">渲染管线 / 网络协议</text>
+        <circle cx="83" cy="360" r="3" fill="#06b6d4"/><text x="94" y="365">第三方插件与原生 SDK</text>
+        <circle cx="83" cy="388" r="3" fill="#06b6d4"/><text x="94" y="393">资源加载方式选型</text>
+      </g>
+    </g>
+
+    <g>
+      <rect x="280" y="168" width="196" height="268" rx="18" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+      <circle cx="310" cy="200" r="17" fill="#f59e0b"/>
+      <text x="310" y="206" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">02</text>
+      <text x="334" y="206" font-size="17" font-weight="700" fill="#92400e">项目转换</text>
+      <text x="300" y="248" font-size="19" font-weight="700" fill="#92400e">先跑起来</text>
+      <text x="300" y="276" font-size="13" fill="#92400e">导出到开发者工具</text>
+      <g font-size="13" fill="#92400e">
+        <circle cx="305" cy="304" r="3" fill="#f59e0b"/><text x="316" y="309">安装转换插件</text>
+        <circle cx="305" cy="332" r="3" fill="#f59e0b"/><text x="316" y="337">WebGL 导出 + 转换</text>
+        <circle cx="305" cy="360" r="3" fill="#f59e0b"/><text x="316" y="365">资源打包上传 CDN</text>
+        <circle cx="305" cy="388" r="3" fill="#f59e0b"/><text x="316" y="393">真机跑通主流程</text>
+      </g>
+    </g>
+
+    <g>
+      <rect x="502" y="168" width="196" height="268" rx="18" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+      <circle cx="532" cy="200" r="17" fill="#8b5cf6"/>
+      <text x="532" y="206" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">03</text>
+      <text x="556" y="206" font-size="17" font-weight="700" fill="#5b21b6">能力接入</text>
+      <text x="522" y="248" font-size="19" font-weight="700" fill="#5b21b6">替换平台层</text>
+      <text x="522" y="276" font-size="13" fill="#5b21b6">微信 SDK + 下线原生 SDK</text>
+      <g font-size="13" fill="#5b21b6">
+        <circle cx="527" cy="304" r="3" fill="#8b5cf6"/><text x="538" y="309">登录 / 排行榜</text>
+        <circle cx="527" cy="332" r="3" fill="#8b5cf6"/><text x="538" y="337">广告 / 支付 / 打点</text>
+        <circle cx="527" cy="360" r="3" fill="#8b5cf6"/><text x="538" y="365">存储 / 震动 / 开放数据域</text>
+        <circle cx="527" cy="388" r="3" fill="#8b5cf6"/><text x="538" y="393">安全域名与网络适配</text>
+      </g>
+    </g>
+
+    <g>
+      <rect x="724" y="168" width="196" height="268" rx="18" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+      <circle cx="754" cy="200" r="17" fill="#22c55e"/>
+      <text x="754" y="206" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">04</text>
+      <text x="778" y="206" font-size="17" font-weight="700" fill="#166534">体验调优</text>
+      <text x="744" y="248" font-size="19" font-weight="700" fill="#166534">瘦身与提速</text>
+      <text x="744" y="276" font-size="13" fill="#166534">启动 / 内存 / 包体</text>
+      <g font-size="13" fill="#166534">
+        <circle cx="749" cy="304" r="3" fill="#22c55e"/><text x="760" y="309">首包与首帧优化</text>
+        <circle cx="749" cy="332" r="3" fill="#22c55e"/><text x="760" y="337">WASM 代码分包</text>
+        <circle cx="749" cy="360" r="3" fill="#22c55e"/><text x="760" y="365">压缩纹理 / 音频</text>
+        <circle cx="749" cy="388" r="3" fill="#22c55e"/><text x="760" y="393">内存峰值与卸载</text>
+      </g>
+    </g>
+
+    <g>
+      <rect x="946" y="168" width="196" height="268" rx="18" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
+      <circle cx="976" cy="200" r="17" fill="#6366f1"/>
+      <text x="976" y="206" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">05</text>
+      <text x="1000" y="206" font-size="17" font-weight="700" fill="#3730a3">发布上线</text>
+      <text x="966" y="248" font-size="19" font-weight="700" fill="#3730a3">验收与监控</text>
+      <text x="966" y="276" font-size="13" fill="#3730a3">云测试 + 现网数据</text>
+      <g font-size="13" fill="#3730a3">
+        <circle cx="971" cy="304" r="3" fill="#6366f1"/><text x="982" y="309">云测试评分</text>
+        <circle cx="971" cy="332" r="3" fill="#6366f1"/><text x="982" y="337">iOS 高性能模式</text>
+        <circle cx="971" cy="360" r="3" fill="#6366f1"/><text x="982" y="365">版本更新与缓存</text>
+        <circle cx="971" cy="388" r="3" fill="#6366f1"/><text x="982" y="393">崩溃与启动留存监控</text>
+      </g>
+    </g>
+
+    <rect x="58" y="464" width="1084" height="176" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="80" y="498" font-size="18" font-weight="700" fill="#1f2937">上线前必须守住的红线</text>
+
+    <g>
+      <rect x="76" y="518" width="196" height="96" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+      <text x="174" y="556" text-anchor="middle" font-size="22" font-weight="700" fill="#0f766e">3~5MB</text>
+      <text x="174" y="582" text-anchor="middle" font-size="13" fill="#64748b">首包网络传输量（总包 ≤ 20MB）</text>
+    </g>
+    <g>
+      <rect x="294" y="518" width="196" height="96" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+      <text x="392" y="556" text-anchor="middle" font-size="22" font-weight="700" fill="#92400e">≤30MB → 1/3</text>
+      <text x="392" y="582" text-anchor="middle" font-size="13" fill="#64748b">WASM 代码包，分包后约三分之一</text>
+    </g>
+    <g>
+      <rect x="512" y="518" width="196" height="96" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+      <text x="610" y="556" text-anchor="middle" font-size="22" font-weight="700" fill="#5b21b6">1G / 1.4G</text>
+      <text x="610" y="582" text-anchor="middle" font-size="13" fill="#64748b">iOS 低档 / 中高档内存峰值</text>
+    </g>
+    <g>
+      <rect x="730" y="518" width="196" height="96" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+      <text x="828" y="556" text-anchor="middle" font-size="22" font-weight="700" fill="#166534">1.2G / 1.5G</text>
+      <text x="828" y="582" text-anchor="middle" font-size="13" fill="#64748b">Android 低档 / 中高档内存峰值</text>
+    </g>
+    <g>
+      <rect x="948" y="518" width="176" height="96" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+      <text x="1036" y="556" text-anchor="middle" font-size="22" font-weight="700" fill="#3730a3">5~10s</text>
+      <text x="1036" y="582" text-anchor="middle" font-size="13" fill="#64748b">首屏启动目标</text>
+    </g>
+  </g>
+</svg>
