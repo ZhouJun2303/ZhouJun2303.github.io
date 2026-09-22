@@ -1,0 +1,2899 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="/styles/main.min.css">
+
+
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+
+
+<style>:root { --heatmap-color: #39d353; }</style>
+
+
+
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('flavor-theme');
+      var theme = saved || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+      }
+    } catch (e) { }
+  })();
+</script>
+  <meta name="generator" content="Gridea Pro 1.2.2">
+  <title>Unity 图片资源格式与内存：ASTC、ETC2、BC 的压缩原理、平台支持与工程规范 | 长胖是个梦想</title>
+  
+<meta property="og:title" content="Unity 图片资源格式与内存：ASTC、ETC2、BC 的压缩原理、平台支持与工程规范" />
+<meta property="og:type" content="article" />
+
+<meta property="og:image" content="/post-images/unity-texture-compression-formats-and-memory-layers.svg" />
+
+
+<meta name="description" content="客户端项目的内存和包体问题，最后往往都会落回到同一类资源上：贴图。很多团队对它的认知停留在“导入时选个 ASTC 就行”，但真正的坑在于——压缩格式决定了显存占用、内存带宽、包体体积、设备兼容四条线，而选错格式的代价不是画质差一点，是低端机直接 OOM。 这篇文章把贴图这件事拆到底：块压缩在内存里到底是怎么存的、ASTC/ETC2/BC 各家族的能力边界、各平台和图形 AP&amp;hellip;">
+<link rel="canonical" href="https://zhoujun2303.github.io/post/unity-texture-compression-formats-and-memory/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 图片资源格式与内存：ASTC、ETC2、BC 的压缩原理、平台支持与工程规范","url":"https://zhoujun2303.github.io/post/unity-texture-compression-formats-and-memory/","description":"客户端项目的内存和包体问题，最后往往都会落回到同一类资源上：贴图。很多团队对它的认知停留在“导入时选个 ASTC 就行”，但真正的坑在于——压缩格式决定了显存占用、内存带宽、包体体积、设备兼容四条线，而选错格式的代价不是画质差一点，是低端机直接 OOM。 这篇文章把贴图这件事拆到底：块压缩在内存里到底是怎么存的、ASTC/ETC2/BC 各家族的能力边界、各平台和图形 AP\u0026hellip;","image":"/post-images/unity-texture-compression-formats-and-memory-layers.svg","datePublished":"2026-09-22T19:40:00+08:00","dateModified":"2026-09-22T21:55:00+08:00","author":{"@type":"Person","name":"长胖是个梦想"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"长胖是个梦想"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"长胖是个梦想","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-texture-compression-formats-and-memory/","name":"Unity 图片资源格式与内存：ASTC、ETC2、BC 的压缩原理、平台支持与工程规范","position":2}]}</script>
+<meta property="og:title" content="Unity 图片资源格式与内存：ASTC、ETC2、BC 的压缩原理、平台支持与工程规范">
+<meta property="og:description" content="客户端项目的内存和包体问题，最后往往都会落回到同一类资源上：贴图。很多团队对它的认知停留在“导入时选个 ASTC 就行”，但真正的坑在于——压缩格式决定了显存占用、内存带宽、包体体积、设备兼容四条线，而选错格式的代价不是画质差一点，是低端机直接 OOM。 这篇文章把贴图这件事拆到底：块压缩在内存里到底是怎么存的、ASTC/ETC2/BC 各家族的能力边界、各平台和图形 AP&amp;hellip;">
+<meta property="og:url" content="https://zhoujun2303.github.io/post/unity-texture-compression-formats-and-memory/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="长胖是个梦想">
+<meta property="og:image" content="/post-images/unity-texture-compression-formats-and-memory-layers.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-texture-compression-formats-and-memory/">
+<meta name="twitter:title" content="Unity 图片资源格式与内存：ASTC、ETC2、BC 的压缩原理、平台支持与工程规范">
+<meta name="twitter:description" content="客户端项目的内存和包体问题，最后往往都会落回到同一类资源上：贴图。很多团队对它的认知停留在“导入时选个 ASTC 就行”，但真正的坑在于——压缩格式决定了显存占用、内存带宽、包体体积、设备兼容四条线，而选错格式的代价不是画质差一点，是低端机直接 OOM。 这篇文章把贴图这件事拆到底：块压缩在内存里到底是怎么存的、ASTC/ETC2/BC 各家族的能力边界、各平台和图形 AP&amp;hellip;">
+<meta name="twitter:image" content="/post-images/unity-texture-compression-formats-and-memory-layers.svg">
+</head>
+<body class="flavor-theme">
+
+  <header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <div class="top-bar">
+
+      
+      <div class="top-bar__left">
+        
+        <a href="https://zhoujun2303.github.io" class="site-avatar-link" aria-label="返回首页">
+          <img class="site-avatar" src="/images/avatar.png" alt="长胖是个梦想" />
+        </a>
+        
+        <a href="https://zhoujun2303.github.io" class="site-name-link">长胖是个梦想</a>
+      </div>
+
+      
+      <nav class="top-bar__nav" id="sectionBar">
+        
+        
+        <a class="nav-item" href="/">首页</a>
+        
+        <a class="nav-item" href="/post">博客</a>
+        
+        <a class="nav-item" href="/memos">闪念</a>
+        
+        <a class="nav-item" href="/archives">归档</a>
+        
+        <a class="nav-item" href="/tags">标签</a>
+        
+        <a class="nav-item" href="/links">友链</a>
+        
+        <a class="nav-item" href="/post/about">关于</a>
+        
+        
+      </nav>
+
+      
+      <div class="top-bar__right">
+        <button class="btn-icon btn-search search-btn" id="btnSearch" type="button" aria-label="搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-sun" id="themeToggleSun" type="button"
+          aria-label="切换到浅色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1C12.5523 1 13 1.44772 13 2V4C13 4.55228 12.5523 5 12 5C11.4477 5 11 4.55228 11 4V2C11 1.44772 11.4477 1 12 1Z"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z"></path>
+            <path d="M13 20C13 19.4477 12.5523 19 12 19C11.4477 19 11 19.4477 11 20V22C11 22.5523 11.4477 23 12 23C12.5523 23 13 22.5523 13 22V20Z"></path>
+            <path d="M4.22282 4.22289C4.61335 3.83236 5.24651 3.83236 5.63704 4.22289L7.04704 5.63289C7.43756 6.02341 7.43756 6.65658 7.04704 7.0471C6.65651 7.43762 6.02335 7.43762 5.63283 7.0471L4.22282 5.6371C3.8323 5.24658 3.8323 4.61341 4.22282 4.22289Z"></path>
+            <path d="M18.367 16.9529C17.9765 16.5623 17.3433 16.5623 16.9528 16.9529C16.5623 17.3434 16.5623 17.9766 16.9528 18.3671L18.3628 19.7771C18.7533 20.1676 19.3865 20.1676 19.777 19.7771C20.1675 19.3866 20.1675 18.7534 19.777 18.3629L18.367 16.9529Z"></path>
+            <path d="M1 12C1 11.4477 1.44772 11 2 11H4C4.55228 11 5 11.4477 5 12C5 12.5523 4.55228 13 4 13H2C1.44772 13 1 12.5523 1 12Z"></path>
+            <path d="M20 11C19.4477 11 19 11.4477 19 12C19 12.5523 19.4477 13 20 13H22C22.5523 13 23 12.5523 23 12C23 11.4477 22.5523 11 22 11H20Z"></path>
+            <path d="M7.04704 16.9529C7.43756 17.3434 7.43756 17.9766 7.04704 18.3671L5.63704 19.7771C5.24651 20.1676 4.61335 20.1676 4.22282 19.7771C3.8323 19.3866 3.8323 18.7534 4.22283 18.3629L5.63283 16.9529C6.02335 16.5623 6.65651 16.5623 7.04704 16.9529Z"></path>
+            <path d="M19.777 5.6371C20.1675 5.24657 20.1675 4.61341 19.777 4.22289C19.3865 3.83236 18.7533 3.83236 18.3628 4.22289L16.9528 5.63289C16.5623 6.02341 16.5623 6.65658 16.9528 7.0471C17.3433 7.43762 17.9765 7.43762 18.367 7.0471L19.777 5.6371Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-moon" id="themeToggleMoon" type="button"
+          aria-label="切换到深色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C10.0222 2 8.08879 2.58649 6.4443 3.6853C4.79981 4.78412 3.51809 6.3459 2.76121 8.17317C2.00433 10.0004 1.8063 12.0111 2.19215 13.9509C2.578 15.8907 3.53041 17.6725 4.92894 19.0711C6.32746 20.4696 8.10929 21.422 10.0491 21.8079C11.9889 22.1937 13.9996 21.9957 15.8268 21.2388C17.6541 20.4819 19.2159 19.2002 20.3147 17.5557C21.4135 15.9112 22 13.9778 22 12C22 11.5955 21.7564 11.2309 21.3827 11.0761C21.009 10.9213 20.5789 11.0069 20.2929 11.2929C19.287 12.2988 17.9226 12.864 16.5 12.864C15.0774 12.864 13.713 12.2988 12.7071 11.2929C11.7012 10.287 11.136 8.92261 11.136 7.5C11.136 6.07739 11.7012 4.71304 12.7071 3.70711C12.9931 3.42111 13.0787 2.99099 12.9239 2.61732C12.7691 2.24364 12.4045 2 12 2ZM7.55544 5.34824C8.27036 4.87055 9.05353 4.51389 9.87357 4.28778C9.39271 5.27979 9.13604 6.37666 9.13604 7.5C9.13604 9.45304 9.91189 11.3261 11.2929 12.7071C12.6739 14.0881 14.547 14.864 16.5 14.864C17.6233 14.864 18.7202 14.6073 19.7122 14.1264C19.4861 14.9465 19.1295 15.7296 18.6518 16.4446C17.7727 17.7602 16.5233 18.7855 15.0615 19.391C13.5997 19.9965 11.9911 20.155 10.4393 19.8463C8.88743 19.5376 7.46197 18.7757 6.34315 17.6569C5.21447 16.538 4.4624 15.1126 4.15372 13.5607C3.84504 12.0089 4.00347 10.4003 4.60897 8.93853C5.21447 7.47672 6.23985 6.22729 7.55544 5.34824Z"></path>
+            <path d="M19 2C19.5523 2 20 2.44772 20 3V4H21C21.5523 4 22 4.44772 22 5C22 5.55228 21.5523 6 21 6H20V7C20 7.55228 19.5523 8 19 8C18.4477 8 18 7.55228 18 7V6H17C16.4477 6 16 5.55228 16 5C16 4.44772 16.4477 4 17 4H18V3C18 2.44772 18.4477 2 19 2Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon btn-nav-toggle mobile-only" id="btnNavToggle" type="button" aria-label="切换导航">
+          <div class="hamburger" id="hamburger">
+            <span class="hamburger__line hamburger__line--top"></span>
+            <span class="hamburger__line hamburger__line--bottom"></span>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+
+<div class="header-spacer"></div>
+
+<script>
+(function(){
+  var btn = document.getElementById('btnNavToggle');
+  var nav = document.getElementById('sectionBar');
+  var hamburger = document.getElementById('hamburger');
+  if (btn && nav) {
+    btn.addEventListener('click', function(){
+      nav.classList.toggle('top-bar__nav--open');
+      if (hamburger) hamburger.classList.toggle('is-active');
+    });
+    nav.querySelectorAll('.nav-item').forEach(function(item){
+      item.addEventListener('click', function(){
+        nav.classList.remove('top-bar__nav--open');
+        if (hamburger) hamburger.classList.remove('is-active');
+      });
+    });
+  }
+
+  var root = document.documentElement;
+  var applyTheme = function(theme, persist){
+    if (theme === 'light') {
+      root.classList.add('theme-light');
+    } else {
+      root.classList.remove('theme-light');
+    }
+    if (persist) {
+      try { localStorage.setItem('flavor-theme', theme); } catch (e) {}
+    }
+  };
+  document.querySelectorAll('.theme-toggle').forEach(function(el){
+    el.addEventListener('click', function(){
+      applyTheme(root.classList.contains('theme-light') ? 'dark' : 'light', true);
+    });
+  });
+})();
+</script>
+
+  <main class="site-main" role="main">
+    
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">Unity 图片资源格式与内存：ASTC、ETC2、BC 的压缩原理、平台支持与工程规范</h1>
+    <div class="article-meta">
+      
+      
+      <a href="/category/unity/" class="article-meta__category">Unity</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
+      <span class="article-meta__item">2026-09-22</span>
+      
+      <span class="article-meta__sep">·</span>
+      <span class="article-meta__item">73 分钟阅读</span>
+      
+    </div>
+    
+    <div class="article-header__tags">
+      
+      <a href="/tag/unity/" class="tag-pill tag-pill--sm">Unity</a>
+      
+      <a href="/tag/kai-fa-gao-ji-zi-shen/" class="tag-pill tag-pill--sm">开发高级/资深</a>
+      
+      <a href="/tag/xing-neng-you-hua/" class="tag-pill tag-pill--sm">性能优化</a>
+      
+      <a href="/tag/nei-cun-you-hua/" class="tag-pill tag-pill--sm">内存优化</a>
+      
+      <a href="/tag/zi-yuan-guan-li/" class="tag-pill tag-pill--sm">资源管理</a>
+      
+    </div>
+    
+  </header>
+
+  
+  <div class="article-feature">
+    <img src="/post-images/unity-texture-compression-formats-and-memory-layers.svg" alt="Unity 图片资源格式与内存：ASTC、ETC2、BC 的压缩原理、平台支持与工程规范" />
+  </div>
+  
+
+  <div class="article-content">
+    <blockquote>
+<p>客户端项目的内存和包体问题，最后往往都会落回到同一类资源上：贴图。很多团队对它的认知停留在“导入时选个 ASTC 就行”，但真正的坑在于——<strong>压缩格式决定了显存占用、内存带宽、包体体积、设备兼容四条线，而选错格式的代价不是画质差一点，是低端机直接 OOM</strong>。</p>
+<p>这篇文章把贴图这件事拆到底：块压缩在内存里到底是怎么存的、ASTC/ETC2/BC 各家族的能力边界、各平台和图形 API 的强制性与可选性、Unity 加载时到底会产生几份数据、以及可以直接抄进项目的导入规范和 CI 门禁。</p>
+</blockquote>
+<h2 id="heading">目录</h2>
+<table>
+<thead>
+<tr>
+<th>章节</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#three-layers">先区分三层格式</a></td>
+<td>源文件、构建容器、GPU 纹理格式，混在一起就会算错账</td>
+</tr>
+<tr>
+<td><a href="#memory-math">内存账怎么算</a></td>
+<td>bpp、块对齐、Mip 系数，2048² 完整对照表</td>
+</tr>
+<tr>
+<td><a href="#why-so-many">为什么会有这些格式，该用哪个</a></td>
+<td>格式的成因、压缩的第一驱动力、平台选型速查</td>
+</tr>
+<tr>
+<td><a href="#block-compression">块压缩原理</a></td>
+<td>为什么 GPU 能直接采样压缩数据，有损的代价是什么</td>
+</tr>
+<tr>
+<td><a href="#texture-size">尺寸与对齐：还需要 2 的次方吗</a></td>
+<td>NPOT、块对齐、Mip 链，POT 建议到底还成不成立</td>
+</tr>
+<tr>
+<td><a href="#bc-family">桌面格式：BC 家族</a></td>
+<td>BC1 到 BC7，通道和质量差异</td>
+</tr>
+<tr>
+<td><a href="#mobile-family">移动格式：ETC / PVRTC / ASTC</a></td>
+<td>ETC1、ETC2、EAC、PVRTC、ASTC 逐个体检</td>
+</tr>
+<tr>
+<td><a href="#platform-matrix">平台与 API 支持矩阵</a></td>
+<td>规范强制、硬件支持、各平台差异</td>
+</tr>
+<tr>
+<td><a href="#runtime-memory">Unity 的加载路径与内存副本</a></td>
+<td>为什么不支持的格式会导致内存翻几倍</td>
+</tr>
+<tr>
+<td><a href="#crunch">Crunch 是什么</a></td>
+<td>磁盘压缩不是显存压缩：三层结构、crnlib、何时该用</td>
+</tr>
+<tr>
+<td><a href="#import-settings">导入设置逐项决策</a></td>
+<td>Texture Importer 每一项该怎么定</td>
+</tr>
+<tr>
+<td><a href="#tools">工具链：怎么看真实内存</a></td>
+<td>贴图 / Shader / 音效到底占多少，内置、厂商与开源工具清单</td>
+</tr>
+<tr>
+<td><a href="#engineering-rules">大厂工程规范</a></td>
+<td>资源分级、导入强制、扫描门禁、多格式分发</td>
+</tr>
+<tr>
+<td><a href="#troubleshooting">常见坑与排障</a></td>
+<td>一整张症状对照表</td>
+</tr>
+<tr>
+<td><a href="#deliverables">验收清单与交付物</a></td>
+<td>落地时要交付什么</td>
+</tr>
+</tbody>
+</table>
+<p><a id="three-layers"></a></p>
+<h2 id="heading-1">先区分三层格式</h2>
+<p>贴图讨论里最常见的错误，是把三个完全不同的东西当成一个东西。它们的度量单位、影响因素和优化手段都不一样。</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>例子</th>
+<th>影响什么</th>
+<th>不影响什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>源文件格式</td>
+<td>PNG、JPG、PSD、TGA、EXR</td>
+<td>仓库体积、导入耗时</td>
+<td>运行时内存，几乎完全不相关</td>
+</tr>
+<tr>
+<td>构建/分发容器</td>
+<td>APK、AAB、AssetBundle、Addressables、LZ4、LZMA、Crunch</td>
+<td>下载体积、磁盘占用、加载 IO</td>
+<td>上传 GPU 后的显存占用</td>
+</tr>
+<tr>
+<td>GPU 纹理格式</td>
+<td>ASTC、ETC2、PVRTC、BC1-7、RGBA32</td>
+<td>显存占用、内存带宽、采样质量、设备兼容</td>
+<td>包体（间接相关）</td>
+</tr>
+</tbody>
+</table>
+<p>由此可以推出几条必须记住的结论：</p>
+<ul>
+<li><strong>一张 8KB 的 PNG 和一张 3MB 的 PNG，展开成 2048×2048 RGBA32 后都是 16 MiB。</strong> 压缩得再好也不会让显存变小。</li>
+<li><strong>AssetBundle 用 LZ4/LZMA 压得再小，解压后进显存还是那份 GPU 格式的数据。</strong> 容器压缩省的是下载和磁盘，不是显存。</li>
+<li><strong>Crunch 压缩只省磁盘，不省显存。</strong> 它是在 DXT/ETC 之上再加一层变码率有损压缩，Unity 加载时在 CPU 上解回 DXT/ETC 再上传 GPU，显存占用和未 Crunch 的完全一样（展开见 <a href="#crunch">Crunch 到底是什么</a>）。</li>
+<li><strong>真正决定内存的是 GPU 纹理格式 + 分辨率 + 是否有 Mip + 是否多了一份 CPU 副本。</strong></li>
+</ul>
+<p><a id="memory-math"></a></p>
+<h2 id="heading-2">内存账怎么算</h2>
+<h3 id="heading-3">未压缩纹理</h3>
+<pre><code>字节数 = 宽 × 高 × 每像素字节数 × Mip 系数
+</code></pre>
+<p><code>RGBA32</code> 是 4 字节/像素，<code>RGB24</code> 是 3 字节，<code>RGBA Half</code> 是 8 字节。一张 2048×2048 的 <code>RGBA32</code> 基础层就是 16 MiB。</p>
+<h3 id="heading-4">块压缩纹理</h3>
+<p>块压缩不是按像素存，而是按“固定尺寸的块”存。所以公式变成：</p>
+<pre><code>每层字节数 = ceil(宽 / 块宽) × ceil(高 / 块高) × 每块字节数
+</code></pre>
+<p>这一点非常关键，它带来两个工程后果：</p>
+<ol>
+<li><strong>尺寸必须尽量对齐块宽高</strong>。2048 对 ASTC 6×6 来说要 <code>ceil(2048/6) = 342</code> 个块，边缘块有大量无效像素被一起编码。尺寸越是对齐得差，浪费越大。</li>
+<li><strong>小图极其不划算</strong>。一张 7×7 的图用 ASTC 6×6 要占 2×2 个块共 64 字节，等效码率超过 10 bpp，比大图的 3.56 bpp 差了三倍。小图要尽量打进图集，而不是各自单独压缩。</li>
+</ol>
+<h3 id="mip-">Mip 系数</h3>
+<p>完整 Mip 链的总量是基础层的约 <strong>4/3（≈1.333）</strong>。但因为每一级都要至少占一个完整的块，实际会比 4/3 略大，小图和粗块尺寸（12×12）尤其明显。</p>
+<p>以 2048×2048 用 ASTC 6×6 为例，逐级计算：</p>
+<table>
+<thead>
+<tr>
+<th>Mip 级别</th>
+<th>尺寸</th>
+<th>块数</th>
+<th>字节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>2048×2048</td>
+<td>342×342</td>
+<td>1,871,424</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1024×1024</td>
+<td>171×171</td>
+<td>467,856</td>
+</tr>
+<tr>
+<td>2</td>
+<td>512×512</td>
+<td>86×86</td>
+<td>118,336</td>
+</tr>
+<tr>
+<td>3</td>
+<td>256×256</td>
+<td>43×43</td>
+<td>29,584</td>
+</tr>
+<tr>
+<td>4</td>
+<td>128×128</td>
+<td>22×22</td>
+<td>7,744</td>
+</tr>
+<tr>
+<td>5</td>
+<td>64×64</td>
+<td>11×11</td>
+<td>1,936</td>
+</tr>
+<tr>
+<td>6-11</td>
+<td>≤32×32</td>
+<td>逐级</td>
+<td>832</td>
+</tr>
+<tr>
+<td><strong>合计</strong></td>
+<td></td>
+<td></td>
+<td><strong>2,497,712 B ≈ 2.38 MiB</strong></td>
+</tr>
+</tbody>
+</table>
+<p>按 4/3 粗估是 2.38 MiB，实际完全吻合——不是巧合，而是大图上块对齐开销可以忽略。</p>
+<h3 id="20482048-">2048×2048 完整对照表</h3>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th>每块字节</th>
+<th>等效 bpp</th>
+<th>基础层</th>
+<th>含完整 Mip</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RGBA Half（HDR）</td>
+<td>—</td>
+<td>64</td>
+<td>32.00 MiB</td>
+<td>42.67 MiB</td>
+</tr>
+<tr>
+<td>RGBA32（未压缩）</td>
+<td>—</td>
+<td>32</td>
+<td>16.00 MiB</td>
+<td>21.33 MiB</td>
+</tr>
+<tr>
+<td>RGB24（未压缩）</td>
+<td>—</td>
+<td>24</td>
+<td>12.00 MiB</td>
+<td>16.00 MiB</td>
+</tr>
+<tr>
+<td>BC7 / BC6H</td>
+<td>16</td>
+<td>8.00</td>
+<td>4.00 MiB</td>
+<td>5.33 MiB</td>
+</tr>
+<tr>
+<td>BC3 / DXT5</td>
+<td>16</td>
+<td>8.00</td>
+<td>4.00 MiB</td>
+<td>5.33 MiB</td>
+</tr>
+<tr>
+<td>BC5（法线）</td>
+<td>16</td>
+<td>8.00</td>
+<td>4.00 MiB</td>
+<td>5.33 MiB</td>
+</tr>
+<tr>
+<td>ETC2 RGBA8（EAC）</td>
+<td>16</td>
+<td>8.00</td>
+<td>4.00 MiB</td>
+<td>5.33 MiB</td>
+</tr>
+<tr>
+<td>ASTC 4×4</td>
+<td>16</td>
+<td>8.00</td>
+<td>4.00 MiB</td>
+<td>5.33 MiB</td>
+</tr>
+<tr>
+<td>BC1 / DXT1</td>
+<td>8</td>
+<td>4.00</td>
+<td>2.00 MiB</td>
+<td>2.67 MiB</td>
+</tr>
+<tr>
+<td>BC4</td>
+<td>8</td>
+<td>4.00</td>
+<td>2.00 MiB</td>
+<td>2.67 MiB</td>
+</tr>
+<tr>
+<td>ETC2 RGB8</td>
+<td>8</td>
+<td>4.00</td>
+<td>2.00 MiB</td>
+<td>2.67 MiB</td>
+</tr>
+<tr>
+<td>EAC R11</td>
+<td>8</td>
+<td>4.00</td>
+<td>2.00 MiB</td>
+<td>2.67 MiB</td>
+</tr>
+<tr>
+<td>PVRTC 4bpp</td>
+<td>—</td>
+<td>4.00</td>
+<td>2.00 MiB</td>
+<td>2.67 MiB</td>
+</tr>
+<tr>
+<td>ASTC 6×6</td>
+<td>16</td>
+<td>3.56</td>
+<td>1.78 MiB</td>
+<td>2.38 MiB</td>
+</tr>
+<tr>
+<td>ASTC 8×8</td>
+<td>16</td>
+<td>2.00</td>
+<td>1.00 MiB</td>
+<td>1.33 MiB</td>
+</tr>
+<tr>
+<td>PVRTC 2bpp</td>
+<td>—</td>
+<td>2.00</td>
+<td>1.00 MiB</td>
+<td>1.33 MiB</td>
+</tr>
+<tr>
+<td>ASTC 12×12</td>
+<td>16</td>
+<td>0.89</td>
+<td>0.44 MiB</td>
+<td>0.59 MiB</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>换算直觉</strong>：ASTC 6×6 相对 RGBA32 是 <strong>1/9</strong>。也就是说，一张不小心回退成 RGBA32 的 2048² 图，等于九张正常 ASTC 6×6 图的内存。一张可能扛得住，几十张就是低端机 OOM。</p>
+</blockquote>
+<p>分辨率的影响请务必记住：<strong>分辨率降一级，内存降为 1/4</strong>。降分辨率的收益永远大于在格式上抠 4×4 换 6×6（只有 2.25 倍）。</p>
+<p><a id="why-so-many"></a></p>
+<h2 id="heading-5">为什么会有这些格式，该用哪个</h2>
+<p>看到了上面那张表，很自然会冒出三个问题：<strong>为什么会有这么多种格式、什么设备用什么、为什么非得压缩。</strong></p>
+<h3 id="heading-6">格式这么多，是三条历史路径造成的</h3>
+<table>
+<thead>
+<tr>
+<th>成因</th>
+<th>具体表现</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>硬件厂商先有电路</strong></td>
+<td>S3 的 S3TC（1998）、Ericsson 的 ETC1（约 2005）、Imagination 的 PVRTC（2007）、ARM 主导的 ASTC（2012）</td>
+<td>格式跟着 GPU 阵营走，是先有硬件解码器、再有标准</td>
+</tr>
+<tr>
+<td><strong>两个 API 阵营各自锁定</strong></td>
+<td>Direct3D 走 BC 家族；OpenGL ES / Khronos 走 ETC1 → ETC2/EAC → ASTC</td>
+<td>桌面和手机的格式<strong>互不通用</strong>，不是技术不行，是生态路线不同</td>
+</tr>
+<tr>
+<td><strong>目标差异需要多档</strong></td>
+<td>通道数（R / RG / RGB / RGBA）、动态范围（LDR / HDR）、质量与体积的权衡</td>
+<td>一个格式覆盖不了所有组合，所以必须一族多档</td>
+</tr>
+</tbody>
+</table>
+<p>压缩成一句话：<strong>块压缩格式是“硬件阵营 + API 生态”的产物，不是按画质排名排出来的。</strong> 这能解答两个常见困惑：</p>
+<ul>
+<li><strong>手机为什么不用桌面那套 BC？</strong> 因为 BC 走的是 Direct3D 生态，移动端选了 Khronos 的开放标准路线。</li>
+<li><strong>同一阵营为什么还要分这么多档？</strong> 因为需求不同：法线要双通道、Mask 要单通道、HDR 要独立格式，一个格式覆盖不了。</li>
+</ul>
+<h3 id="heading-7">为什么要用：带宽和功耗才是第一驱动力</h3>
+<p>多数人把块压缩理解成“省显存”。在移动端，这个优先级是错的：</p>
+<table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>收益</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>省带宽</strong></td>
+<td>移动 GPU 是 UMA 架构，CPU/GPU 共享同一块 DRAM，纹理采样是最大的带宽消耗方之一</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>省功耗</strong></td>
+<td>移动端 <strong>DRAM 读写量 ≈ 耗电与发热</strong>，少读数据就是省电、少降频</td>
+</tr>
+<tr>
+<td>3</td>
+<td>省显存</td>
+<td>容量问题，但降分辨率的性价比更高</td>
+</tr>
+<tr>
+<td>4</td>
+<td>省磁盘 / 下载</td>
+<td>由容器压缩和尺寸决定，与 GPU 格式是两条独立战线</td>
+</tr>
+</tbody>
+</table>
+<p>所以拿到移动端，<strong>“我显存够大、不用压缩”是站不住的</strong>——真正的墙是带宽和功耗。从 8bpp 换到 3.56bpp，意味着采样同样多的纹素少读约 <strong>55%</strong> 的数据，这部分会直接变成帧率和续航。</p>
+<h3 id="heading-8">平台选型速查</h3>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>首选</th>
+<th>兜底</th>
+<th>关键约束</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>桌面 PC</td>
+<td><strong>BC7</strong>（按通道可降到 BC1 / BC5）</td>
+<td>BC3 / DXT5</td>
+<td>完全不支持 ETC2 / ASTC</td>
+</tr>
+<tr>
+<td>Android</td>
+<td><strong>ASTC 6×6</strong></td>
+<td>ETC2</td>
+<td>要靠 AAB 多格式分发</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td><strong>ASTC 6×6</strong></td>
+<td>ETC2</td>
+<td>LDR ASTC 需 A8+</td>
+</tr>
+<tr>
+<td>主机</td>
+<td>平台 SDK 专属格式</td>
+<td>—</td>
+<td>用厂商工具链，不要照搬移动结论</td>
+</tr>
+<tr>
+<td>WebGL 2 / 小游戏</td>
+<td><strong>ETC2</strong></td>
+<td>—</td>
+<td>ASTC 看设备扩展，必须逐平台验证</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>支持性细节（谁强制、谁可选、哪些 GPU 有）见 <a href="#platform-matrix">各图形 API 的强制性</a> 与 <a href="#platform-matrix">设备与 GPU 硬件</a>。</li>
+<li>想按资源类型选到具体块尺寸，见 <a href="#import-settings">按资源角色的格式与尺寸建议</a>。</li>
+</ul>
+<p><a id="block-compression"></a></p>
+<h2 id="heading-9">块压缩原理</h2>
+<h3 id="--">固定尺寸块 + 定点解释</h3>
+<p>所有主流 GPU 压缩格式（BC、ETC、ASTC）都是<strong>固定码率块压缩</strong>：</p>
+<ul>
+<li>把图像切成固定像素尺寸的块（BC/ETC 是 4×4，ASTC 是 4×4 到 12×12 可选）。</li>
+<li>每个块编码成<strong>固定字节数</strong>（BC1/BC4/ETC2_RGB8 是 8 字节，BC3/BC7/ETC2_RGBA8/ASTC 是 16 字节）。</li>
+<li>块内像素通过“端点色 + 索引表 / 权重”的方式近似重建，而不是存原始像素。</li>
+</ul>
+<p><code>ASTC 6×6</code> 就是“一个 128 bit 的块表示 36 个像素”，所以：</p>
+<pre><code>bpp = 128 / (块宽 × 块高)
+</code></pre>
+<p>这是<strong>码率定义</strong>，不是编码质量档位。4×4 和 6×6 是同一个硬件格式族下不同的存储密度，不是“高质量/低质量”预设。</p>
+<h3 id="-gpu-">为什么 GPU 能直接采样</h3>
+<p>因为块是固定尺寸、固定字节，纹理硬件可以<strong>直接用块索引算出地址</strong>，解码在纹理单元里用固定流水线完成：</p>
+<pre><code>blockAddress = baseAddress + (blockY × blocksPerRow + blockX) × blockBytes
+</code></pre>
+<p>不存在“每帧解压整张图”这件事。压缩数据就是常驻显存的数据本身。这也解释了为什么块压缩格式的内存占用是精确可算的，而不像 JPEG 那样随内容浮动。</p>
+<p>顺带澄清一个流传很广的疑虑：<strong>ASTC 6×6 的“6”不是 2 的幂，这不是缺点</strong>。ASTC 规范里本来就有 5×4、5×5、6×5、6×6、8×5、8×6、10×5、10×6、10×8、12×10 等一堆非 2 次幂块。纹理宽高是 2 次幂的老建议说的是<strong>整张图的尺寸</strong>，不是<strong>块的尺寸</strong>。硬件支持 <code>ASTC LDR</code> 时，标准块尺寸就是整套可用的。</p>
+<h3 id="heading-10">有损的代价</h3>
+<p>块压缩全都是有损的，表现形式比 JPEG 更“结构化”：</p>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>成因</th>
+<th>高发资源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>块状伪影 / 色块</td>
+<td>块内只有有限端点色，跨块不连续</td>
+<td>渐变背景、天空、大面积纯色过渡</td>
+</tr>
+<tr>
+<td>色带 / 台阶</td>
+<td>位深不足</td>
+<td>深色渐变、雾效、半透明遮罩</td>
+</tr>
+<tr>
+<td>边缘发糊、串色</td>
+<td>块跨越了高频边界</td>
+<td>UI 细线、文字、图标描边</td>
+</tr>
+<tr>
+<td>Alpha 边缘锯齿或变硬</td>
+<td>Alpha 与颜色挤在同一块里</td>
+<td>半透明特效、抠图立绘边缘</td>
+</tr>
+<tr>
+<td>法线光照畸变</td>
+<td>法线对误差极敏感</td>
+<td>高光、金属、近景法线贴图</td>
+</tr>
+<tr>
+<td>遮罩阈值翻转</td>
+<td>通道承载数值而非颜色</td>
+<td>ORM/PBR 通道包、Mask、SDF</td>
+</tr>
+</tbody>
+</table>
+<p>最后两条是资深和新手的分界线：<strong>颜色贴图压缩误差可以被美术掩盖，法线和 Mask 的误差会变成逻辑错误</strong>。如果 shader 里对某个通道做 <code>step(0.5, x)</code> 之类的阈值判断，压缩误差可能直接让分支走错。</p>
+<h3 id="srgb--linear">sRGB 与 Linear</h3>
+<p>颜色贴图走 sRGB（Unity 的 <code>sRGB (Color Texture)</code> 勾选），法线、粗糙度、金属度、Mask 必须走 Linear。sRGB 贴图在采样时由硬件做反 sRGB 转换，压缩格式也分 sRGB / Linear 变体（例如 <code>ASTC_6x6</code> 与 <code>ASTC_6x6_HDR</code>、BC7 的 SRGB 变体）。</p>
+<p><strong>sRGB 勾错的典型症状</strong>：整体偏亮/偏暗、光照能量不对。而且它极难在编辑器里看出来——因为编辑器里很多贴图根本没走压缩路径。</p>
+<p><a id="texture-size"></a></p>
+<h2 id="-2-">尺寸与对齐：还需要 2 的次方吗</h2>
+<h3 id="heading-11">先给结论</h3>
+<p><strong>不需要。</strong> ASTC、ETC2、BC 都支持任意宽高（NPOT）。块压缩的公式本身就是 <code>ceil(宽 / 块宽) × ceil(高 / 块高)</code>，边缘不足一个块就补满一个块。<strong>“贴图必须是 2 的次方”是 OpenGL ES 2.0 时代的遗留经验，不是当前硬件的要求。</strong></p>
+<p>但“不强制”不等于“没有代价”。要先把三件常被混为一谈的事拆开：</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>是否必须 2 的次方</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>块的尺寸</strong></td>
+<td>否</td>
+<td>ASTC 有 5×5、6×6、8×5、10×6、12×10 一堆非 2 次幂块，这是规范设计，不是缺陷</td>
+</tr>
+<tr>
+<td><strong>整图尺寸</strong></td>
+<td>否</td>
+<td>ASTC / ETC2 / BC 都支持 NPOT（PVRTC 是唯一例外）</td>
+</tr>
+<tr>
+<td><strong>Mip 链的每一级</strong></td>
+<td>否</td>
+<td>每级先减半、再按块宽取整，所以每级都是独立对齐的</td>
+</tr>
+</tbody>
+</table>
+<p>“2 的次方”这条建议真正还有价值的场景只剩两个：<strong>老 API / 老设备</strong>（见下表），以及<strong>图集尺寸</strong>（便于幂等切分和压缩器优化）。</p>
+<h3 id="heading-12">谁还在要求尺寸</h3>
+<table>
+<thead>
+<tr>
+<th>约束</th>
+<th>来源</th>
+<th>具体规则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PVRTC 必须 POT</strong></td>
+<td>格式规范</td>
+<td>宽高都必须是 2 的次方，否则 Unity 会重新缩放或回退。这是 PVRTC 独有的硬约束</td>
+</tr>
+<tr>
+<td>WebGL 1.0 / ES 2.0（无 <code>OES_texture_npot</code>）</td>
+<td>规范</td>
+<td>NPOT 纹理不能用 Mip、不能用 Repeat 采样。现代浏览器基本已不受限</td>
+</tr>
+<tr>
+<td>D3D11 及更早：BCn 的 level 0 宽高必须是 4 的倍数</td>
+<td>规范</td>
+<td>D3D12 + 新 Agility SDK 已放开（<code>UnalignedBlockTexturesSupported</code>）</td>
+</tr>
+<tr>
+<td>部分老 GPU 驱动的行 / 面 对齐要求</td>
+<td>驱动</td>
+<td>历史上有些移动 GPU 对压缩纹理有对齐要求，现代设备基本已无</td>
+</tr>
+<tr>
+<td>Unity 的 <code>Non-Power of 2</code> 选项</td>
+<td>引擎</td>
+<td>可选 <code>None</code> / <code>ToNearest</code> / <code>ToLarger</code> / <code>ToSmaller</code>，默认 <code>None</code>（不缩放）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Vulkan 与 Metal 对 NPOT 压缩纹理没有额外约束</strong>，现代 Android / iOS 设备可以放心用。</p>
+<h3 id="heading-13">尺寸不对齐的代价：边缘填充</h3>
+<p>每一级的块数是 <code>ceil(w / blockW) × ceil(h / blockH)</code>，最后一行 / 列不足一块时<strong>整块照占</strong>：多出来的纹素永远不会被采样，但确实占内存。</p>
+<p>以 100×100 为例：</p>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th>块数</th>
+<th>实际覆盖</th>
+<th>有效利用率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ASTC 4×4</td>
+<td>25×25 = 625</td>
+<td>100×100</td>
+<td><strong>100%</strong>（正好整除）</td>
+</tr>
+<tr>
+<td>ASTC 6×6</td>
+<td>17×17 = 289</td>
+<td>102×102</td>
+<td>约 <strong>96.1%</strong></td>
+</tr>
+<tr>
+<td>ASTC 8×8</td>
+<td>13×13 = 169</td>
+<td>104×104</td>
+<td>约 <strong>92.5%</strong></td>
+</tr>
+<tr>
+<td>ASTC 12×12</td>
+<td>9×9 = 81</td>
+<td>108×108</td>
+<td>约 <strong>85.7%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>结论：<strong>块越大，尺寸不对齐的浪费越明显</strong>；但即使 12×12 也只有约 14%，远小于“降一级分辨率省 75%”。所以不要为了省内存去纠结 POT，该纠结的是分辨率。</p>
+<p>真正需要警惕的是<strong>小图</strong>：一张 20×20 用 ASTC 6×6 是 4×4 = 16 块共 256 字节，等效 <strong>5.12 bpp</strong>，比大图的 3.56 bpp 还贵。小图应该进图集。</p>
+<h3 id="mip--npot-">Mip 链在 NPOT 下会怎样</h3>
+<p>Mip 的尺寸是 <code>floor(w / 2^level)</code>——<strong>先减半，再按块宽向上取整</strong>。所以 NPOT 图会更“早”地落进小块数区间，低级别 Mip 的相对浪费会突然变大：</p>
+<ul>
+<li>2048² 的 ASTC 6×6：逐级块数从 342×342 一路降到 1×1，最后几级的开销可以忽略。</li>
+<li>1000² 的图：Mip 链是 1000 → 500 → 250 → 125 → 62 → 31 → 15 → 7 → 3 → 1，<strong>每一级都要按 6 取整</strong>，在 31 → 15 → 7 → 3 这几级上浪费占比明显上升。</li>
+</ul>
+<p>这也解释了为什么“源图尽量取 2 的次方，或至少取块尺寸的倍数”这条建议仍然有人提：<strong>它优化的不是显存公式，而是浪费比例和 Mip 链的整洁度。</strong> 另外注意：尺寸不会因为 Mip 生成而“自动变回 POT”，<code>floor</code> 之后各平台行为一致，不存在某一级被偷偷补到 POT 的情况。</p>
+<h3 id="heading-14">工程建议</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3D 贴图</td>
+<td>保持 2 的次方，或至少对齐到块尺寸（用 ASTC 6×6 就取 6 的倍数），让 Mip 链干净</td>
+</tr>
+<tr>
+<td>UI / 精灵</td>
+<td><strong>不必追求 POT</strong>，但必须打进图集；图集尺寸取 2 的次方便于管理</td>
+</tr>
+<tr>
+<td>图集内 padding</td>
+<td><strong>至少留一个块宽</strong>（ASTC 6×6 就留 6–8 px），否则相邻图会在边缘块里互相串色</td>
+</tr>
+<tr>
+<td>尺寸不是 4 的倍数</td>
+<td>BC 系在 D3D11 及更早会出问题，扫描器里按<strong>警告</strong>处理，不阻断</td>
+</tr>
+<tr>
+<td>PVRTC 目标</td>
+<td>必须是 POT，否则被缩放或回退——这也是新项目可以直接放弃 PVRTC 的原因之一</td>
+</tr>
+<tr>
+<td>很扁 / 很长的 NPOT 图</td>
+<td>检查块浪费比例，必要时裁到块尺寸的倍数</td>
+</tr>
+<tr>
+<td>图集尺寸</td>
+<td>取 2 的次方只是为了切分和工具友好，与显存无关</td>
+</tr>
+</tbody>
+</table>
+<p>一句话：<strong>POT 是“兼容性”和“整洁度”的要求，不是“内存”的要求。</strong> 决定内存的始终是分辨率、bpp 和副本数。</p>
+<p><a id="bc-family"></a></p>
+<h2 id="bc-">桌面格式：BC 家族</h2>
+<p>桌面（Windows / macOS / Linux / 主机）走 DirectX/OpenGL/Vulkan，主流是 BC（Block Compression），也就是老名字 DXT/ATI 的后继。</p>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th>别名</th>
+<th>每块字节</th>
+<th>bpp</th>
+<th>通道与用途</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BC1</td>
+<td>DXT1</td>
+<td>8</td>
+<td>4</td>
+<td>RGB + 1bit Alpha</td>
+<td>最省，无渐变 Alpha；有透明区会有硬边</td>
+</tr>
+<tr>
+<td>BC2</td>
+<td>DXT3</td>
+<td>16</td>
+<td>8</td>
+<td>RGBA，Alpha 4bit</td>
+<td>已基本被 BC3 取代</td>
+</tr>
+<tr>
+<td>BC3</td>
+<td>DXT5</td>
+<td>16</td>
+<td>8</td>
+<td>RGBA，Alpha 插值</td>
+<td>通用带 Alpha 方案，兼容性最好</td>
+</tr>
+<tr>
+<td>BC4</td>
+<td>ATI1</td>
+<td>8</td>
+<td>4</td>
+<td>单通道</td>
+<td>灰度、Mask、单通道数据</td>
+</tr>
+<tr>
+<td>BC5</td>
+<td>ATI2</td>
+<td>16</td>
+<td>8</td>
+<td>双通道</td>
+<td><strong>法线贴图首选</strong>，XY 双通道，质量优于 BC3</td>
+</tr>
+<tr>
+<td>BC6H</td>
+<td>—</td>
+<td>16</td>
+<td>8</td>
+<td>HDR RGB</td>
+<td>HDR 环境、天空盒、Lightmap</td>
+</tr>
+<tr>
+<td>BC7</td>
+<td>—</td>
+<td>16</td>
+<td>8</td>
+<td>RGB / RGBA</td>
+<td>质量最好的 8bpp 方案，压缩慢</td>
+</tr>
+</tbody>
+</table>
+<p>桌面选型规则：</p>
+<ul>
+<li><strong>BC1 覆盖不到的所有情况，默认 BC7。</strong> HB2 之后的显卡几乎都支持 BC7，质量和 BC3 差距明显，同为 8bpp 不涨内存。</li>
+<li><strong>法线贴图一律 BC5</strong>，不要用 BC1/BC3 存法线。BC5 把 X/Y 单独编码，Z 在 shader 里重建，质量高出一个档次。</li>
+<li><strong>只有需要兼容 DirectX 10 级老卡（2012 年以前的集显）时才退回 BC3。</strong> 现代项目不应该为此牺牲画质。</li>
+<li><strong>BC6H 只用于 HDR</strong>，普通 LDR 贴图不要用。</li>
+</ul>
+<p><a id="mobile-family"></a></p>
+<h2 id="etc--pvrtc--astc">移动格式：ETC / PVRTC / ASTC</h2>
+<h3 id="etc1">ETC1</h3>
+<ul>
+<li>1998 年 Ericsson 方案，<strong>所有 Android 设备从 2.2 起保证支持</strong>（OpenGL ES 2.0 的可选但事实普及格式）。</li>
+<li>4bpp，<strong>只有 RGB，没有 Alpha</strong>。</li>
+<li>曾经的用法是“ETC1 + 单独一张 Alpha 图”（Alpha Splitting）。在 ETC2 普及的今天已无必要，只作为最古老的兜底。</li>
+</ul>
+<h3 id="etc2--eac">ETC2 / EAC</h3>
+<ul>
+<li><strong>OpenGL ES 3.0 的强制格式</strong>，也就是说 WebGL 2、所有 Vulkan 设备、所有支持 ES 3.0 的设备都保证支持。这是移动端最安全的基线。</li>
+<li>五个成员：
+<ul>
+<li><code>ETC2 RGB8</code>：4bpp，RGB 无 Alpha。</li>
+<li><code>ETC2 RGB8 Punchthrough</code>：4bpp，RGB + 1bit Alpha（硬边透明）。</li>
+<li><code>ETC2 RGBA8</code>（也叫 ETC2_EAC）：<strong>8bpp</strong>，带插值 Alpha。</li>
+<li><code>EAC R11</code>：4bpp，单通道。</li>
+<li><code>EAC RG11</code>：8bpp，双通道（法线可用）。</li>
+</ul>
+</li>
+<li><strong>代价</strong>：带 Alpha 的图要么用 8bpp 的 RGBA8（和 BC7 一样大），要么用 1bit Alpha 牺牲边缘质量。早期 ETC2 硬件上 RGBA8 的质量明显弱于 BC7。</li>
+</ul>
+<h3 id="pvrtc">PVRTC</h3>
+<ul>
+<li>只用于 iOS（PowerVR / Apple GPU）。</li>
+<li>2bpp / 4bpp 两种码率，属于小波类，不是块压缩。</li>
+<li>约束较多：<strong>要求 2 次幂尺寸</strong>（否则 Unity 会重新缩放或回退），<strong>有最小尺寸限制</strong>（4bpp 约 8×8，2bpp 约 16×8），低分辨率 Mip 需要按最小尺寸补齐。</li>
+<li>质量特点是<strong>整体模糊</strong>而不是块状伪影，文字和细线表现较差。</li>
+<li>现在的定位：只在需要兼容 A7 及更早、或者要极致省内存的场合用。<strong>新项目可以直接忽略 PVRTC</strong>。</li>
+</ul>
+<h3 id="astc">ASTC</h3>
+<p>移动端现在的首选。核心优势：</p>
+<ul>
+<li>块尺寸从 4×4 到 12×12 共 14 种，<strong>码率 8bpp 到 0.89bpp 细粒度可调</strong>，每个块恒定 128 bit。</li>
+<li>RGB 和 RGBA <strong>占用完全相同的块空间</strong>（不像 ETC2 从 4bpp 跳到 8bpp）。这意味着“需要 Alpha 所以要双倍内存”这件事在 ASTC 上不存在。</li>
+<li>支持 LDR 和 HDR（HDR 是独立能力，见下）、2D 和 3D。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>ASTC 块</th>
+<th>等效 bpp</th>
+<th>2048² 基础层</th>
+<th>典型起点用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4×4</td>
+<td>8.00</td>
+<td>4.00 MiB</td>
+<td>文字、SDF、细节 UI、重要法线、Mask</td>
+</tr>
+<tr>
+<td>5×5</td>
+<td>5.12</td>
+<td>2.56 MiB</td>
+<td>高质量主角、近景物件</td>
+</tr>
+<tr>
+<td>6×6</td>
+<td>3.56</td>
+<td>1.78 MiB</td>
+<td><strong>通用起步档</strong>：角色、场景、精灵</td>
+</tr>
+<tr>
+<td>8×8</td>
+<td>2.00</td>
+<td>1.00 MiB</td>
+<td>远景、模糊背景、低频大图</td>
+</tr>
+<tr>
+<td>10×10</td>
+<td>1.28</td>
+<td>0.64 MiB</td>
+<td>激进压缩</td>
+</tr>
+<tr>
+<td>12×12</td>
+<td>0.89</td>
+<td>0.44 MiB</td>
+<td>极限压缩，可下载内容</td>
+</tr>
+</tbody>
+</table>
+<p>需要警惕的点：</p>
+<ul>
+<li><strong>不要全局锁死 6×6。</strong> 文字、细线图标、SDF 字体、近景法线、通道 Mask 都应该往上走 4×4/5×5；“背景”也不能无脑上 8×8，如果相机能拉近，块状伪影会很显眼。</li>
+<li><strong>ASTC 支持 NPOT 尺寸，但不代表小图省空间。</strong> 小图还是打包进图集更划算。</li>
+<li><strong>ASTC LDR 和 ASTC HDR 是两个独立能力。</strong> Apple 硬件上 LDR 从 A8（Apple2 GPU 家族）开始，HDR 要到 A13（Apple6 家族）才开始。HDR 回退的代价比 LDR 更大（可能扩成 <code>RGBA Half</code>）。</li>
+</ul>
+<p><a id="platform-matrix"></a></p>
+<h2 id="-api-">平台与 API 支持矩阵</h2>
+<p>这一节是本文最需要背下来的部分。<strong>“通常支持”和“规范强制”是两回事</strong>，把后者当前者会导致线上回退事故。</p>
+<h3 id="-api--1">各图形 API 的强制性</h3>
+<table>
+<thead>
+<tr>
+<th>格式族</th>
+<th>OpenGL ES 2.0</th>
+<th>OpenGL ES 3.0</th>
+<th>OpenGL ES 3.2</th>
+<th>Vulkan</th>
+<th>OpenGL 4.2</th>
+<th>Direct3D 11</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ETC1</td>
+<td>事实普及</td>
+<td>支持</td>
+<td>支持</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>ETC2 / EAC</td>
+<td>✗</td>
+<td><strong>强制</strong></td>
+<td><strong>强制</strong></td>
+<td>可选特性 <code>textureCompressionETC2</code></td>
+<td><strong>强制</strong>（4.3 起）</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>PVRTC</td>
+<td>仅 PowerVR/Apple</td>
+<td>同左</td>
+<td>同左</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>ASTC LDR 2D</td>
+<td>扩展</td>
+<td>扩展（<code>GL_KHR_texture_compression_astc_ldr</code>）</td>
+<td><strong>强制</strong></td>
+<td>可选特性 <code>textureCompressionASTC_LDR</code></td>
+<td>扩展</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>BC1-5</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>可选特性 <code>textureCompressionBC</code></td>
+<td>支持</td>
+<td><strong>强制</strong>（feature level 9.1+）</td>
+</tr>
+<tr>
+<td>BC4/BC5</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>同 BC</td>
+<td>支持</td>
+<td><strong>强制</strong>（10.0+）</td>
+</tr>
+<tr>
+<td>BC6H / BC7</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>同 BC</td>
+<td>4.2 起 BPTC</td>
+<td><strong>强制</strong>（11.0）</td>
+</tr>
+</tbody>
+</table>
+<p>必须注意的推论：</p>
+<ul>
+<li><strong>OpenGL ES 3.0 ≠ ASTC 可用。</strong> ES 3.0 只保证 ETC2。ASTC 在 ES 3.0/3.1 上是通过扩展暴露的，不能从 API 版本推断。</li>
+<li><strong>Vulkan ≠ ASTC 可用。</strong> Vulkan 里 ASTC 是 core 里的<strong>可选特性</strong>，必须运行时查询 <code>textureCompressionASTC_LDR</code>。</li>
+<li><strong>ES 3.2 才把 2D LDR ASTC 写入强制列表</strong>，但也不代表 HDR ASTC。</li>
+</ul>
+<h3 id="-gpu--1">设备与 GPU 硬件</h3>
+<p>块压缩不是软件选项，而是<strong>烧在 GPU 硅片里的解码电路</strong>。所以问题不是“哪些设备用块压缩”——<strong>只要做实时渲染的设备都在用</strong>——而是“支持哪几种”。</p>
+<p>块压缩进入硬件的时间比多数人想的早：</p>
+<table>
+<thead>
+<tr>
+<th>年份</th>
+<th>格式</th>
+<th>里程碑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1998</td>
+<td>S3TC / DXT1</td>
+<td>S3 的 Savage3D 首个硬件实现；同年微软授权进 DirectX 6.0，成为桌面标准</td>
+</tr>
+<tr>
+<td>约 2005</td>
+<td>ETC1</td>
+<td>Ericsson 方案被 Khronos 采纳，Android 2.2 起事实普及</td>
+</tr>
+<tr>
+<td>2007</td>
+<td>PVRTC</td>
+<td>PowerVR 专有格式，初代 iPhone 开始用</td>
+</tr>
+<tr>
+<td>约 2010</td>
+<td>BC6H / BC7</td>
+<td>Direct3D 11 硬件</td>
+</tr>
+<tr>
+<td>2012</td>
+<td>ETC2 / EAC</td>
+<td>OpenGL ES 3.0 <strong>强制</strong></td>
+</tr>
+<tr>
+<td>2012</td>
+<td>ASTC</td>
+<td>Khronos 发布；2015 年被 OpenGL ES 3.2 纳入<strong>强制</strong>（2D LDR）</td>
+</tr>
+</tbody>
+</table>
+<p>设备与 GPU 的实际支持情况：</p>
+<table>
+<thead>
+<tr>
+<th>设备 / GPU</th>
+<th>必定支持</th>
+<th>通常支持</th>
+<th>不支持</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>桌面 PC（NVIDIA / AMD / Intel）</td>
+<td>BC1–BC3（D3D 9.1 级）</td>
+<td>BC4/BC5、BC6H/BC7</td>
+<td><strong>ETC2、ASTC、PVRTC 全不支持</strong></td>
+</tr>
+<tr>
+<td>Android（Adreno / Mali / PowerVR）</td>
+<td><strong>ETC2 + EAC</strong></td>
+<td>ASTC；PVRTC 仅 PowerVR 机型</td>
+<td><strong>BC 家族</strong></td>
+</tr>
+<tr>
+<td>iOS（Apple GPU）</td>
+<td><strong>ASTC</strong>（A8+，LDR）</td>
+<td>ETC2（A7+）、PVRTC（历史遗留）</td>
+<td>BC 家族</td>
+</tr>
+<tr>
+<td>主机</td>
+<td>厂商专属格式</td>
+<td>通常也支持 BC</td>
+<td>—</td>
+</tr>
+<tr>
+<td>WebGL 2 / 小游戏</td>
+<td><strong>ETC2</strong></td>
+<td>ASTC（看设备扩展）</td>
+<td>视平台而定</td>
+</tr>
+</tbody>
+</table>
+<p>两条最容易踩的推论：</p>
+<ul>
+<li><strong>桌面 GPU 完全不支持 ETC2/ASTC，手机 GPU 完全不支持 BC。</strong> 两边资源不能混用，AssetBundle 必须按平台分开打。</li>
+<li><strong>PVRTC 不是通用移动格式。</strong> Android 生态里只有用 PowerVR 的机型支持，它实际只能当 iOS 专用格式。</li>
+</ul>
+<p>“设备决定格式”之所以绕不过去，是因为解码电路在硅片里：Adreno 的纹理单元里没有 BC 解码器，给它一张 BC7 不会报错，而是<strong>在 CPU 上软解成 <code>RGBA32</code></strong>（代价见 <a href="#runtime-memory">不支持的格式会怎样</a>）。</p>
+<p>反过来，也有些数据<strong>不走块压缩</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>不走块压缩的</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RenderTexture / FrameBuffer</td>
+<td>块压缩纹理<strong>不可写入</strong>，GPU 无法把渲染结果渲染进 BC/ASTC 纹理</td>
+</tr>
+<tr>
+<td>深度 / 模板缓冲</td>
+<td>没有对应的块压缩格式</td>
+</tr>
+<tr>
+<td>Compute / UAV 输出</td>
+<td>需要可读写</td>
+</tr>
+<tr>
+<td>Read/Write 的 CPU 副本</td>
+<td>要给 CPU 读写，必须是可读的原始像素</td>
+</tr>
+<tr>
+<td>运行时 <code>LoadImage</code> 的 PNG</td>
+<td>解出来就是 <code>RGBA32</code>，不会自动变 ASTC</td>
+</tr>
+</tbody>
+</table>
+<p>所以完整图景是：<strong>静态贴图走块压缩省显存，动态渲染目标走未压缩因为要可写。</strong> 这也是 RenderTexture 特别吃内存的根因。</p>
+<h3 id="ios">iOS</h3>
+<table>
+<thead>
+<tr>
+<th>Apple GPU 家族</th>
+<th>代表 SoC</th>
+<th>LDR ASTC</th>
+<th>HDR ASTC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Apple1</td>
+<td>A7</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>Apple2+</td>
+<td>A8 起</td>
+<td>✓</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>Apple6+</td>
+<td>A13 起</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>A8 是硬件边界，不是发版边界。</strong> 实际发版设备集是 Unity Player 要求、Deployment Target、Xcode/SDK、App Store 规则的交集。现代项目实际上已经不覆盖 A7 了。</li>
+<li>Apple 平台还支持 ETC2（A7 起），所以“ASTC 为主 + ETC2 兜底”在 iOS 上也是成立的。</li>
+<li>如果确认发版设备全在 A8 以上，iOS 直接用 ASTC 是自然选择。</li>
+</ul>
+<h3 id="android">Android</h3>
+<p>Android 的支持性<strong>取决于 GPU 和驱动，而不是 Android 版本号</strong>。不要写“Android 8 以上支持 ASTC”这种判断。</p>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th>Google Play 生态覆盖（官方粗略值）</th>
+<th>常见 GPU 门槛</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ETC2</td>
+<td><strong>&gt; 95%</strong></td>
+<td>ES 3.0 / Vulkan 设备</td>
+</tr>
+<tr>
+<td>ASTC</td>
+<td><strong>&gt; 80%</strong></td>
+<td>Adreno 4xx+ / 骁龙 415+、Mali T624+、Tegra K1+、PowerVR GX6250+</td>
+</tr>
+</tbody>
+</table>
+<p><a id="why-not-astc-only"></a></p>
+<h3 id="-astc-">为什么“纯 ASTC 策略”行不通</h3>
+<p>把上面那句结论拆开看：<strong>覆盖率高，不等于可以只押一个格式。</strong></p>
+<h4 id="-80-">&gt; 80% 的正确读法</h4>
+<table>
+<thead>
+<tr>
+<th>读法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>乐观读法（错）</td>
+<td>“八成设备支持，那用 ASTC 就行了”</td>
+</tr>
+<tr>
+<td>正确读法</td>
+<td><strong>反过来说是最多 20% 的设备不支持</strong>，这不是一个小数字</td>
+</tr>
+</tbody>
+</table>
+<p>而且要补两个限定：</p>
+<ul>
+<li><strong>这是 Google Play 全生态的数字，不是你的用户群的数字。</strong> 你的真实分布取决于目标市场和机型策略。要看自己的分布，用 Play Console 的 <strong>Reach and devices</strong>，按 SoC、GPU、RAM 维度拆开看。</li>
+<li><strong>低端机在用户量上往往是多数。</strong> 尤其在增量市场，一台几年前的中低端机可能贡献了可观的 DAU，而它恰好落在 ASTC 覆盖之外的那部分里。</li>
+</ul>
+<h4 id="heading-15">不支持时会发生什么：两条都不好的路</h4>
+<p>Google Play 判断设备能力的方式，是读设备的 OpenGL 扩展串与版本号：<code>astc</code> 对应 <code>GL_KHR_texture_compression_astc_ldr</code>，<code>etc2</code> 则要求 OpenGL ES 3.0 及以上。</p>
+<p>只提供 ASTC 时，那部分设备会遇到两种情况之一：</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>触发条件</th>
+<th>后果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A. 商店直接过滤</strong></td>
+<td>Manifest 里声明了 <code>&lt;supports-gl-texture&gt;</code>，且设备不支持其中任何一项</td>
+<td>用户在 Play 里<strong>看不到这个应用</strong>，直接损失用户，但至少不会崩溃</td>
+</tr>
+<tr>
+<td><strong>B. 能装，运行时软解</strong></td>
+<td>没做格式过滤。AAB 里只有 ASTC，Play 按“都不支持就下发默认格式”的规则下发的还是 ASTC</td>
+<td>Unity 把纹理解压成 <code>RGBA32</code>，<strong>内存约 9 倍</strong>、加载明显变慢</td>
+</tr>
+</tbody>
+</table>
+<p><strong>路径 B 才是真正危险的</strong>，因为它是一个“装了才发现”的故障：用户成功安装，然后在低端机上 OOM 崩溃——而低端机正是内存最小、最扛不住 9 倍膨胀的那批设备。同一个用户群既是最可能没 ASTC 的，又是最容易被回退拖垮的，这是<strong>双重惩罚</strong>，代价直接体现在崩溃率和评分上。Android 官方文档也专门提示了这个内存转码的代价。</p>
+<h4 id="aab-">AAB 多格式分发如何解决</h4>
+<p>核心机制一句话：<strong>AAB 里同时打包 ASTC 与 ETC2 两套纹理，Google Play 在安装时按设备能力只下发匹配的那一套。</strong></p>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AAB 本体（你上传的）</td>
+<td>含两套纹理，体积变大</td>
+</tr>
+<tr>
+<td>Optimized APK（用户下载的）</td>
+<td><strong>只含一套</strong>，下载体积基本不增加</td>
+</tr>
+<tr>
+<td>构建时间 / CI 存储</td>
+<td>变长、变大</td>
+</tr>
+<tr>
+<td>QA 成本</td>
+<td><strong>两套切片都要验</strong>，画质要分别看</td>
+</tr>
+</tbody>
+</table>
+<p>这里有个关键澄清，能消除很多人对多格式的抵触：<strong>多格式不等于用户下载体积翻倍。</strong> 体积代价落在你上传的 AAB 和构建流水线上，不落在用户手机上。真正的代价是构建耗时、CI 存储和翻倍的 QA 工作量——这些是可以用工程手段摊平的，而丢掉那 20% 的用户是丢掉的。</p>
+<h4 id="-etc2-">兜底不是免费的：要认 ETC2 的取舍</h4>
+<p>ETC2 不是无代价的兜底，它是明确的权衡：</p>
+<ul>
+<li>带 Alpha 的贴图要 8bpp（和 BC7 一样大），质量还不如 ASTC 6×6；</li>
+<li>想省内存就只能用 1bit Alpha，牺牲半透明边缘。</li>
+</ul>
+<p>也就是说，<strong>兜底那批用户的画质和内存都吃亏</strong>。这是有意的选择：宁可让这部分设备跑得差一点，也不要让他们崩溃或者根本装不上。</p>
+<h4 id="heading-16">什么情况下可以只用一种格式</h4>
+<p>单一格式不是绝对禁止，前提是<strong>你能确证设备集合</strong>：</p>
+<ul>
+<li>自研渠道、企业内部分发、定向设备群（统一定制机、云游戏实例、展陈设备等）；</li>
+<li>能通过埋点或后台数据确认线上 100% 设备支持 ASTC；</li>
+<li>或者反过来：明确接受纯 ETC2（覆盖 &gt; 95%），用画质换简单。</li>
+</ul>
+<p>面向公开市场的买量产品，<strong>AAB + ETC2 兜底 + ASTC 优化</strong>就是默认答案。</p>
+<h3 id="----web">桌面 / 主机 / Web</h3>
+<ul>
+<li><strong>桌面</strong>：BC 一家独大。D3D 从 feature level 9.1 就强制 BC1-3，11.0 起有 BC6H/BC7；Vulkan 上查 <code>textureCompressionBC</code>；OpenGL 4.2 起有 BPTC。<strong>PC 项目不应该出现 ASTC/ETC2 资源</strong>。</li>
+<li><strong>主机</strong>：各平台有专属格式与工具链，通常走厂商 SDK 的纹理打包工具，本文不展开。</li>
+<li><strong>WebGL / 小游戏</strong>：WebGL 2 对应 ES 3.0，<strong>ETC2 是可靠基线</strong>；ASTC 只在部分浏览器/设备通过扩展暴露。微信小游戏等平台还有各自的纹理格式与分包限制，要单独验证，不能直接套用 Android 结论。</li>
+</ul>
+<h3 id="unity-">Unity 的格式查询与回退</h3>
+<p>运行时可以做能力自检：</p>
+<pre><code class="language-csharp">using UnityEngine;
+
+public static class TextureFormatDiagnostics
+{
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+    private static void LogSupport()
+    {
+        Debug.Log(
+            $&quot;GPU={SystemInfo.graphicsDeviceName}, &quot; +
+            $&quot;API={SystemInfo.graphicsDeviceType}, &quot; +
+            $&quot;ASTC4x4={SystemInfo.SupportsTextureFormat(TextureFormat.ASTC_4x4)}, &quot; +
+            $&quot;ASTC6x6={SystemInfo.SupportsTextureFormat(TextureFormat.ASTC_6x6)}, &quot; +
+            $&quot;ASTC8x8={SystemInfo.SupportsTextureFormat(TextureFormat.ASTC_8x8)}, &quot; +
+            $&quot;ETC2RGBA8={SystemInfo.SupportsTextureFormat(TextureFormat.ETC2_RGBA8)}, &quot; +
+            $&quot;BC7={SystemInfo.SupportsTextureFormat(TextureFormat.BC7)}&quot;);
+    }
+#endif
+}
+</code></pre>
+<p>要理解这个 API 的<strong>边界</strong>：它只证明“这台设备的这个图形环境支持该格式”，<strong>不证明当前加载的某个资源现在真的以该格式驻留</strong>。要验证后者，必须结合 <code>Texture2D.format</code> / <code>Texture2D.graphicsFormat</code> + Memory Profiler + 实际下发的分包。</p>
+<p>需要区分 sRGB/Linear、LDR/HDR、具体用途时，用更精确的 <code>SystemInfo.IsFormatSupported(GraphicsFormat, GraphicsFormatUsage)</code>。</p>
+<p><a id="runtime-memory"></a></p>
+<h2 id="unity--1">Unity 的加载路径与内存副本</h2>
+<p>这一节解释“为什么配置看起来没问题，真机内存却爆了”。</p>
+<h3 id="heading-17">从磁盘到显存</h3>
+<pre><code>源文件(PNG/PSD)
+   ↓ 导入时按平台压成 GPU 格式（ETC2/ASTC/BC…）
+AssetBundle / 构建数据（压缩块数据，容器再套 LZ4/LZMA）
+   ↓ 加载：解容器压缩
+CPU 侧原生内存（该纹理对象持有的压缩块数据）
+   ↓ 上传
+GPU 显存（纹理对象，渲染时直接采样）
+</code></pre>
+<p>关键在于：<strong>CPU 侧和 GPU 侧各有一份</strong>。</p>
+<h3 id="heading-18">三份数据，别搞混</h3>
+<table>
+<thead>
+<tr>
+<th>数据</th>
+<th>位置</th>
+<th>何时存在</th>
+<th>怎么消掉</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bundle 解压后的数据</td>
+<td>托管/原生内存</td>
+<td>Bundle 加载后到 Unload</td>
+<td><code>AssetBundle.Unload</code> / Addressables 释放句柄</td>
+</tr>
+<tr>
+<td>纹理的 CPU 副本</td>
+<td>原生内存</td>
+<td>Read/Write Enabled 开启时</td>
+<td>关闭 Read/Write，或 <code>Apply(true, true)</code></td>
+</tr>
+<tr>
+<td>纹理的 GPU 数据</td>
+<td>显存</td>
+<td>纹理被创建/上传后</td>
+<td>释放纹理引用 + 卸载</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heading-19">不支持的格式会怎样（最容易出事故的一环）</h3>
+<p>Unity 官方文档写得很明确：</p>
+<blockquote>
+<p>当 Unity 加载一张压缩格式不被设备支持的纹理时，它会<strong>把纹理解压成该平台的默认未压缩格式，并把未压缩副本和原始压缩纹理一起保存在内存中</strong>。</p>
+</blockquote>
+<p>这意味着一次错误的格式配置，代价是：</p>
+<ol>
+<li><strong>内存成倍增长</strong>。ASTC 6×6（3.56bpp）回退到 RGBA32（32bpp）是 <strong>约 9 倍</strong>。2048² 从 2.38 MiB 变成 21.33 MiB。</li>
+<li><strong>加载时多出 CPU 解压开销</strong>，表现是加载卡顿、切场景变慢。</li>
+<li><strong>带宽压力暴涨</strong>，低端机直接 OOM 或掉帧。</li>
+<li><strong>两份数据同时存在</strong>，峰值内存比稳态更糟。</li>
+</ol>
+<p><strong>所以：运行时回退只能当最后的安全网，绝不能当正常发版路径。</strong></p>
+<h3 id="readwrite-enabled-">Read/Write Enabled 的代价</h3>
+<p><code>Read/Write Enabled</code> 勾上，Unity 就在 CPU 内存里保留一份可读像素数据：</p>
+<ul>
+<li><strong>内存大约翻倍</strong>（对压缩纹理是“压缩块数据 + 解压后的可读数据”，可能更糟）。</li>
+<li><strong>让 Streaming Mipmap 失效</strong>——因为可读副本需要所有 Mip 都在，所以整张图会被完整加载。</li>
+<li>运行时创建的可读纹理，处理完应立即释放：</li>
+</ul>
+<pre><code class="language-csharp">var tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
+tex.LoadImage(rawBytes);
+// … 处理像素 …
+tex.Apply(updateMipmaps: true, makeNoLongerReadable: true); // 上传 GPU 并删除 CPU 副本
+</code></pre>
+<p>注意 <code>makeNoLongerReadable: true</code> 之后纹理<strong>不能再从磁盘重新加载</strong>，也会脱离 Mip 限制设置，所以必须确保上传时是期望的完整分辨率。</p>
+<p><a id="crunch"></a></p>
+<h3 id="crunch-">Crunch 到底是什么</h3>
+<p>一句话：<strong>Crunch 是“存在磁盘上的那层额外压缩”，不是一种 GPU 纹理格式。</strong> 它不是 BC / ETC / ASTC 的替代品，而是叠加在这些格式之上的一层<strong>可变码率有损压缩</strong>。</p>
+<h4 id="heading-20">它在三层结构里的位置</h4>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>未用 Crunch</th>
+<th>用了 Crunch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>构建产物 / 下载体积</td>
+<td>固定码率块数据（如 ETC2 4bpp）</td>
+<td><strong>变码率压缩数据</strong>，通常在 1–2 bpp 量级</td>
+</tr>
+<tr>
+<td>加载过程中的 CPU 内存</td>
+<td>该格式的压缩块数据</td>
+<td>先短暂持有 Crunch 数据，再在 CPU 上解成 DXT / ETC</td>
+</tr>
+<tr>
+<td>上传后的显存</td>
+<td>DXT / ETC 块数据</td>
+<td><strong>完全一样</strong>的 DXT / ETC 块数据</td>
+</tr>
+</tbody>
+</table>
+<p>所以关键点是：<strong>GPU 的解码电路不认识 Crunch，只有 CPU 认识。</strong> GPU 拿到的永远是解压后的 DXT / ETC。</p>
+<h4 id="heading-21">技术来源：为什么它能压得比固定码率更小</h4>
+<p>Unity 的 Crunch 来自 Rich Geldreich 的 <strong>crnlib</strong>（Binomial LLC / crunch 项目）。核心设计是<strong>可转码（transcodable）</strong>：它的码流设计的终点不是“解出一张 RGB 图”，而是<strong>直接转码成 DXT1 / DXT5 / BC4 / BC5 / ETC 的块数据</strong>，中间不需要重建整张图像。</p>
+<table>
+<thead>
+<tr>
+<th>手段</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>端点聚类（endpoint clustering）</td>
+<td>全图共用 DXT 端点调色板的统计特征</td>
+</tr>
+<tr>
+<td>选择器向量量化 + 码本</td>
+<td>把每个 4×4 块的选择器索引整体编码，而不是逐块存</td>
+</tr>
+<tr>
+<td>熵编码</td>
+<td>消除剩余统计冗余</td>
+</tr>
+<tr>
+<td>变码率 / 率失真优化</td>
+<td>按块的视觉重要性与内容复杂度分配比特：平缓区域几乎不占空间，高频区域才多给比特</td>
+</tr>
+</tbody>
+</table>
+<p>官方给的经验量级：普通贴图约 <strong>1–1.25 bit/texel</strong>，法线贴图约 <strong>1.75–2 bit/texel</strong>（法线更难压）。注意这是<strong>内容相关</strong>的，不是固定值——同一张图在不同质量档下压出来的尺寸不同。</p>
+<h4 id="heading-22">收益与代价</h4>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Crunch 的效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>磁盘 / 下载体积</td>
+<td><strong>显著减小</strong>（这是它唯一的收益）</td>
+</tr>
+<tr>
+<td>显存 / 运行时内存</td>
+<td><strong>完全不变</strong></td>
+</tr>
+<tr>
+<td>加载 CPU 开销</td>
+<td>增加一次 CPU 解码（多线程），低端机上体现为加载卡顿</td>
+</tr>
+<tr>
+<td>Streaming Mipmap</td>
+<td><strong>不支持</strong>，整张图从磁盘完整加载</td>
+</tr>
+<tr>
+<td>导入 / 构建耗时</td>
+<td>大幅增加，Crunch 编码很慢</td>
+</tr>
+<tr>
+<td>画质</td>
+<td>多一层有损；法线、遮罩这类数值型通道风险更高</td>
+</tr>
+<tr>
+<td>平台兼容</td>
+<td>只在支持 Crunch 的平台上生效，其他平台会退回普通 DXT / ETC</td>
+</tr>
+</tbody>
+</table>
+<p>还有一个容易被忽略的组合：<strong>Crunch + AssetBundle 是三层压缩叠加</strong>——Bundle 的 LZ4 / LZMA、Crunch 本身、底层的 DXT / ETC。下载时确实小，但加载时要依次剥掉三层，加载耗时和峰值内存都不便宜。</p>
+<h4 id="heading-23">什么时候该用</h4>
+<p><strong>Crunch 是包体 / 下载优化手段，不是内存优化手段。</strong></p>
+<ul>
+<li>✅ 值得用：下载体积严重超标、且该图不在加载关键路径上（预下载资源、低频大图、C 级背景）。</li>
+<li>❌ 不要用：首包关键路径、需要 Streaming Mipmap 的大图、法线贴图和 Mask、需要快速迭代的资源。</li>
+<li>⚠️ 想省显存请改<strong>分辨率或格式</strong>，这两项才是内存杠杆；Crunch 一点都不省。现代 SSD 和高速网络下，它“省加载时间”的价值也基本消失了。</li>
+</ul>
+<h3 id="streaming-mipmap">Streaming Mipmap</h3>
+<ul>
+<li>开关在 <code>Quality Settings → Texture Streaming</code>，单张纹理在导入设置里勾 <code>Streaming Mipmaps</code>。</li>
+<li>运行时按相机距离只把需要的 Mip 上传 GPU，内存预算由 <code>QualitySettings.streamingMipmapsMemoryBudget</code> 控制。</li>
+<li>可以主动干预：</li>
+</ul>
+<pre><code class="language-csharp">// 强制某张纹理保持低分辨率，常用于过场/远景
+tex.requestedMipmapLevel = 2;
+// 或者临时解除限制
+tex.ClearRequestedMipmapLevel();
+</code></pre>
+<ul>
+<li><strong>注意</strong>：显存省了，但加载逻辑不是渐进的——当相机靠近需要更高 Mip 时，Unity 会重新读取并上传整张纹理，而不是“只补 mip 0”。所以近距离突进仍可能有卡顿。</li>
+<li>自定义 shader 里改了 UV 的纹理，Streaming 系统算不准，需要手动指定 <code>requestedMipmapLevel</code>。</li>
+</ul>
+<h3 id="---1">编辑器 ≠ 真机</h3>
+<p>这是排查贴图内存问题时最浪费时间的地方：</p>
+<ul>
+<li>编辑器里 <code>Texture2D.format</code> 经常报告 <strong><code>RGBA32</code></strong>，因为编辑器平台通常不套用移动端的压缩格式（也可以用 <code>Build Profiles → Asset Import Overrides → Texture Compression</code> 强制）。</li>
+<li>编辑器不会做 Android 的 ETC2 fallback，也不会做 AAB 的 Texture Compression Targeting 分包。</li>
+<li>编辑器的显存和真机 UMA 架构的内存行为不同。</li>
+</ul>
+<p><strong>结论：所有贴图内存结论必须在真机 + 实际下发的包上验证。</strong></p>
+<p><a id="import-settings"></a></p>
+<h2 id="heading-24">导入设置逐项决策</h2>
+<h3 id="default-">Default 页</h3>
+<table>
+<thead>
+<tr>
+<th>设置</th>
+<th>决策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Texture Type</td>
+<td><code>Sprite</code> 给 UI/2D；<code>Normal map</code> 给法线（会自动关 sRGB）；<code>Default</code> 给其它</td>
+</tr>
+<tr>
+<td>sRGB (Color Texture)</td>
+<td>颜色贴图 <strong>开</strong>；法线、粗糙度、金属度、Mask、灰度数据 <strong>关</strong></td>
+</tr>
+<tr>
+<td>Alpha Source</td>
+<td><code>From Gray Scale</code> / <code>Input Texture Alpha</code>。没有 Alpha 通道就别留，能省一半</td>
+</tr>
+<tr>
+<td>Alpha Is Transparency</td>
+<td>半透明边缘要开（会做边缘膨胀，避免采样串色）</td>
+</tr>
+<tr>
+<td>Read/Write Enabled</td>
+<td><strong>默认全关</strong>，只在需要 CPU 读写像素时开</td>
+</tr>
+<tr>
+<td>Generate Mip Maps</td>
+<td>3D 物件 <strong>开</strong>；UI / 2D 精灵 / 全屏图 <strong>关</strong>（省 1/3）</td>
+</tr>
+<tr>
+<td>Streaming Mipmaps</td>
+<td>大图 <strong>开</strong>；UI <strong>关</strong></td>
+</tr>
+<tr>
+<td>Max Size</td>
+<td>按实际最大显示尺寸倒推，<strong>这是收益最大的一项</strong></td>
+</tr>
+<tr>
+<td>Compression</td>
+<td><code>None</code> / <code>Low</code> / <code>Normal</code> / <code>High</code>。移动端建议用 Platform Override 显式指定格式，不依赖 Normal/High 的自动映射</td>
+</tr>
+<tr>
+<td>Use Crunch Compression</td>
+<td>默认 <strong>关</strong>，只对下载体积敏感资源开</td>
+</tr>
+<tr>
+<td>Non-Power of 2</td>
+<td><code>ToNearest</code> 或 <code>None</code>。PVRTC 必须 POT；ASTC/ETC2 支持 NPOT，但块对齐仍有浪费（见 <a href="#texture-size">尺寸与对齐</a>）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Unity 默认格式映射（Default 页的 Compression 档位 → Platform Override 里的默认格式）：</strong></p>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>通道</th>
+<th>无压缩</th>
+<th>Normal</th>
+<th>High</th>
+<th>Low</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows/Linux/macOS</td>
+<td>RGB</td>
+<td>RGB 24</td>
+<td>DXT1</td>
+<td>BC7</td>
+<td>DXT1</td>
+</tr>
+<tr>
+<td>Windows/Linux/macOS</td>
+<td>RGBA</td>
+<td>RGBA 32</td>
+<td>DXT5</td>
+<td>BC7</td>
+<td>DXT5</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td>RGB / RGBA</td>
+<td>RGB(A) 32</td>
+<td><strong>ASTC 6×6</strong></td>
+<td><strong>ASTC 4×4</strong></td>
+<td><strong>ASTC 8×8</strong></td>
+</tr>
+<tr>
+<td>Android</td>
+<td>RGB / RGBA</td>
+<td>RGB(A) 32</td>
+<td><strong>ASTC 6×6 / ETC2</strong></td>
+<td><strong>ASTC 4×4 / ETC2</strong></td>
+<td><strong>ASTC 8×8 / ETC2</strong></td>
+</tr>
+</tbody>
+</table>
+<p>注意 Android 一行的两层含义：<strong>Unity 会同时生成 ASTC 和 ETC2 两套数据，运行时按设备能力挑一套</strong>。这会让包体增大，但避免了运行时回退。</p>
+<h3 id="platform-override-">Platform Override 页</h3>
+<p>真正需要精确控制格式时，必须逐平台显式覆盖（<code>overridden = true</code>），并注意：</p>
+<ul>
+<li><strong>Android 的 <code>Override ETC2 fallback</code></strong>：控制设备不支持 ETC2 时解压成什么（32 位 / 16 位 / 32 位降分辨率）。这是最后兜底，不是常规路径。</li>
+<li><strong><code>Ignore Platform Support</code></strong>：勾上会绕过编辑器的支持性检查，把不支持格式塞进包——通常只在自研加载器或确实做了运行时判断时用。</li>
+<li><strong>Android 的 <code>Texture Compression Formats</code></strong>：Player Settings 里的列表，<strong>第一个是默认</strong>。配合 AAB 才有多格式分发；打 APK 时只用第一个。</li>
+</ul>
+<h3 id="android-aab--texture-compression-targeting">Android AAB 的 Texture Compression Targeting</h3>
+<p>这是 Android 上最有价值的工程配置，因为它让 Google Play 按设备能力下发最优格式，而不是全靠 ETC2。（为什么必须同时准备两种格式，见 <a href="#why-not-astc-only">为什么“纯 ASTC 策略”行不通</a>）</p>
+<p>推荐顺序：</p>
+<pre><code>1. ETC2   // 默认兜底，覆盖 &gt;95%
+2. ASTC   // 优化格式，覆盖 &gt;80%
+</code></pre>
+<p><strong>为什么 ETC2 放第一？</strong> 因为第一项是“默认兜底”而不是“优先格式”。Play 仍会给支持 ASTC 的设备下发 ASTC 切片，同时 ETC2 保证没有 ASTC 的设备拿到可用格式。</p>
+<p>配置要点与坑：</p>
+<ul>
+<li>必须 <strong>AAB</strong>（或导出 AAB 用的 Gradle 工程）才生效；APK 只用第一项。</li>
+<li>启用 targeting 后，Unity 会<strong>忽略</strong> Android 的 <code>Texture Compression</code> 构建设置，不能用它再覆盖。</li>
+<li>构建配置里要把 <code>Asset Import Overrides → Texture Compression</code> 设成非 <code>Force Uncompressed</code>。</li>
+<li><strong>自定义 Gradle 模板必须包含 <code>texture { enableSplit = true }</code></strong>，否则会出现“能装包但引擎初始化失败”（<code>Unable to initialize the Unity Engine</code>）这类问题——从旧 Unity 升级的项目特别容易踩，因为 Gradle 模板不会像 C# 脚本那样自动升级。</li>
+<li>逐纹理的 Platform Override 会<strong>覆盖全局策略和 Play 的分发选择</strong>，审计时必须一起查。</li>
+<li><strong>远端 Addressables / 自建 CDN 的 Bundle 不受 targeting 保护。</strong> 如果远端也要分格式，必须把格式编进 Profile、RemoteLoadPath、catalog、Bundle 名、URL 和缓存 key，当成两条独立内容线维护。<strong>不要把不同二进制内容发在同一个 URL 后面。</strong></li>
+</ul>
+<h3 id="heading-25">按资源角色的格式与尺寸建议</h3>
+<table>
+<thead>
+<tr>
+<th>资源角色</th>
+<th>起步格式</th>
+<th>检查什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>通用角色/场景反照率</td>
+<td>ASTC 6×6</td>
+<td>脸部、剪影、Alpha 边缘</td>
+</tr>
+<tr>
+<td>主角 / 高质量 UI</td>
+<td>ASTC 4×4–5×5</td>
+<td>细线、眼睛、文字、渐变</td>
+</tr>
+<tr>
+<td>UI 背景 / 大面板</td>
+<td>ASTC 6×6–8×8</td>
+<td>色带、圆角、半透明</td>
+</tr>
+<tr>
+<td>远景 / 模糊背景</td>
+<td>ASTC 8×8</td>
+<td>相机拉近时的块状伪影</td>
+</tr>
+<tr>
+<td>法线贴图</td>
+<td><strong>ASTC 5×5–6×6（桌面 BC5）</strong></td>
+<td>光照畸变，确认 sRGB 关闭</td>
+</tr>
+<tr>
+<td>ORM / Mask 通道包</td>
+<td><strong>ASTC 4×4–6×6</strong></td>
+<td>分通道可视化检查，阈值行为</td>
+</tr>
+<tr>
+<td>字体 / SDF</td>
+<td><strong>ASTC 4×4</strong>，或对比未压缩</td>
+<td>小字号可读性、边缘</td>
+</tr>
+<tr>
+<td>极小贴图</td>
+<td>优先打进图集</td>
+<td>块对齐浪费、Mip 数量</td>
+</tr>
+<tr>
+<td>HDR 环境 / Lightmap</td>
+<td>桌面 BC6H；移动确认 ASTC HDR 能力</td>
+<td>独立能力，别和 LDR 混为一谈</td>
+</tr>
+</tbody>
+</table>
+<p><a id="tools"></a></p>
+<h2 id="--shader--">工具链：怎么看贴图 / Shader / 音效的真实内存</h2>
+<p>原理讲完了，接下来是“怎么拿到证据”。这一节按<strong>测什么</strong>分类，而不是按厂商分类——因为同一个工具往往只能回答其中一两问。</p>
+<h3 id="heading-26">先分清五类指标</h3>
+<table>
+<thead>
+<tr>
+<th>想知道什么</th>
+<th>典型问题</th>
+<th>用什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>整机 / 进程内存</td>
+<td>低端机会不会 OOM？崩溃前峰值多少？</td>
+<td>PerfDog、UWA GOT、<code>dumpsys meminfo</code>、Xcode Instruments / VM Tracker</td>
+</tr>
+<tr>
+<td>引擎侧分类内存</td>
+<td>贴图、网格、Shader、音频各占多少？</td>
+<td>Unity Profiler → Memory 模块；Memory Profiler 快照的汇总页</td>
+</tr>
+<tr>
+<td>单个资源</td>
+<td>这张图实际是 ASTC 还是被回退了？被谁持有？</td>
+<td>Memory Profiler 快照的 Textures 表 + 引用链</td>
+</tr>
+<tr>
+<td>单帧 GPU 侧</td>
+<td>这一帧的 draw call、RT、带宽来自谁？</td>
+<td>RenderDoc、Xcode Metal Debugger、Android Performance Analyzer、Snapdragon Profiler</td>
+</tr>
+<tr>
+<td>构建产物</td>
+<td>这个包 / AB 里到底装了什么、重复了多少？</td>
+<td>Build Report Inspector、AssetBundle Browser、Addressables Analyze</td>
+</tr>
+</tbody>
+</table>
+<p><strong>一个前提必须记住</strong>：编辑器里的数字不代表真机。贴图格式、显存行为、系统内存口径全都不一样。下面所有“单资源”级别的结论都要在<strong>真机 Development Build</strong> 上取。</p>
+<h3 id="unity--2">Unity 内置（首选，跨平台）</h3>
+<h4 id="profiler--memory-">Profiler → Memory 模块</h4>
+<p><code>Window → Analysis → Profiler → Memory</code>。它给的是<strong>分类汇总</strong>，适合看趋势、找异常方向：</p>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>含义</th>
+<th>排查重点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Managed Heap</td>
+<td>托管堆已用 / 预留</td>
+<td>C# 对象、字符串、容器、泄漏</td>
+</tr>
+<tr>
+<td>Graphics &amp; Graphics Driver</td>
+<td>引擎估算的纹理、RT、Shader、Mesh 与驱动开销</td>
+<td><strong>贴图问题的第一入口</strong></td>
+</tr>
+<tr>
+<td>Audio</td>
+<td>音频系统估算占用</td>
+<td>AudioClip 的 Load Type</td>
+</tr>
+<tr>
+<td>Video</td>
+<td>视频系统占用</td>
+<td>VideoPlayer / 视频流</td>
+</tr>
+<tr>
+<td>Other</td>
+<td>未被上述分类统计的原生内存</td>
+<td>需要 Memory Profiler 快照才能拆开</td>
+</tr>
+<tr>
+<td>Profiler</td>
+<td>Profiler 自身的开销</td>
+<td>真机采样时要扣掉</td>
+</tr>
+</tbody>
+</table>
+<p>注意 <code>Graphics &amp; Graphics Driver</code> 是<strong>估算值</strong>，只用来定位方向，不能当作精确的资产内存；精确值要用快照。</p>
+<h4 id="memory-profiler-">Memory Profiler 包（最重要的工具）</h4>
+<p>包名 <code>com.unity.memoryprofiler</code>。它才是能回答“<strong>哪个对象、占多少、被谁引用</strong>”的工具：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全量快照</td>
+<td>拍一张，包含托管堆 + 原生内存 + 图形资源的对象图</td>
+</tr>
+<tr>
+<td>按类型 / 大小排序</td>
+<td><code>All Of Unity Objects</code> 里按大小倒序，直接看到最贵的贴图和 RenderTexture</td>
+</tr>
+<tr>
+<td><strong>Textures 表</strong></td>
+<td>列出每张贴图的尺寸、<code>TextureFormat</code>、Mip、是否 Read/Write、实际字节数——<strong>验证“导入配置是否真的生效”的唯一可靠手段</strong></td>
+</tr>
+<tr>
+<td>引用链</td>
+<td>这张贴图被哪个 AssetBundle / GameObject / Material 持有</td>
+</tr>
+<tr>
+<td>快照 Diff</td>
+<td>两张快照对比，看进场景前后新增和未释放的资源</td>
+</tr>
+<tr>
+<td>Managed Heap</td>
+<td>托管堆里的对象与类型分布，找增长源</td>
+</tr>
+</tbody>
+</table>
+<p>用法要点：</p>
+<ul>
+<li>场景加载<strong>前</strong>拍一张、稳定后拍一张、卸载后再拍一张，<strong>三张一组</strong>才能区分“常驻 / 峰值 / 泄漏”。</li>
+<li>快照本身很占内存，大项目可能几百 MB，真机上要留余量。</li>
+<li>如果 Textures 表里某张贴图的格式是 <code>RGBA32</code>，而配置写的是 ASTC，说明<strong>回退发生了</strong>（见 <a href="#runtime-memory">不支持的格式会怎样</a>）。</li>
+</ul>
+<h4 id="-api">关键 API</h4>
+<p>不开快照也能在代码里拿到分类数字：</p>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using System.Text;
+using UnityEngine;
+using UnityEngine.Profiling;
+
+public static class AssetMemoryReport
+{
+    /// &lt;summary&gt;按类型汇总已加载 Unity 对象的运行时内存（Editor / Development Build）。&lt;/summary&gt;
+    public static string Build()
+    {
+        var map = new Dictionary&lt;Type, (int count, long bytes)&gt;();
+        var objects = Resources.FindObjectsOfTypeAll&lt;UnityEngine.Object&gt;();
+
+        foreach (var obj in objects)
+        {
+            long size = Profiler.GetRuntimeMemorySizeLong(obj);
+            if (size &lt;= 0) continue;
+
+            var t = obj.GetType();
+            map.TryGetValue(t, out var cur);
+            map[t] = (cur.count + 1, cur.bytes + size);
+        }
+
+        var sb = new StringBuilder(&quot;[AssetMemoryReport]\n&quot;);
+        foreach (var kv in map)
+            sb.AppendLine($&quot;{kv.Key.Name,-24} count={kv.Value.count,-6} {kv.Value.bytes / 1024f / 1024f,8:F2} MB&quot;);
+
+        return sb.ToString();
+    }
+}
+</code></pre>
+<p><code>Profiler.GetRuntimeMemorySizeLong</code> 返回的是<strong>该对象持有的运行时内存</strong>：对贴图是压缩块数据大小，对 AudioClip 取决于 Load Type，对 Shader 是进入内存的变体数据。它<strong>不包含</strong>驱动 / GPU 侧的额外开销，所以只适合做“同类之间对比”，不要拿它当显存总量。</p>
+<p>配套常用查询：</p>
+<table>
+<thead>
+<tr>
+<th>目标</th>
+<th>API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>设备是否支持某格式</td>
+<td><code>SystemInfo.SupportsTextureFormat</code> / <code>SystemInfo.IsFormatSupported</code></td>
+</tr>
+<tr>
+<td>贴图实际格式</td>
+<td><code>Texture2D.format</code> / <code>Texture2D.graphicsFormat</code></td>
+</tr>
+<tr>
+<td>Mip 数量</td>
+<td><code>Texture2D.mipmapCount</code></td>
+</tr>
+<tr>
+<td>音频加载方式</td>
+<td><code>AudioClip.loadType</code> / <code>AudioClip.loadInBackground</code></td>
+</tr>
+<tr>
+<td>手动触发回收</td>
+<td><code>Resources.UnloadUnusedAssets</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="heading-27">构建侧工具</h4>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>开源</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Build Report Inspector</td>
+<td>✅ <code>Unity-Technologies/BuildReportInspector</code></td>
+<td>构建报告：各资源在包体里的实际大小与压缩后大小</td>
+</tr>
+<tr>
+<td>AssetBundle Browser</td>
+<td>✅ <code>Unity-Technologies/AssetBundles-Browser</code></td>
+<td>看 AB 的内容、依赖、冗余与大小</td>
+</tr>
+<tr>
+<td>Addressables Analyze</td>
+<td>内置</td>
+<td>重复资源、未引用资源、Bundle 布局</td>
+</tr>
+<tr>
+<td>Build Layout Report</td>
+<td>内置（<code>buildlayout.json</code>）</td>
+<td>Addressables 构建的 Bundle 与资源明细</td>
+</tr>
+<tr>
+<td>Shader 变体剥离</td>
+<td>内置</td>
+<td>Graphics Settings 的 Shader Stripping、<code>ShaderVariantCollection</code>、<code>IPreprocessShaders</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-gpu--">厂商工具（真机 GPU / 系统口径）</h3>
+<table>
+<thead>
+<tr>
+<th>平台 / 芯片</th>
+<th>工具</th>
+<th>能回答什么</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iOS / macOS</td>
+<td><strong>Xcode Instruments</strong>（Allocations、VM Tracker、Metal System Trace、Metal Debugger）</td>
+<td>原生内存、GPU 时间线、逐 pass / 逐 draw 的 GPU 资源</td>
+<td>免费；Metal Debugger 是 iOS 上体验最接近 RenderDoc 的工具</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td>Xcode Memory Graph Debugger</td>
+<td>原生对象引用链、循环引用泄漏</td>
+<td>免费</td>
+</tr>
+<tr>
+<td>Android</td>
+<td><strong>Android Studio Profiler</strong></td>
+<td>Java / 原生堆、CPU、GPU、网络</td>
+<td>免费；对 Unity 原生内存的视角有限</td>
+</tr>
+<tr>
+<td>Android</td>
+<td><strong><code>adb shell dumpsys meminfo &lt;pkg&gt;</code></strong></td>
+<td>PSS 明细，含 <code>GL mtrack</code> / <code>Graphics</code></td>
+<td>命令行最快；不同 Android 版本字段名有差异</td>
+</tr>
+<tr>
+<td>Android</td>
+<td><strong>Perfetto</strong></td>
+<td>系统级 trace：内存、调度、GPU 频率、内存压力</td>
+<td>开源（<code>google/perfetto</code>），Android 官方主推</td>
+</tr>
+<tr>
+<td>Android</td>
+<td><strong>Android Performance Analyzer（APA）</strong></td>
+<td>系统级 CPU / GPU / 内存 / 功耗分析、GPU 计数器</td>
+<td>Google 新推荐工具，前身是 AGI（<code>google/agi</code>，Apache-2.0，仍可下载）</td>
+</tr>
+<tr>
+<td>高通 Adreno</td>
+<td><strong>Snapdragon Profiler</strong></td>
+<td>GPU 计数器、内存、逐 draw、带宽</td>
+<td>免费，需高通账号</td>
+</tr>
+<tr>
+<td>Arm（Mali / CPU）</td>
+<td><strong>Arm Performance Studio</strong>（Streamline、Frame Advisor、Mali Offline Compiler 等）</td>
+<td>Mali GPU 计数器、CPU 采样、shader 离线静态分析</td>
+<td>免费；老名字是 Arm Mobile Studio（2024.0 起改名）</td>
+</tr>
+<tr>
+<td>通用逐帧</td>
+<td><strong>RenderDoc</strong></td>
+<td>抓帧、看每个 draw 的纹理 / RT / shader / PSO，并把贴图内容可视化</td>
+<td>开源（<code>baldurk/renderdoc</code>），可 attach Android；Arm 也发行了针对 Mali 的定制版</td>
+</tr>
+</tbody>
+</table>
+<p>要点：厂商工具回答的是**“GPU 和系统层面发生了什么”**，它们通常不会告诉你“这张 2048² 的图是 ASTC 还是被回退成了 RGBA32”。<strong>资产级的问题留给 Memory Profiler。</strong></p>
+<h3 id="heading-28">第三方线上平台（国内项目常用）</h3>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>定位</th>
+<th>优势</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UWA</strong>（GOT Online / GPM / 本地资源检测 / AssetBundle 检测）</td>
+<td>真机性能与资源内存的持续监测 + 规则化检测</td>
+<td>报告维度直接对齐 Unity 的分类（贴图 / 网格 / Shader / 音频 / 代码），有行业横向对比；<strong>Shader 变体数量</strong>这类问题有现成规则</td>
+</tr>
+<tr>
+<td><strong>PerfDog</strong>（腾讯 WeTest）</td>
+<td>全平台性能采集</td>
+<td>零侵入、设备覆盖广、可进 CI；<strong>只看系统口径，看不到单资源</strong></td>
+</tr>
+<tr>
+<td><strong>WeTest 深度性能测试</strong></td>
+<td>手游性能与兼容性测试平台</td>
+<td>结合真机机房，适合发版前批量跑机型</td>
+</tr>
+</tbody>
+</table>
+<p>选型建议：<strong>日常定位用 Unity 自带工具，版本级回归用线上平台。</strong> 自带工具能下钻到单资源，线上平台的价值在于跨机型、跨版本的<strong>趋势与门禁</strong>。</p>
+<p>微信小游戏等平台用各自开发者工具的性能面板（如 <code>wx.getPerformance()</code>），内存口径与原生 App 不同，不要直接对比。</p>
+<h3 id="heading-29">按资源类型怎么查</h3>
+<table>
+<thead>
+<tr>
+<th>资源</th>
+<th>第一步（定位）</th>
+<th>第二步（确认根因）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>贴图</td>
+<td>Profiler Memory 看 <code>Graphics</code> 是否异常</td>
+<td>Memory Profiler → Textures，核对 <code>format</code> / 尺寸 / Mip / Read-Write 是否等于配置；不等就是回退</td>
+</tr>
+<tr>
+<td>RenderTexture</td>
+<td>Memory Profiler 按大小倒序看 RT</td>
+<td>检查临时 RT 是否 <code>Release()</code>；管线是否产生了多余的全屏 RT</td>
+</tr>
+<tr>
+<td>Mesh</td>
+<td>Profiler Memory 看网格分类；Memory Profiler 按 Mesh 排序</td>
+<td>是否开了 Read/Write、是否有重复网格</td>
+</tr>
+<tr>
+<td>Shader</td>
+<td>Profiler Memory 的 Shader 计数与大小</td>
+<td>Memory Profiler 看 Shader 对象；构建侧看<strong>变体数量</strong>与剥离结果</td>
+</tr>
+<tr>
+<td>音效</td>
+<td>Profiler → Audio 模块看播放数与内存</td>
+<td>Memory Profiler 看 AudioClip；核对 Load Type（Decompress On Load / Compressed In Memory / Streaming）、Compression Format、Force To Mono、Preload</td>
+</tr>
+<tr>
+<td>托管堆</td>
+<td>Profiler Memory 的 Managed Heap 曲线</td>
+<td>Memory Profiler 快照的 Managed Heap 表，按类型和大小找增长源</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heading-30">采样规范（否则数据不可信）</h3>
+<ul>
+<li><strong>必须真机 + Development Build</strong>：编辑器格式、驱动、内存管理都不是真机行为。</li>
+<li><strong>固定条件</strong>：同一场景、同一相机路径、同一画质档、同一台设备，否则数字没有可比性。</li>
+<li><strong>看峰值，不只看稳态</strong>：峰值往往出现在场景切换 / Loading / 大特效，OOM 也发生在那里。</li>
+<li><strong>区分口径</strong>：任务管理器的 RSS、Android 的 PSS、Unity 的 <code>System Used Memory</code> 不是同一个数字，跨工具对比前先确认口径。</li>
+<li><strong>快照要成组</strong>：单张快照只能看到“现在有什么”，看不到“谁涨的”。</li>
+<li><strong>别一边挂 Profiler 一边测性能</strong>：Profiler 自身有开销，<code>Profiler</code> 分类的内存也要减掉。</li>
+</ul>
+<h3 id="heading-31">工具层面的常见坑</h3>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>编辑器里贴图全是 <code>RGBA32</code></td>
+<td>编辑器平台不套用移动端压缩格式</td>
+<td>用 Build Profiles 的 Asset Import Overrides 强制，或直接看真机快照</td>
+</tr>
+<tr>
+<td>Profiler 的 <code>Graphics</code> 和任务管理器对不上</td>
+<td>一个是引擎估算，一个是系统口径</td>
+<td>用 Memory Profiler 快照 + 系统工具交叉验证</td>
+</tr>
+<tr>
+<td>快照里贴图比配置大很多</td>
+<td>格式回退，或 Read/Write 留了 CPU 副本</td>
+<td>看 <code>format</code> 是否等于配置格式；关掉 Read/Write</td>
+</tr>
+<tr>
+<td>找不到某个贴图是谁加载的</td>
+<td>只看了对象列表，没看引用链</td>
+<td>用 Memory Profiler 的引用链 / <code>All Of Unity Objects</code> 反查</td>
+</tr>
+<tr>
+<td>Android 上 <code>dumpsys meminfo</code> 没有 Graphics 字段</td>
+<td>系统版本 / GPU 驱动差异</td>
+<td>改用 Perfetto，或直接看 <code>GL mtrack</code></td>
+</tr>
+<tr>
+<td>采样时游戏明显变卡</td>
+<td>Profiler 采样本身有开销</td>
+<td>分开测：一次拿数据，一次拿性能</td>
+</tr>
+</tbody>
+</table>
+<p><a id="engineering-rules"></a></p>
+<h2 id="heading-32">大厂工程规范</h2>
+<p>规范的核心不是“写一份文档”，而是<strong>让错误的配置在提交时就被拦住</strong>。</p>
+<h3 id="heading-33">资源分级与预算表</h3>
+<p>先定义清楚，再谈执行。示例：</p>
+<table>
+<thead>
+<tr>
+<th>资源等级</th>
+<th>尺寸上限</th>
+<th>无 Alpha 格式</th>
+<th>有 Alpha 格式</th>
+<th>Mip</th>
+<th>典型数量级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S 级：主角 / 关键 UI</td>
+<td>2048</td>
+<td>ASTC 4×4</td>
+<td>ASTC 4×4</td>
+<td>主角开，UI 关</td>
+<td>十几张</td>
+</tr>
+<tr>
+<td>A 级：角色 / 场景主要物件</td>
+<td>2048</td>
+<td>ASTC 6×6</td>
+<td>ASTC 6×6</td>
+<td>开</td>
+<td>数百张</td>
+</tr>
+<tr>
+<td>B 级：普通道具 / 特效</td>
+<td>1024</td>
+<td>ASTC 6×6</td>
+<td>ASTC 6×6</td>
+<td>开</td>
+<td>上千张</td>
+</tr>
+<tr>
+<td>C 级：远景 / 背景 / 装饰</td>
+<td>512–1024</td>
+<td>ASTC 8×8</td>
+<td>ASTC 8×8</td>
+<td>开</td>
+<td>数千张</td>
+</tr>
+<tr>
+<td>UI 图集</td>
+<td>2048/图集</td>
+<td>—</td>
+<td>ASTC 6×6</td>
+<td>关</td>
+<td>几十个图集</td>
+</tr>
+<tr>
+<td>法线</td>
+<td>同所属角色</td>
+<td><strong>BC5 / ASTC 5×5</strong></td>
+<td>—</td>
+<td>开</td>
+<td>同角色数</td>
+</tr>
+</tbody>
+</table>
+<p>配套的全场景贴图内存预算（必须进入提测 Checklist）：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>低端机</th>
+<th>中端机</th>
+<th>高端机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主城贴图驻留</td>
+<td>≤ 180 MB</td>
+<td>≤ 320 MB</td>
+<td>≤ 500 MB</td>
+</tr>
+<tr>
+<td>战斗贴图驻留</td>
+<td>≤ 250 MB</td>
+<td>≤ 450 MB</td>
+<td>≤ 700 MB</td>
+</tr>
+<tr>
+<td>单张贴图上限</td>
+<td>2048</td>
+<td>2048</td>
+<td>4096（仅特例）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="assetpostprocessor">导入强制：AssetPostprocessor</h3>
+<p><strong>不要让美术手动配格式。</strong> 用导入管线统一收口，只在 <code>importSettingsMissing</code>（首次导入）或不符合规则时改写。</p>
+<pre><code class="language-csharp">using UnityEditor;
+using UnityEngine;
+
+public class TextureImportRule : AssetPostprocessor
+{
+    private void OnPreprocessTexture()
+    {
+        var importer = (TextureImporter)assetImporter;
+        bool isUi = assetPath.Contains(&quot;/UI/&quot;);
+        bool isNormal = assetPath.Contains(&quot;_Normal&quot;);
+
+        // 1) 通用安全默认值：任何贴图都不允许带 CPU 副本
+        importer.isReadable = false;
+        importer.crunchedCompression = false;
+        importer.wrapMode = TextureWrapMode.Clamp;
+
+        // 2) 法线：类型 + 线性空间 + 高保真格式
+        if (isNormal)
+        {
+            importer.textureType = TextureImporterType.NormalMap;
+            importer.sRGBTexture = false;
+            importer.maxTextureSize = 2048;
+            importer.mipmapEnabled = true;
+            ApplyAndroid(importer, TextureImporterFormat.ASTC_5x5, 2048);
+            ApplyIos(importer, TextureImporterFormat.ASTC_5x5, 2048);
+            return;
+        }
+
+        // 3) UI：关 Mip、关 Streaming、按需限制尺寸
+        if (isUi)
+        {
+            importer.textureType = TextureImporterType.Sprite;
+            importer.sRGBTexture = true;
+            importer.mipmapEnabled = false;
+            importer.streamingMipmaps = false;
+            importer.maxTextureSize = 1024;
+            ApplyAndroid(importer, TextureImporterFormat.ASTC_6x6, 1024);
+            ApplyIos(importer, TextureImporterFormat.ASTC_6x6, 1024);
+            return;
+        }
+
+        // 4) 3D 反照率：开 Mip + Streaming
+        importer.sRGBTexture = true;
+        importer.mipmapEnabled = true;
+        importer.streamingMipmaps = true;
+        importer.maxTextureSize = 2048;
+        ApplyAndroid(importer, TextureImporterFormat.ASTC_6x6, 2048);
+        ApplyIos(importer, TextureImporterFormat.ASTC_6x6, 2048);
+    }
+
+    private static void ApplyAndroid(TextureImporter importer, TextureImporterFormat format, int maxSize)
+    {
+        importer.SetPlatformTextureSettings(new TextureImporterPlatformSettings
+        {
+            name = &quot;Android&quot;,
+            overridden = true,
+            maxTextureSize = maxSize,
+            format = format,
+            textureCompression = TextureImporterCompression.Compressed,
+            crunchedCompression = false,
+            // 不支持 ETC2 的老设备兜底：宁可降分辨率，也不要 32 位全尺寸
+            androidETC2FallbackOverride = AndroidETC2FallbackOverride.Quality16Bit
+        });
+    }
+
+    private static void ApplyIos(TextureImporter importer, TextureImporterFormat format, int maxSize)
+    {
+        importer.SetPlatformTextureSettings(new TextureImporterPlatformSettings
+        {
+            name = &quot;iPhone&quot;,
+            overridden = true,
+            maxTextureSize = maxSize,
+            format = format,
+            textureCompression = TextureImporterCompression.Compressed,
+            crunchedCompression = false
+        });
+    }
+}
+</code></pre>
+<h3 id="-ci-">资源扫描与 CI 门禁</h3>
+<p>规范必须能被机器检查，否则一定会腐化。扫描项：</p>
+<table>
+<thead>
+<tr>
+<th>检查项</th>
+<th>判定</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Read/Write Enabled</code> 为真</td>
+<td><strong>违规</strong></td>
+<td>自动关闭并提交</td>
+</tr>
+<tr>
+<td>尺寸超过该目录等级上限</td>
+<td><strong>违规</strong></td>
+<td>阻断合并，要求改尺寸</td>
+</tr>
+<tr>
+<td>平台格式未覆盖（<code>overridden == false</code>）</td>
+<td><strong>违规</strong></td>
+<td>自动套规则</td>
+</tr>
+<tr>
+<td>法线贴图 <code>sRGBTexture == true</code></td>
+<td><strong>违规</strong></td>
+<td>自动关闭</td>
+</tr>
+<tr>
+<td>非颜色贴图 <code>sRGBTexture == true</code></td>
+<td><strong>违规</strong></td>
+<td>人工确认</td>
+</tr>
+<tr>
+<td>尺寸不是 4 的倍数</td>
+<td><strong>警告</strong></td>
+<td>提示改为 2 次幂或 4 倍数</td>
+</tr>
+<tr>
+<td><code>RGBA</code> 贴图实际 Alpha 全 255</td>
+<td><strong>警告</strong></td>
+<td>建议改 RGB 格式，直接省一半</td>
+</tr>
+<tr>
+<td>UI 贴图开了 Mip</td>
+<td><strong>警告</strong></td>
+<td>建议关闭</td>
+</tr>
+<tr>
+<td>Crunch 用在非 C 级资源</td>
+<td><strong>警告</strong></td>
+<td>确认是否必要</td>
+</tr>
+<tr>
+<td>同一资源在多处重复导入</td>
+<td><strong>违规</strong></td>
+<td>要求合并到图集/公共目录</td>
+</tr>
+</tbody>
+</table>
+<p>编辑器侧扫描骨架：</p>
+<pre><code class="language-csharp">using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+
+public static class TextureAudit
+{
+    [MenuItem(&quot;Tools/Texture/Audit Selection And Report&quot;)]
+    public static void Audit()
+    {
+        var violations = new List&lt;string&gt;();
+        foreach (var guid in AssetDatabase.FindAssets(&quot;t:Texture2D&quot;, new[] { &quot;Assets/Arts&quot; }))
+        {
+            var path = AssetDatabase.GUIDToAssetPath(guid);
+            var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+            if (importer == null) continue;
+
+            if (importer.isReadable)
+                violations.Add($&quot;[Read/Write] {path}&quot;);
+
+            var android = importer.GetPlatformTextureSettings(&quot;Android&quot;);
+            if (!android.overridden)
+                violations.Add($&quot;[No Android Override] {path}&quot;);
+
+            if (importer.textureType == TextureImporterType.NormalMap &amp;&amp; importer.sRGBTexture)
+                violations.Add($&quot;[Normal sRGB] {path}&quot;);
+
+            if (path.Contains(&quot;/UI/&quot;) &amp;&amp; importer.mipmapEnabled)
+                violations.Add($&quot;[UI Mip On] {path}&quot;);
+        }
+
+        foreach (var v in violations) Debug.LogWarning(v);
+        Debug.Log($&quot;Texture audit done. Violations: {violations.Count}&quot;);
+    }
+}
+</code></pre>
+<p>同一套检查要在 CI 的 <code>-batchmode -executeMethod</code> 里跑，并把违规数作为门禁指标。<strong>只有进入流水线的规范才是规范。</strong></p>
+<h3 id="editor-">Editor 侧内存估算</h3>
+<p>在导入前就能算出内存，避免等到真机才发现：</p>
+<pre><code class="language-csharp">using UnityEngine;
+
+public static class TextureMemoryEstimator
+{
+    /// &lt;summary&gt;按块压缩公式估算纹理内存（含 Mip 链）。&lt;/summary&gt;
+    public static long EstimateBytes(int width, int height,
+        int blockWidth, int blockHeight, int blockBytes, bool mipmaps)
+    {
+        long total = 0;
+        int w = width, h = height;
+
+        while (true)
+        {
+            int blocksX = (w + blockWidth - 1) / blockWidth;
+            int blocksY = (h + blockHeight - 1) / blockHeight;
+            total += (long)blocksX * blocksY * blockBytes;
+
+            if (!mipmaps || (w == 1 &amp;&amp; h == 1)) break;
+            w = Mathf.Max(1, w &gt;&gt; 1);
+            h = Mathf.Max(1, h &gt;&gt; 1);
+        }
+        return total;
+    }
+}
+
+// 例：2048² ASTC 6x6 含 Mip
+// var bytes = TextureMemoryEstimator.EstimateBytes(2048, 2048, 6, 6, 16, true);
+// bytes == 2497712  →  约 2.38 MiB
+</code></pre>
+<p>把这张表接进资源扫描报告，就能在美术提交时直接看到“这个目录的贴图内存从多少涨到多少”。</p>
+<p><a id="troubleshooting"></a></p>
+<h2 id="heading-34">常见坑与排障</h2>
+<table>
+<thead>
+<tr>
+<th>症状</th>
+<th>可能原因</th>
+<th>排查手段</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>真机贴图内存远超预期</td>
+<td>格式不被支持，回退成 RGBA32 并保留两份</td>
+<td><code>Texture2D.format</code>、Memory Profiler、<code>SystemInfo.SupportsTextureFormat</code></td>
+<td>换平台支持的格式，或走 AAB 多格式分发</td>
+</tr>
+<tr>
+<td>内存只涨不降</td>
+<td>Bundle 未 Unload；纹理引用未释放</td>
+<td>Memory Profiler Diff、Addressables 事件</td>
+<td>释放句柄、<code>Resources.UnloadUnusedAssets</code></td>
+</tr>
+<tr>
+<td>贴图内存是预期两倍</td>
+<td><code>Read/Write Enabled</code> 开着</td>
+<td>资源扫描</td>
+<td>关闭；运行时纹理用 <code>Apply(true, true)</code></td>
+</tr>
+<tr>
+<td>Streaming Mipmap 不生效</td>
+<td>纹理可读，或用了 Crunch</td>
+<td>导入设置</td>
+<td>关 Read/Write，关 Crunch</td>
+</tr>
+<tr>
+<td>编辑器正常，真机偏亮/偏暗</td>
+<td>sRGB 勾错</td>
+<td>逐平台对比截图</td>
+<td>颜色开、数据关</td>
+</tr>
+<tr>
+<td>法线光照发花</td>
+<td>用 BC1/BC3 存法线，或格式太粗</td>
+<td>近景高光、金属对比</td>
+<td>用 BC5 / ASTC 5×5 以上，确认 sRGB 关闭</td>
+</tr>
+<tr>
+<td>Mask 行为在低端机不一样</td>
+<td>压缩误差跨过 shader 阈值</td>
+<td>分通道可视化</td>
+<td>提高该图格式档位，或改 shader 容差逻辑</td>
+</tr>
+<tr>
+<td>半透明边缘变硬/锯齿</td>
+<td>用了 1bit Alpha（ETC1/ETC2 Punchthrough/BC1）</td>
+<td>放大观察边缘</td>
+<td>换 ASTC 或 8bpp 方案</td>
+</tr>
+<tr>
+<td>Android 装包后引擎初始化失败</td>
+<td>自定义 Gradle 模板缺 <code>texture { enableSplit = true }</code></td>
+<td>logcat + 检查 AAB 切片</td>
+<td>更新 <code>launcherTemplate.gradle</code></td>
+</tr>
+<tr>
+<td>AAB 里没有 ASTC 切片</td>
+<td>只打 APK，或列表没加 ASTC，或 Asset Import Overrides 是 Force Uncompressed</td>
+<td>bundletool 解 AAB</td>
+<td>补配置后重新出包</td>
+</tr>
+<tr>
+<td>远端 Bundle 在部分设备花屏/异常</td>
+<td>不同格式资源混在同一 URL，缓存串了</td>
+<td>CDN 缓存 key、Bundle 名</td>
+<td>把格式编进 Profile / URL / 缓存 key</td>
+</tr>
+<tr>
+<td>下载体积超标</td>
+<td>贴图尺寸过大、未走 Crunch、重复资源</td>
+<td>Build Layout Report、Addressables Analyze</td>
+<td>降尺寸优先，其次 Crunch，再查重复</td>
+</tr>
+<tr>
+<td>导入/构建时间过长</td>
+<td>全局开了 Crunch 或用了高质量 ASTC 编码</td>
+<td>构建日志</td>
+<td>只对必要资源开 Crunch</td>
+</tr>
+<tr>
+<td>小图很多，内存却不低</td>
+<td>每张小图都单独压缩，块对齐浪费大</td>
+<td>贴图数量与尺寸分布统计</td>
+<td>打进图集，或改小格式（R8/RG16）</td>
+</tr>
+</tbody>
+</table>
+<p><a id="deliverables"></a></p>
+<h2 id="heading-35">验收清单与交付物</h2>
+<h3 id="heading-36">发版前必须回答的问题</h3>
+<ul>
+<li><input disabled="" type="checkbox" /> 每个平台的<strong>默认纹理压缩格式</strong>是什么？有没有逐纹理的 Platform Override 打乱全局策略？</li>
+<li><input disabled="" type="checkbox" /> Android 是 <strong>AAB</strong> 还是 APK？如果是 AAB，<code>Texture Compression Formats</code> 是否配好、切片是否真的包含目标格式？</li>
+<li><input disabled="" type="checkbox" /> 走 AAB 的项目，<strong>Gradle 模板是否包含 <code>texture { enableSplit = true }</code></strong>？</li>
+<li><input disabled="" type="checkbox" /> 有没有任何资源可能触发<strong>运行时格式回退</strong>？回退后的内存峰值算过吗？</li>
+<li><input disabled="" type="checkbox" /> 全项目 <code>Read/Write Enabled</code> 是否已清零？运行时创建的纹理是否都 <code>Apply(true, true)</code>？</li>
+<li><input disabled="" type="checkbox" /> UI 贴图是否关掉 Mip？3D 贴图是否开了 Mip 和 Streaming？</li>
+<li><input disabled="" type="checkbox" /> 法线和 Mask 是否走了正确格式、正确色彩空间？</li>
+<li><input disabled="" type="checkbox" /> 远端 Addressables 是否做了格式分离（URL / 缓存 key / catalog）？</li>
+<li><input disabled="" type="checkbox" /> 低端机上贴图驻留峰值是多少？离预算还差多少？</li>
+<li><input disabled="" type="checkbox" /> 尺寸分布是否合理？有没有 4K 图被当 300 像素用？</li>
+<li><input disabled="" type="checkbox" /> 是否用 <strong>Memory Profiler 快照</strong>验证过贴图的<strong>实际格式与字节数</strong>，而不是只看导入设置？（见 <a href="#tools">工具链</a>）</li>
+<li><input disabled="" type="checkbox" /> 音效的 <strong>Load Type / Compression Format</strong> 是否按使用场景区分？长音频是否走了 Streaming？</li>
+</ul>
+<h3 id="heading-37">要交付的东西</h3>
+<table>
+<thead>
+<tr>
+<th>交付物</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>贴图资源规范</td>
+<td>分级表、尺寸上限、格式矩阵、Mip/sRGB/Read-Write 规则</td>
+</tr>
+<tr>
+<td>导入管线脚本</td>
+<td><code>AssetPostprocessor</code> 自动套规则，覆盖首导和异常配置</td>
+</tr>
+<tr>
+<td>资源扫描器 + CI 门禁</td>
+<td>上述检查项，违规数进流水线指标</td>
+</tr>
+<tr>
+<td>贴图内存估算工具</td>
+<td>块压缩公式实现，输出按目录/等级的估算报告</td>
+</tr>
+<tr>
+<td>多格式分包方案</td>
+<td>Android AAB targeting 配置 + 远端 Bundle 的格式分离策略</td>
+</tr>
+<tr>
+<td>真机验证清单</td>
+<td>iOS/Android 的 ASTC、ETC2、回退三条路径分别验证</td>
+</tr>
+<tr>
+<td>性能 / 内存工具链清单</td>
+<td>每个平台的标准采样流程、工具组合、快照命名与留档规范</td>
+</tr>
+<tr>
+<td>排障手册</td>
+<td>上面的症状对照表，接入到线上问题处理流程</td>
+</tr>
+</tbody>
+</table>
+<h2 id="heading-38">一句话总结</h2>
+<p><strong>贴图内存 = 分辨率 × bpp × Mip 系数 × 副本数。</strong></p>
+<ul>
+<li>分辨率是最大杠杆（降一级省 3/4），其次才是格式（ASTC 6×6 相对 RGBA32 省 8/9）；</li>
+<li>格式选择的本质是<strong>在“设备支持”的前提下选够用的 bpp</strong>，没有全局最优解；</li>
+<li>移动端的正确姿势是 <strong>ETC2 兜底 + ASTC 优化 + AAB 分发</strong>，而不是赌所有设备都支持 ASTC；</li>
+<li>最贵的错误不是画质差一点，而是<strong>格式不支持导致的 runtime 回退</strong>——它会让内存九倍增长，且同时存在两份数据。</li>
+<li><strong>Crunch 省的是磁盘，不是显存</strong>；<strong>2 的次方也不再是硬要求</strong>——POT 影响的是兼容性与块对齐浪费，不是内存公式本身；</li>
+<li>所有结论都要在<strong>真机 + 实际下发的包</strong>上用 Memory Profiler 快照验证，编辑器里的数字不算数。</li>
+</ul>
+<p>相关阅读：<a href="/post/unity-senior-developer-08-performance-memory-package/">Unity 开发高级/资深 08：性能、内存与包体</a>、<a href="/post/unity-senior-developer-07-rendering-shader-ta/">Unity 开发高级/资深 07：渲染、Shader 与 TA 协作</a>。</p>
+
+  </div>
+
+  
+  <nav class="post-nav">
+    
+    <a href="/post/gamerecord/" class="post-nav-card post-nav-card--prev">
+      
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">上一篇</span>
+        <span class="post-nav-card__title">GameRecord</span>
+      </div>
+      <span class="post-nav-card__arrow">&larr;</span>
+    </a>
+    
+    
+    <a href="/post/unity-zhuan-wei-xin-xiao-you-xi-zhi-nan/" class="post-nav-card post-nav-card--next">
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">下一篇</span>
+        <span class="post-nav-card__title">Unity 转微信小游戏指南</span>
+      </div>
+      
+      <span class="post-nav-card__arrow">&rarr;</span>
+    </a>
+    
+  </nav>
+
+  
+  
+
+
+  
+    <section class="comment-section">
+  <h2 class="comment-section__title">评论</h2>
+  <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    var gitalk = new Gitalk({
+      clientID: 'ca79a66585e72af3bff6',
+      clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+      repo: 'zhoujun2303.github.io',
+      owner: 'zhoujun2303',
+      admin: ['zhoujun2303'],
+      id: location.pathname,
+      distractionFreeMode: false
+    });
+    gitalk.render('gitalk-container');
+  </script>
+</section>
+
+  
+
+
+
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+
+    
+    
+    <nav class="footer-nav" aria-label="页脚导航">
+      
+      <a class="footer-nav__link" href="/">首页</a>
+      
+      <a class="footer-nav__link" href="/post">博客</a>
+      
+      <a class="footer-nav__link" href="/memos">闪念</a>
+      
+      <a class="footer-nav__link" href="/archives">归档</a>
+      
+      <a class="footer-nav__link" href="/tags">标签</a>
+      
+      <a class="footer-nav__link" href="/links">友链</a>
+      
+      <a class="footer-nav__link" href="/post/about">关于</a>
+      
+    </nav>
+    
+
+    
+    <div class="footer-social">
+      
+      <a class="footer-social__link" href="https://github.com/ZhouJun2303" target="_blank" rel="noopener noreferrer"
+        aria-label="GitHub">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+      </a>
+      
+      
+      
+      <a class="footer-social__link" href="/feed.xml" aria-label="RSS">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6.18 15.64a2.18 2.18 0 110 4.36 2.18 2.18 0 010-4.36zM4 4.44A15.56 15.56 0 0119.56 20h-2.83A12.73 12.73 0 004 7.27V4.44zm0 5.66a9.9 9.9 0 019.9 9.9h-2.83A7.07 7.07 0 004 12.93V10.1z"/>
+        </svg>
+      </a>
+    </div>
+
+    
+    <div class="footer-copyright">
+      <p>&copy; 2026 长胖是个梦想. All rights reserved.</p>
+    </div>
+
+    
+    
+    <div class="footer-custom">
+      Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+    </div>
+    
+
+    
+    <div class="footer-powered">
+      <span>Powered by <a href="https://gridea.pro" target="_blank" rel="noopener noreferrer">Gridea Pro</a></span>
+    </div>
+
+  </div>
+</footer>
+
+  
+  <div class="search-overlay" id="searchOverlay" style="display:none;">
+  <div class="search-modal">
+    <div class="search-header">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索文章..." autocomplete="off" />
+      <span class="search-kbd">&#8984;K</span>
+      <button class="search-close" id="searchClose" type="button" aria-label="关闭搜索">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script src="/scripts/search.js"></script>
+  
+
+  
+
+  
+
+  
+
+<script>console.log("\n%c ✦ Gridea Pro v1.2.2 %c · Theme: flavor-theme v1.0.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+</body>
+</html>

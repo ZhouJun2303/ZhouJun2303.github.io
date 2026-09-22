@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-label="Unity 贴图格式与内存分层示意">
+  <rect width="1200" height="800" fill="#f7fafc"/>
+  <rect x="40" y="30" width="1120" height="740" rx="28" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+
+  <text x="600" y="92" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="36" font-weight="700" fill="#1f2937">Unity 贴图格式与内存分层</text>
+  <text x="600" y="128" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="18" fill="#64748b">源文件 / 构建容器 / GPU 格式，三层不能混为一谈</text>
+
+  <text x="90" y="178" font-family="Arial, 'PingFang SC', sans-serif" font-size="19" font-weight="700" fill="#334155">三层格式</text>
+
+  <rect x="90" y="194" width="600" height="112" rx="18" fill="#f1f5f9" stroke="#64748b"/>
+  <text x="120" y="232" font-family="Arial, 'PingFang SC', sans-serif" font-size="20" font-weight="700" fill="#334155">① 源文件格式</text>
+  <text x="120" y="262" font-family="Arial, 'PingFang SC', sans-serif" font-size="17" fill="#475569">PNG / JPG / PSD / TGA / EXR</text>
+  <text x="120" y="288" font-family="Arial, 'PingFang SC', sans-serif" font-size="15" fill="#94a3b8">影响仓库体积与导入耗时，不影响显存</text>
+
+  <path d="M390 306 L390 340" stroke="#94a3b8" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="90" y="340" width="600" height="112" rx="18" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="120" y="378" font-family="Arial, 'PingFang SC', sans-serif" font-size="20" font-weight="700" fill="#92400e">② 构建 / 分发容器</text>
+  <text x="120" y="408" font-family="Arial, 'PingFang SC', sans-serif" font-size="17" fill="#92400e">APK / AAB / AssetBundle / LZ4 / LZMA / Crunch</text>
+  <text x="120" y="434" font-family="Arial, 'PingFang SC', sans-serif" font-size="15" fill="#b45309">影响下载体积、磁盘占用与加载 IO</text>
+
+  <path d="M390 452 L390 486" stroke="#94a3b8" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="90" y="486" width="600" height="130" rx="18" fill="#ecfeff" stroke="#06b6d4"/>
+  <text x="120" y="524" font-family="Arial, 'PingFang SC', sans-serif" font-size="20" font-weight="700" fill="#155e75">③ GPU 纹理格式（决定内存）</text>
+  <text x="120" y="554" font-family="Arial, 'PingFang SC', sans-serif" font-size="17" fill="#0e7490">ASTC / ETC2 / EAC / PVRTC / BC1-7 / RGBA32</text>
+  <text x="120" y="580" font-family="Arial, 'PingFang SC', sans-serif" font-size="15" fill="#0891b2">固定尺寸块 + 固定字节：显存可精确计算</text>
+  <text x="120" y="602" font-family="Arial, 'PingFang SC', sans-serif" font-size="15" fill="#0891b2">bpp = 128 / (块宽 × 块高)（ASTC）</text>
+
+  <rect x="730" y="178" width="390" height="438" rx="20" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="760" y="216" font-family="Arial, 'PingFang SC', sans-serif" font-size="19" font-weight="700" fill="#334155">运行时内存里有几份数据</text>
+
+  <rect x="760" y="236" width="330" height="76" rx="14" fill="#eef2ff" stroke="#6366f1"/>
+  <text x="782" y="266" font-family="Arial, 'PingFang SC', sans-serif" font-size="17" font-weight="700" fill="#3730a3">GPU 显存</text>
+  <text x="782" y="292" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#4338ca">渲染直接采样，必需驻留</text>
+
+  <rect x="760" y="322" width="330" height="76" rx="14" fill="#fdf2f8" stroke="#ec4899"/>
+  <text x="782" y="352" font-family="Arial, 'PingFang SC', sans-serif" font-size="17" font-weight="700" fill="#9d174d">CPU 副本</text>
+  <text x="782" y="378" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#be185d">Read/Write Enabled 才有，约 2 倍</text>
+
+  <rect x="760" y="408" width="330" height="76" rx="14" fill="#f0fdf4" stroke="#22c55e"/>
+  <text x="782" y="438" font-family="Arial, 'PingFang SC', sans-serif" font-size="17" font-weight="700" fill="#166534">Bundle 缓存</text>
+  <text x="782" y="464" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#15803d">加载后到 Unload 之间一直占内存</text>
+
+  <rect x="760" y="500" width="330" height="96" rx="14" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+  <text x="782" y="530" font-family="Arial, 'PingFang SC', sans-serif" font-size="16" font-weight="700" fill="#b91c1c">⚠ 格式不被支持时</text>
+  <text x="782" y="556" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#dc2626">解压为 RGBA32，且压缩副本与未压缩副本</text>
+  <text x="782" y="578" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#dc2626">同时存在 —— 内存约 9 倍</text>
+
+  <line x1="90" y1="650" x2="1110" y2="650" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="90" y="684" font-family="Arial, 'PingFang SC', sans-serif" font-size="18" font-weight="700" fill="#334155">2048×2048 贴图含完整 Mip 的内存对比</text>
+
+  <text x="300" y="716" text-anchor="end" font-family="Arial, 'PingFang SC', sans-serif" font-size="15" fill="#475569">RGBA32（未压缩）</text>
+  <rect x="310" y="702" width="700" height="20" rx="6" fill="#ef4444"/>
+  <text x="1022" y="717" font-family="Arial, 'PingFang SC', sans-serif" font-size="15" font-weight="700" fill="#b91c1c">21.3 MiB</text>
+
+  <text x="300" y="750" text-anchor="end" font-family="Arial, 'PingFang SC', sans-serif" font-size="15" fill="#475569">ASTC 6×6</text>
+  <rect x="310" y="736" width="78" height="20" rx="6" fill="#22c55e"/>
+  <text x="400" y="751" font-family="Arial, 'PingFang SC', sans-serif" font-size="15" font-weight="700" fill="#15803d">2.38 MiB　→　约 1/9</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <path d="M0 0 L6 3 L0 6 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+</svg>
