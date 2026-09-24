@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-label="Unity 资源热更概念地图">
+  <rect width="1200" height="820" fill="#f7fafc"/>
+  <rect x="40" y="24" width="1120" height="780" rx="28" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+
+  <text x="600" y="86" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="34" font-weight="700" fill="#1f2937">Unity 资源热更概念地图</text>
+  <text x="600" y="120" text-anchor="middle" font-family="Arial, 'PingFang SC', sans-serif" font-size="17" fill="#64748b">Package / Catalog / Manifest / Bundle / DLC 的从属关系与各自的职责边界</text>
+
+  <text x="80" y="168" font-family="Arial, 'PingFang SC', sans-serif" font-size="18" font-weight="700" fill="#334155">名词的从属关系（由大到小）</text>
+
+  <rect x="80" y="184" width="500" height="68" rx="16" fill="#eef2ff" stroke="#6366f1"/>
+  <text x="106" y="214" font-family="Arial, 'PingFang SC', sans-serif" font-size="19" font-weight="700" fill="#3730a3">Package　资源包</text>
+  <text x="106" y="240" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#4338ca">一组资源的集合：自己的清单、版本号、下载器、缓存目录</text>
+
+  <path d="M330 252 L330 276" stroke="#94a3b8" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="80" y="276" width="500" height="68" rx="16" fill="#ecfeff" stroke="#06b6d4"/>
+  <text x="106" y="306" font-family="Arial, 'PingFang SC', sans-serif" font-size="19" font-weight="700" fill="#155e75">Catalog / Manifest　清单</text>
+  <text x="106" y="332" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#0e7490">资源地址到 Bundle 的映射表，回答“谁在哪个包里、依赖谁”</text>
+
+  <path d="M330 344 L330 368" stroke="#94a3b8" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="80" y="368" width="500" height="68" rx="16" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="106" y="398" font-family="Arial, 'PingFang SC', sans-serif" font-size="19" font-weight="700" fill="#92400e">Bundle　物理容器</text>
+  <text x="106" y="424" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#b45309">磁盘上真实存在的文件：BundleName 加内容 Hash 后缀</text>
+
+  <path d="M330 436 L330 460" stroke="#94a3b8" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="80" y="460" width="500" height="68" rx="16" fill="#f0fdf4" stroke="#22c55e"/>
+  <text x="106" y="490" font-family="Arial, 'PingFang SC', sans-serif" font-size="19" font-weight="700" fill="#166534">Asset　资源</text>
+  <text x="106" y="516" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#15803d">业务层只认 Address，路径或 GUID 都不该同时存在两套</text>
+
+  <text x="620" y="168" font-family="Arial, 'PingFang SC', sans-serif" font-size="18" font-weight="700" fill="#334155">三套版本号：必须分开比较</text>
+
+  <rect x="620" y="184" width="500" height="52" rx="14" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="644" y="216" font-family="Arial, 'PingFang SC', sans-serif" font-size="16" fill="#334155">App 版本　→　只能商店强更，改 AOT 就得走这条</text>
+
+  <rect x="620" y="246" width="500" height="52" rx="14" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="644" y="278" font-family="Arial, 'PingFang SC', sans-serif" font-size="16" fill="#334155">资源版本　→　res_version.txt，整数比对决定是否热更</text>
+
+  <rect x="620" y="308" width="500" height="52" rx="14" fill="#fef2f2" stroke="#ef4444"/>
+  <text x="644" y="340" font-family="Arial, 'PingFang SC', sans-serif" font-size="16" fill="#b91c1c">代码版本　→　热更 DLL 本身也是资源，跟着资源版本走</text>
+
+  <text x="620" y="400" font-family="Arial, 'PingFang SC', sans-serif" font-size="18" font-weight="700" fill="#334155">同一份资源的三层位置</text>
+
+  <rect x="620" y="416" width="500" height="48" rx="14" fill="#f0fdf4" stroke="#22c55e"/>
+  <text x="644" y="446" font-family="Arial, 'PingFang SC', sans-serif" font-size="15" fill="#166534">StreamingAssets　随包内置，首启离线也能跑</text>
+
+  <rect x="620" y="472" width="500" height="48" rx="14" fill="#eef2ff" stroke="#6366f1"/>
+  <text x="644" y="502" font-family="Arial, 'PingFang SC', sans-serif" font-size="15" fill="#3730a3">persistentDataPath　热更落地处，覆盖安装会清</text>
+
+  <rect x="620" y="528" width="500" height="48" rx="14" fill="#ecfeff" stroke="#06b6d4"/>
+  <text x="644" y="558" font-family="Arial, 'PingFang SC', sans-serif" font-size="15" fill="#155e75">CDN　按 v 加版本号 加包名分层，换版本必须换目录</text>
+
+  <line x1="80" y1="600" x2="1120" y2="600" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="80" y="636" font-family="Arial, 'PingFang SC', sans-serif" font-size="18" font-weight="700" fill="#334155">最容易混的三个词：DLC、热更、分包，它们不在同一个维度</text>
+
+  <rect x="80" y="656" width="336" height="126" rx="16" fill="#eef2ff" stroke="#6366f1"/>
+  <text x="104" y="686" font-family="Arial, 'PingFang SC', sans-serif" font-size="18" font-weight="700" fill="#3730a3">DLC</text>
+  <text x="104" y="712" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#4338ca">发行与商业概念：主包之外、</text>
+  <text x="104" y="734" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#4338ca">按需购买或获取的内容单元</text>
+  <text x="104" y="762" font-family="Arial, 'PingFang SC', sans-serif" font-size="13" fill="#6366f1">技术侧没有对应 API，靠独立 Package 落地</text>
+
+  <rect x="432" y="656" width="336" height="126" rx="16" fill="#f0fdf4" stroke="#22c55e"/>
+  <text x="456" y="686" font-family="Arial, 'PingFang SC', sans-serif" font-size="18" font-weight="700" fill="#166534">热更（Patch）</text>
+  <text x="456" y="712" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#15803d">交付机制：把已经发出去的内容</text>
+  <text x="456" y="734" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#15803d">替换成新版本</text>
+  <text x="456" y="762" font-family="Arial, 'PingFang SC', sans-serif" font-size="13" fill="#22c55e">关注的是版本比对、差异下载、回滚</text>
+
+  <rect x="784" y="656" width="336" height="126" rx="16" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="808" y="686" font-family="Arial, 'PingFang SC', sans-serif" font-size="18" font-weight="700" fill="#92400e">分包（Split）</text>
+  <text x="808" y="712" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#b45309">包体结构：首包里放什么、</text>
+  <text x="808" y="734" font-family="Arial, 'PingFang SC', sans-serif" font-size="14" fill="#b45309">其余按什么边界拆出去</text>
+  <text x="808" y="762" font-family="Arial, 'PingFang SC', sans-serif" font-size="13" fill="#f59e0b">关注的是首包体积与下载时机</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <path d="M0 0 L6 3 L0 6 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+</svg>

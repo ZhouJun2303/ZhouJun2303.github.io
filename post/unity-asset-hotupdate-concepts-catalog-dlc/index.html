@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="/styles/main.min.css">
+
+
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+
+
+<style>:root { --heatmap-color: #39d353; }</style>
+
+
+
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('flavor-theme');
+      var theme = saved || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('theme-light');
+      }
+    } catch (e) { }
+  })();
+</script>
+  <meta name="generator" content="Gridea Pro 1.2.2">
+  <title>Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么 | idea</title>
+  
+<meta property="og:title" content="Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么" />
+<meta property="og:type" content="article" />
+
+<meta property="og:image" content="/post-images/unity-asset-hotupdate-concept-map.svg" />
+
+
+<meta name="description" content="资源热更这块最大的沟通成本不在实现，而在名词。同一个词在不同框架里指不同文件，同一个文件在不同框架里叫不同名字：Addressables 叫 Catalog，YooAsset 里没有 Catalog 这个类却有一份 BuildinCatalog；Manifest 既可能是框架的运行时清单，也可能是 Unity 构建过程产出的一个副产物；而 DLC 干脆不是技术名词，是发行名词。 &amp;hellip;">
+<link rel="canonical" href="https://zhoujun2303.github.io/post/unity-asset-hotupdate-concepts-catalog-dlc/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么","url":"https://zhoujun2303.github.io/post/unity-asset-hotupdate-concepts-catalog-dlc/","description":"资源热更这块最大的沟通成本不在实现，而在名词。同一个词在不同框架里指不同文件，同一个文件在不同框架里叫不同名字：Addressables 叫 Catalog，YooAsset 里没有 Catalog 这个类却有一份 BuildinCatalog；Manifest 既可能是框架的运行时清单，也可能是 Unity 构建过程产出的一个副产物；而 DLC 干脆不是技术名词，是发行名词。 \u0026hellip;","image":"/post-images/unity-asset-hotupdate-concept-map.svg","datePublished":"2026-09-24T21:10:00+08:00","dateModified":"2026-09-24T21:10:00+08:00","author":{"@type":"Person","name":"idea"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"idea"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"idea","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-asset-hotupdate-concepts-catalog-dlc/","name":"Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么","position":2}]}</script>
+<meta property="og:title" content="Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么">
+<meta property="og:description" content="资源热更这块最大的沟通成本不在实现，而在名词。同一个词在不同框架里指不同文件，同一个文件在不同框架里叫不同名字：Addressables 叫 Catalog，YooAsset 里没有 Catalog 这个类却有一份 BuildinCatalog；Manifest 既可能是框架的运行时清单，也可能是 Unity 构建过程产出的一个副产物；而 DLC 干脆不是技术名词，是发行名词。 &amp;hellip;">
+<meta property="og:url" content="https://zhoujun2303.github.io/post/unity-asset-hotupdate-concepts-catalog-dlc/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="idea">
+<meta property="og:image" content="/post-images/unity-asset-hotupdate-concept-map.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-asset-hotupdate-concepts-catalog-dlc/">
+<meta name="twitter:title" content="Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么">
+<meta name="twitter:description" content="资源热更这块最大的沟通成本不在实现，而在名词。同一个词在不同框架里指不同文件，同一个文件在不同框架里叫不同名字：Addressables 叫 Catalog，YooAsset 里没有 Catalog 这个类却有一份 BuildinCatalog；Manifest 既可能是框架的运行时清单，也可能是 Unity 构建过程产出的一个副产物；而 DLC 干脆不是技术名词，是发行名词。 &amp;hellip;">
+<meta name="twitter:image" content="/post-images/unity-asset-hotupdate-concept-map.svg">
+</head>
+<body class="flavor-theme">
+
+  <header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <div class="top-bar">
+
+      
+      <div class="top-bar__left">
+        
+        <a href="https://zhoujun2303.github.io" class="site-avatar-link" aria-label="返回首页">
+          <img class="site-avatar" src="/images/avatar.png" alt="idea" />
+        </a>
+        
+        <a href="https://zhoujun2303.github.io" class="site-name-link">idea</a>
+      </div>
+
+      
+      <nav class="top-bar__nav" id="sectionBar">
+        
+        
+        <a class="nav-item" href="/">首页</a>
+        
+        <a class="nav-item" href="/post">博客</a>
+        
+        <a class="nav-item" href="/memos">闪念</a>
+        
+        <a class="nav-item" href="/archives">归档</a>
+        
+        <a class="nav-item" href="/tags">标签</a>
+        
+        <a class="nav-item" href="/links">友链</a>
+        
+        <a class="nav-item" href="/post/about">关于</a>
+        
+        
+      </nav>
+
+      
+      <div class="top-bar__right">
+        <button class="btn-icon btn-search search-btn" id="btnSearch" type="button" aria-label="搜索">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-sun" id="themeToggleSun" type="button"
+          aria-label="切换到浅色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1C12.5523 1 13 1.44772 13 2V4C13 4.55228 12.5523 5 12 5C11.4477 5 11 4.55228 11 4V2C11 1.44772 11.4477 1 12 1Z"></path>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12ZM12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9Z"></path>
+            <path d="M13 20C13 19.4477 12.5523 19 12 19C11.4477 19 11 19.4477 11 20V22C11 22.5523 11.4477 23 12 23C12.5523 23 13 22.5523 13 22V20Z"></path>
+            <path d="M4.22282 4.22289C4.61335 3.83236 5.24651 3.83236 5.63704 4.22289L7.04704 5.63289C7.43756 6.02341 7.43756 6.65658 7.04704 7.0471C6.65651 7.43762 6.02335 7.43762 5.63283 7.0471L4.22282 5.6371C3.8323 5.24658 3.8323 4.61341 4.22282 4.22289Z"></path>
+            <path d="M18.367 16.9529C17.9765 16.5623 17.3433 16.5623 16.9528 16.9529C16.5623 17.3434 16.5623 17.9766 16.9528 18.3671L18.3628 19.7771C18.7533 20.1676 19.3865 20.1676 19.777 19.7771C20.1675 19.3866 20.1675 18.7534 19.777 18.3629L18.367 16.9529Z"></path>
+            <path d="M1 12C1 11.4477 1.44772 11 2 11H4C4.55228 11 5 11.4477 5 12C5 12.5523 4.55228 13 4 13H2C1.44772 13 1 12.5523 1 12Z"></path>
+            <path d="M20 11C19.4477 11 19 11.4477 19 12C19 12.5523 19.4477 13 20 13H22C22.5523 13 23 12.5523 23 12C23 11.4477 22.5523 11 22 11H20Z"></path>
+            <path d="M7.04704 16.9529C7.43756 17.3434 7.43756 17.9766 7.04704 18.3671L5.63704 19.7771C5.24651 20.1676 4.61335 20.1676 4.22282 19.7771C3.8323 19.3866 3.8323 18.7534 4.22283 18.3629L5.63283 16.9529C6.02335 16.5623 6.65651 16.5623 7.04704 16.9529Z"></path>
+            <path d="M19.777 5.6371C20.1675 5.24657 20.1675 4.61341 19.777 4.22289C19.3865 3.83236 18.7533 3.83236 18.3628 4.22289L16.9528 5.63289C16.5623 6.02341 16.5623 6.65658 16.9528 7.0471C17.3433 7.43762 17.9765 7.43762 18.367 7.0471L19.777 5.6371Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon theme-toggle theme-toggle-moon" id="themeToggleMoon" type="button"
+          aria-label="切换到深色模式">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C10.0222 2 8.08879 2.58649 6.4443 3.6853C4.79981 4.78412 3.51809 6.3459 2.76121 8.17317C2.00433 10.0004 1.8063 12.0111 2.19215 13.9509C2.578 15.8907 3.53041 17.6725 4.92894 19.0711C6.32746 20.4696 8.10929 21.422 10.0491 21.8079C11.9889 22.1937 13.9996 21.9957 15.8268 21.2388C17.6541 20.4819 19.2159 19.2002 20.3147 17.5557C21.4135 15.9112 22 13.9778 22 12C22 11.5955 21.7564 11.2309 21.3827 11.0761C21.009 10.9213 20.5789 11.0069 20.2929 11.2929C19.287 12.2988 17.9226 12.864 16.5 12.864C15.0774 12.864 13.713 12.2988 12.7071 11.2929C11.7012 10.287 11.136 8.92261 11.136 7.5C11.136 6.07739 11.7012 4.71304 12.7071 3.70711C12.9931 3.42111 13.0787 2.99099 12.9239 2.61732C12.7691 2.24364 12.4045 2 12 2ZM7.55544 5.34824C8.27036 4.87055 9.05353 4.51389 9.87357 4.28778C9.39271 5.27979 9.13604 6.37666 9.13604 7.5C9.13604 9.45304 9.91189 11.3261 11.2929 12.7071C12.6739 14.0881 14.547 14.864 16.5 14.864C17.6233 14.864 18.7202 14.6073 19.7122 14.1264C19.4861 14.9465 19.1295 15.7296 18.6518 16.4446C17.7727 17.7602 16.5233 18.7855 15.0615 19.391C13.5997 19.9965 11.9911 20.155 10.4393 19.8463C8.88743 19.5376 7.46197 18.7757 6.34315 17.6569C5.21447 16.538 4.4624 15.1126 4.15372 13.5607C3.84504 12.0089 4.00347 10.4003 4.60897 8.93853C5.21447 7.47672 6.23985 6.22729 7.55544 5.34824Z"></path>
+            <path d="M19 2C19.5523 2 20 2.44772 20 3V4H21C21.5523 4 22 4.44772 22 5C22 5.55228 21.5523 6 21 6H20V7C20 7.55228 19.5523 8 19 8C18.4477 8 18 7.55228 18 7V6H17C16.4477 6 16 5.55228 16 5C16 4.44772 16.4477 4 17 4H18V3C18 2.44772 18.4477 2 19 2Z"></path>
+          </svg>
+        </button>
+        <button class="btn-icon btn-nav-toggle mobile-only" id="btnNavToggle" type="button" aria-label="切换导航">
+          <div class="hamburger" id="hamburger">
+            <span class="hamburger__line hamburger__line--top"></span>
+            <span class="hamburger__line hamburger__line--bottom"></span>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+
+<div class="header-spacer"></div>
+
+<script>
+(function(){
+  var btn = document.getElementById('btnNavToggle');
+  var nav = document.getElementById('sectionBar');
+  var hamburger = document.getElementById('hamburger');
+  if (btn && nav) {
+    btn.addEventListener('click', function(){
+      nav.classList.toggle('top-bar__nav--open');
+      if (hamburger) hamburger.classList.toggle('is-active');
+    });
+    nav.querySelectorAll('.nav-item').forEach(function(item){
+      item.addEventListener('click', function(){
+        nav.classList.remove('top-bar__nav--open');
+        if (hamburger) hamburger.classList.remove('is-active');
+      });
+    });
+  }
+
+  var root = document.documentElement;
+  var applyTheme = function(theme, persist){
+    if (theme === 'light') {
+      root.classList.add('theme-light');
+    } else {
+      root.classList.remove('theme-light');
+    }
+    if (persist) {
+      try { localStorage.setItem('flavor-theme', theme); } catch (e) {}
+    }
+  };
+  document.querySelectorAll('.theme-toggle').forEach(function(el){
+    el.addEventListener('click', function(){
+      applyTheme(root.classList.contains('theme-light') ? 'dark' : 'light', true);
+    });
+  });
+})();
+</script>
+
+  <main class="site-main" role="main">
+    
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么</h1>
+    <div class="article-meta">
+      
+      
+      <a href="/category/unity/" class="article-meta__category">Unity</a>
+      
+      
+      <span class="article-meta__sep">·</span>
+      
+      <span class="article-meta__item">2026-09-24</span>
+      
+      <span class="article-meta__sep">·</span>
+      <span class="article-meta__item">24 分钟阅读</span>
+      
+    </div>
+    
+    <div class="article-header__tags">
+      
+      <a href="/tag/unity/" class="tag-pill tag-pill--sm">Unity</a>
+      
+      <a href="/tag/kai-fa-gao-ji-zi-shen/" class="tag-pill tag-pill--sm">开发高级/资深</a>
+      
+      <a href="/tag/re-geng-xin/" class="tag-pill tag-pill--sm">热更新</a>
+      
+      <a href="/tag/zi-yuan-guan-li/" class="tag-pill tag-pill--sm">资源管理</a>
+      
+    </div>
+    
+  </header>
+
+  
+  <div class="article-feature">
+    <img src="/post-images/unity-asset-hotupdate-concept-map.svg" alt="Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么" />
+  </div>
+  
+
+  <div class="article-content">
+    <blockquote>
+<p>资源热更这块最大的沟通成本不在实现，而在<strong>名词</strong>。同一个词在不同框架里指不同文件，同一个文件在不同框架里叫不同名字：Addressables 叫 Catalog，YooAsset 里没有 Catalog 这个类却有一份 BuildinCatalog；<code>Manifest</code> 既可能是框架的运行时清单，也可能是 Unity 构建过程产出的一个副产物；而 DLC 干脆不是技术名词，是发行名词。</p>
+<p>这篇文章不按框架 API 组织，而是<strong>按名词组织</strong>：每个词先给一句话定义、再给它在文件系统里的落点、最后给&quot;怎么验证它&quot;。目标是下次看到别人文档里的一个词，能立刻判断它说的是哪一层，需要打开哪个文件。</p>
+</blockquote>
+<h2 id="heading">目录</h2>
+<table>
+<thead>
+<tr>
+<th>章节</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#version-trio">先分清三套版本号</a></td>
+<td>App 版本、资源版本、代码版本，混在一起就永远对不上</td>
+</tr>
+<tr>
+<td><a href="#package">Package：资源包</a></td>
+<td>它不是安装包；划分边界决定了后面所有能力的上限</td>
+</tr>
+<tr>
+<td><a href="#catalog">Catalog：清单目录</a></td>
+<td>三种语境下同名不同物，以及它的两种粒度</td>
+</tr>
+<tr>
+<td><a href="#manifest">Manifest：清单字段逐项</a></td>
+<td>AssetList / BundleList 每个字段的用途与坑</td>
+</tr>
+<tr>
+<td><a href="#bundle">Bundle：物理容器</a></td>
+<td>BundleName 与 FileName 的区别，依赖是双向的</td>
+</tr>
+<tr>
+<td><a href="#dlc">DLC：可下载内容</a></td>
+<td>为什么它不是技术概念，以及工程上怎么落地</td>
+</tr>
+<tr>
+<td><a href="#playmode">PlayMode 与资源的三层位置</a></td>
+<td>内置 / 沙盒 / 远端，以及各自的清理语义</td>
+</tr>
+<tr>
+<td><a href="#code-hotfix">代码热更的名词</a></td>
+<td>热更 DLL 与 AOT 补充元数据，两个 DLL 分工完全不同</td>
+</tr>
+<tr>
+<td><a href="#glossary">速查词表</a></td>
+<td>中英对照总表，可直接当交接文档用</td>
+</tr>
+<tr>
+<td><a href="#inspect">怎么查：实操路径</a></td>
+<td>定位资源在哪个包、确认运行时用的哪个版本</td>
+</tr>
+<tr>
+<td><a href="#pitfalls">常见误解</a></td>
+<td>一整张&quot;以为是 A 其实是 B&quot;的对照表</td>
+</tr>
+<tr>
+<td><a href="#deliverables">落地清单</a></td>
+<td>接入新框架时要确认的问题</td>
+</tr>
+</tbody>
+</table>
+<p><a id="version-trio"></a></p>
+<h2 id="heading-1">先分清三套版本号</h2>
+<p>所有资源热更的排障，第一步都是&quot;你到底在比哪个版本号&quot;。这三套版本号的生命周期、比较方、更新代价都不一样。</p>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>典型字段 / 载体</th>
+<th>谁负责比较</th>
+<th>更新手段</th>
+<th>需要重新出包吗</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>App 版本</strong></td>
+<td>原生 <code>versionName</code> / <code>versionCode</code>、强更配置</td>
+<td>启动时服务端下发</td>
+<td>应用商店覆盖安装</td>
+<td><strong>是</strong></td>
+</tr>
+<tr>
+<td><strong>资源版本</strong></td>
+<td><code>PackageVersion</code>、<code>res_version.txt</code> 里的整数</td>
+<td>客户端与远端清单比对</td>
+<td>资源热更</td>
+<td>否</td>
+</tr>
+<tr>
+<td><strong>代码版本</strong></td>
+<td>热更程序集文件（如 <code>hlwd.game.bytes</code>）</td>
+<td>随资源版本一起走</td>
+<td>资源热更</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<p>三条必须记住的结论：</p>
+<ol>
+<li><strong>代码热更不是独立通道。</strong> 热更 DLL 就是被打进 Bundle 的一个资源，它走的是和贴图、预制体完全相同的版本比对和下载流程。所以&quot;代码版本&quot;实际是&quot;资源版本&quot;的一个子集，不要把它当第四套版本号去设计流程。</li>
+<li><strong>资源版本和 App 版本不是包含关系，是两条平行线。</strong> 一个 App 版本可以对应任意多个资源版本；但资源版本不能向下兼容到比它更老的 App 版本，除非你主动做了降级逻辑。</li>
+<li><strong>比较动作只有&quot;相等 / 不等&quot;，不要设计成大小比较。</strong> 资源版本用来寻址 CDN 目录（换版本换目录），不是用来判断&quot;用户是不是落后了&quot;。想做灰度、回滚，就换一份清单指向，而不是去比数字大小。</li>
+</ol>
+<blockquote>
+<p><strong>为什么先讲这个</strong>：后面所有名词——Package、Catalog、Manifest、Bundle——都存在&quot;每个版本一份&quot;的情况。分不清版本号，就会拿 A 版本的清单去解释 B 版本的报错。</p>
+</blockquote>
+<p><a id="package"></a></p>
+<h2 id="package">Package：资源包</h2>
+<p><strong>一句话定义</strong>：一组资源的集合，拥有独立的清单、独立的版本号、独立的下载器与独立的缓存目录。</p>
+<p>最容易搞混的一点：<strong>Package 不是安装包。</strong> 安装包叫 APK / AAB / IPA，项目里通常叫&quot;包体&quot;；Package 是工程内部对资源的逻辑切分，一个安装包里可以有多个 Package。</p>
+<h3 id="-package-">一个 Package 到底&quot;独立&quot;了什么</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>是否独立</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>清单文件</td>
+<td>✅</td>
+<td>每个 Package 一套，互不影响</td>
+</tr>
+<tr>
+<td>版本号</td>
+<td>✅</td>
+<td>可以单独涨版本，其他包不动</td>
+</tr>
+<tr>
+<td>下载任务</td>
+<td>✅</td>
+<td>可以有各自的并发与超时策略</td>
+</tr>
+<tr>
+<td>缓存目录</td>
+<td>✅</td>
+<td>可以单独清理、单独校验</td>
+</tr>
+<tr>
+<td>引用计数</td>
+<td>✅</td>
+<td>跨包引用需要显式依赖声明，不会自动共享</td>
+</tr>
+<tr>
+<td>CDN 目录</td>
+<td>✅</td>
+<td>通常按 <code>v{版本}/{包名}/</code> 分层</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heading-2">划分边界的常见口径</h3>
+<table>
+<thead>
+<tr>
+<th>切分维度</th>
+<th>适用场景</th>
+<th>代价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主资源 / 非主资源</td>
+<td>控制首包体积</td>
+<td>首启需要一次完整清单比对</td>
+</tr>
+<tr>
+<td>语言</td>
+<td>多语言发行，按系统语言只下次需要的</td>
+<td>文案常被其他资源引用，容易跨包</td>
+</tr>
+<tr>
+<td>活动 / 赛季</td>
+<td>活动内容独立上下线、独立回滚</td>
+<td>活动数量多时清单数量爆炸</td>
+</tr>
+<tr>
+<td>DLC / 付费内容</td>
+<td>按需购买后下载</td>
+<td>需要处理授权与卸载</td>
+</tr>
+<tr>
+<td>清晰度 / 画质档</td>
+<td>高端机下高清资源</td>
+<td>同一资源存在多份，跨档不能复用</td>
+</tr>
+<tr>
+<td>平台</td>
+<td>桌面与移动格式不通用（如 BC 与 ASTC）</td>
+<td>这是硬约束，基本必须分</td>
+</tr>
+</tbody>
+</table>
+<p><strong>划分边界是架构决策，不是&quot;顺手分个组&quot;。</strong> 一旦按某个维度切了 Package，跨越这个边界的资源引用就会变成&quot;跨包依赖&quot;——它会带来加载时序、卸载粒度、清单复杂度三方面的额外成本。新项目建议先只切&quot;必须切的&quot;（平台、首包/非首包），把 DLC 这类业务维度留到有明确需求时再加。</p>
+<p><a id="catalog"></a></p>
+<h2 id="catalog">Catalog：清单目录</h2>
+<p>这是本文最容易读错的一个词，因为<strong>三种语境下都叫 Catalog，但不是同一个文件</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>语境</th>
+<th>名字</th>
+<th>实际文件</th>
+<th>回答什么问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Addressables</td>
+<td>Content Catalog</td>
+<td><code>catalog.json</code>、<code>catalog.hash</code>、<code>catalog_{时间戳}.json</code></td>
+<td>有哪些资源、地址是什么、在哪个 bundle、依赖谁</td>
+</tr>
+<tr>
+<td>YooAsset</td>
+<td>没有 Catalog 类，由两个文件分担</td>
+<td><code>BuildinCatalog.json</code>、<code>{Package}_{版本}.json</code></td>
+<td>内置带了哪些 bundle；资源到 bundle 的映射</td>
+</tr>
+<tr>
+<td>Unity 原生</td>
+<td><code>AssetBundleManifest</code></td>
+<td><code>OutputCache.manifest</code>（构建副产物）</td>
+<td>bundle 之间的依赖关系</td>
+</tr>
+</tbody>
+</table>
+<h3 id="catalog-">通用语义：catalog 是&quot;目录&quot;，而且是两级的</h3>
+<p>抛开框架，catalog 这个词的本义是<strong>目录</strong>。而在资源框架里它有两个粒度，两者常被混为一谈：</p>
+<ol>
+<li><strong>清单的清单</strong>（对应 <code>BuildinCatalog</code>）：包里内置了哪些 Bundle、当前有哪些清单版本可用。它是&quot;找清单&quot;的入口。</li>
+<li><strong>资源的目录</strong>（对应 <code>Manifest</code> / Addressables Catalog 的主体）：某个资源地址 → 它属于哪个 Bundle → 它依赖哪些 Bundle。它是&quot;找资源&quot;的入口。</li>
+</ol>
+<p>所以当有人说&quot;catalog 不对&quot;，你要追问的是：<strong>是入口清单不对，还是资源映射不对？</strong> 这两个问题的排查路径完全不同。</p>
+<h3 id="heading-3">一份真实的内置清单结构</h3>
+<pre><code>{
+  &quot;FileVersion&quot;: &quot;1.0.0&quot;,
+  &quot;PackageName&quot;: &quot;DefaultPackage&quot;,
+  &quot;PackageVersion&quot;: &quot;12&quot;,
+  &quot;Wrappers&quot;: [
+    {
+      &quot;BundleGUID&quot;: &quot;531607a7cd2af3b8a31565ec3f2d374c&quot;,
+      &quot;FileName&quot;: &quot;defaultpackage_assets_gamemain_scenes_531607a7cd2af3b8a31565ec3f2d374c.bundle&quot;
+    }
+  ]
+}
+</code></pre>
+<p>读这份文件的正确姿势是<strong>倒着读</strong>：先看 <code>PackageVersion</code>（当前内置到第几个版本），再看 <code>Wrappers</code> 里每个 <code>FileName</code> 是否真的存在于磁盘上。出现&quot;清单说有这么个包，但磁盘上没有&quot;的时候，问题就锁定在内置产物不完整，而不是下载逻辑。</p>
+<h3 id="hash-">hash 文件的作用</h3>
+<p>清单旁边通常有一个同名 <code>.hash</code> 文件（或清单里带 Hash 字段）。它的唯一用途是：<strong>让客户端在不下载整个清单的情况下，判断清单有没有变。</strong></p>
+<ul>
+<li>只下 hash（极小的文件）→ 和本地比对 → 相同就跳过清单下载 → 直接进下载阶段。</li>
+<li>不同才下完整清单。</li>
+</ul>
+<p>这就是&quot;每次启动都要检查更新，但流量消耗很小&quot;的实现基础。反过来说，如果 hash 的生成逻辑和清单内容不匹配（例如清单被重新序列化但 hash 没重算），会出现<strong>永远认为需要更新</strong>的死循环。</p>
+<h3 id="bundleid-">必须记住的坑：BundleID 是数组下标</h3>
+<p>清单里代表 Bundle 的字段在很多框架里是<strong>整数 ID</strong>，它不是稳定标识符，而是<strong>同一份清单内 <code>BundleList</code> 数组的下标</strong>。</p>
+<pre><code class="language-powershell"># 给定一个 bundleID，反查是哪个 bundle
+$manifest = Get-Content .\DefaultPackage_12.json -Raw | ConvertFrom-Json
+$bundleId = 15
+$bundle   = $manifest.BundleList[$bundleId]
+$bundle.BundleName
+</code></pre>
+<p>由此推出两条结论：</p>
+<ul>
+<li><strong>这个 ID 一旦清单重建就会变</strong>，不能持久化、不能跨版本比较、不能写死在配置表里。</li>
+<li>排查时<strong>要拿同一份清单内部的 ID 去查</strong>，不要拿 A 版本的报错 ID 去 B 版本清单里找，那样必然对不上。</li>
+<li>反查&quot;这个资源依赖了谁&quot;的正确方式是读 <code>DependBundleIDs</code>（一组下标），再逐个映射回 <code>BundleList</code>。人眼读 JSON 很痛苦，<strong>优先用构建报告</strong>（见下节）。</li>
+</ul>
+<p><a id="manifest"></a></p>
+<h2 id="manifest">Manifest：清单字段逐项</h2>
+<p>Manifest 是&quot;资源目录&quot;的本体。不同框架字段名不同，但结构高度一致：<strong>一张资源表 + 一张容器表，用 ID 互相引用。</strong></p>
+<p>以 YooAsset 的 PackageManifest 为例：</p>
+<h3 id="assetlist">AssetList（资源表）</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+<th>注意事项</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Address</code></td>
+<td>逻辑地址，业务层加载时用</td>
+<td>默认用资源路径；配了可寻址规则后可能变成短名</td>
+</tr>
+<tr>
+<td><code>AssetPath</code></td>
+<td>工程内路径</td>
+<td>与 Address 同时存在时，需明确哪个是&quot;对外契约&quot;</td>
+</tr>
+<tr>
+<td><code>BundleID</code></td>
+<td>所属 Bundle</td>
+<td><strong>是下标</strong>，见上一节</td>
+</tr>
+<tr>
+<td><code>DependBundleIDs</code></td>
+<td>依赖的 Bundle 集合</td>
+<td>一组下标；共享资源会在这里指向 share 包</td>
+</tr>
+<tr>
+<td><code>Tags</code></td>
+<td>标签</td>
+<td>用于按标签批量下载、预加载</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bundlelist">BundleList（容器表）</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+<th>注意事项</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BundleName</code></td>
+<td>逻辑名</td>
+<td>相对稳定，会体现打包目录结构</td>
+</tr>
+<tr>
+<td><code>FileName</code></td>
+<td>物理名</td>
+<td><code>BundleName_HashName.bundle</code>，含内容 Hash</td>
+</tr>
+<tr>
+<td><code>FileHash</code></td>
+<td>内容 Hash</td>
+<td>判断&quot;这个包的内容变没变&quot;的唯一依据</td>
+</tr>
+<tr>
+<td><code>FileCRC</code></td>
+<td>校验值</td>
+<td>下载完整性校验</td>
+</tr>
+<tr>
+<td><code>FileSize</code></td>
+<td>字节数</td>
+<td>用于下载进度与体积预算</td>
+</tr>
+<tr>
+<td><code>DependBundleIDs</code></td>
+<td>依赖的其他 Bundle</td>
+<td>加载一个包会先递归加载它</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-json">读法建议：别读 JSON，读构建报告</h3>
+<p>原始 JSON 适合程序读，不适合人读。构建过程通常会额外产出一份<strong>可读报告</strong>，包含四个部分：</p>
+<table>
+<thead>
+<tr>
+<th>报告区块</th>
+<th>内容</th>
+<th>什么时候看</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Summary</td>
+<td>整体统计：资源数、包数、总大小</td>
+<td>发现包体异常膨胀时</td>
+</tr>
+<tr>
+<td>AssetInfos</td>
+<td>每个资源：路径、所属包、依赖包</td>
+<td>查&quot;这个资源被谁引用&quot;</td>
+</tr>
+<tr>
+<td>BundleInfos</td>
+<td>每个包：逻辑名、物理名、依赖包、<strong>被谁依赖</strong>、包含哪些资源</td>
+<td>查共享包、查环形依赖</td>
+</tr>
+<tr>
+<td>IndependAssets</td>
+<td>没有任何包引用、也没被引用的独立资源</td>
+<td>查无用资源、查漏加入收集器的资源</td>
+</tr>
+</tbody>
+</table>
+<p>其中 <code>BundleInfos</code> 里的 <strong><code>ReferenceBundles</code>（被谁依赖）是最有价值的一列</strong>。原始 JSON 只存了&quot;我依赖谁&quot;（正向），要回答&quot;谁依赖我&quot;必须遍历全表构建反向索引——报告已经帮你算好了。</p>
+<p>判断一个共享包是否健康，就看它的 <code>ReferenceBundles</code> 数量：<strong>只有 1 个引用者的&quot;共享包&quot;，说明拆包规则切错了</strong>，它白白多了一次 IO 和一份清单开销。</p>
+<p><a id="bundle"></a></p>
+<h2 id="bundle">Bundle：物理容器</h2>
+<p><strong>Bundle 是磁盘上真实存在的文件</strong>，前面所有概念最终都要落到它身上。</p>
+<h3 id="heading-4">两个名字，别混用</h3>
+<table>
+<thead>
+<tr>
+<th>名字</th>
+<th>形态</th>
+<th>稳定性</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BundleName</code></td>
+<td><code>defaultpackage_assets_gamemain_materials</code></td>
+<td>相对稳定</td>
+<td>日志、依赖分析、人工排查</td>
+</tr>
+<tr>
+<td><code>FileName</code></td>
+<td><code>defaultpackage_assets_gamemain_materials_abc123....bundle</code></td>
+<td>内容一变就变</td>
+<td>磁盘文件名、CDN 路径、缓存 key</td>
+</tr>
+</tbody>
+</table>
+<p><strong>为什么要带 Hash 后缀</strong>：因为要支持&quot;同一路径下新旧内容共存&quot;。如果文件名固定，CDN 缓存会给你旧文件；CM 部署新版本时也无法灰度。带 Hash 后，<code>abc123</code> 和 <code>def456</code> 是两个不同 URL，缓存互不干扰，代价是<strong>旧文件需要清理策略</strong>。</p>
+<h3 id="heading-5">依赖是双向的</h3>
+<p>清单里存的是正向依赖（我依赖谁），但排查时经常需要反向信息（谁依赖我）：</p>
+<ul>
+<li><strong>共享资源的判定</strong>：一个材质被 10 个预制体引用 → 抽成 share 包 → 这 10 个包都会在 <code>DependBundleIDs</code> 里指向它。</li>
+<li><strong>卸载安全</strong>：卸载 A 包前要确认没有其他已加载包依赖它，否则会出现&quot;资源凭空消失&quot;。</li>
+<li><strong>环形依赖</strong>：A 依赖 B、B 又依赖 A，加载时死锁。这类问题在正向清单里很难看出来，看报告的反向列表反而一目了然。</li>
+</ul>
+<h3 id="heading-6">命名规则会泄漏架构</h3>
+<p>BundleName 通常由&quot;打包目录 + 资源类型&quot;拼出来，例如：</p>
+<pre><code>defaultpackage_share_assets_gamemain_materials
+^^^^^^^^^^^^^ ^^^^^ ^^^^^ ^^^^^^^^^^^^^^
+   包名前缀    标记   目录路径      资源类型
+</code></pre>
+<p>所以<strong>看一个项目的 BundleName 分布，基本就能推断出它的打包策略</strong>：出现大量 <code>share</code> 前缀说明启用了共享包规则；目录层级很深说明按目录打包；同名资源出现在多个包名里说明收集器配置有重叠。</p>
+<p><a id="dlc"></a></p>
+<h2 id="dlc">DLC：可下载内容</h2>
+<p><strong>DLC（Downloadable Content）是发行与商业概念，不是技术概念。</strong></p>
+<p>这句话是理解 DLC 的关键。在资源框架里你<strong>找不到任何叫 DLC 的 API</strong>——因为 DLC 描述的是&quot;这个东西在产品上怎么卖、怎么交付&quot;，而技术侧只提供&quot;按需下载一组资源&quot;这个能力。把 DLC 当技术名词去找，就会一直在文档里找不到答案。</p>
+<h3 id="dlc-">DLC 与相邻概念的边界</h3>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>属于哪个维度</th>
+<th>回答的问题</th>
+<th>典型关注点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DLC</strong></td>
+<td>发行 / 商业</td>
+<td>主包之外，用户按需购买或获取的内容单元是什么</td>
+<td>定价、授权、上下架、评级</td>
+</tr>
+<tr>
+<td><strong>热更（Patch）</strong></td>
+<td>交付机制</td>
+<td>已发布的内容怎么替换成新版本</td>
+<td>版本比对、差异下载、回滚</td>
+</tr>
+<tr>
+<td><strong>分包（Split）</strong></td>
+<td>包体结构</td>
+<td>首包放什么、其余按什么边界拆出去</td>
+<td>首包体积、下载时机</td>
+</tr>
+<tr>
+<td><strong>Package</strong></td>
+<td>技术实现单元</td>
+<td>实现上述目标时，资源按什么边界分组成独立清单</td>
+<td>清单数量、跨包依赖</td>
+</tr>
+</tbody>
+</table>
+<p>一句话概括四者关系：<strong>DLC 是一类需求，分包是实现它的包体结构策略，Package 是落地时的技术单元，热更是让它们能被持续更新的机制。</strong></p>
+<h3 id="-dlc">技术侧怎么落地一个 DLC</h3>
+<p>既然没有 API，落地方式就是组合既有能力，通常需要同时满足下面几条：</p>
+<ol>
+<li><strong>独立 Package</strong>：DLC 内容单独一个 Package（或一组），独立清单、独立版本号——这样才能&quot;用户没买就不下载&quot;。</li>
+<li><strong>独立下载入口</strong>：不进入默认启动下载流程，只在用户触发时（购买成功、点了某个入口）才开始下载。</li>
+<li><strong>两道门：可达 + 授权</strong>。技术上&quot;资源下载完了&quot;和&quot;用户有权访问&quot;是两件独立的事。很多线上事故是<strong>资源已经能加载，但授权状态没同步</strong>，于是未购买用户通过其他入口意外加载到了内容。不要用&quot;资源没下载&quot;来当权限校验。</li>
+<li><strong>卸载与回收</strong>：DLC 是第一个真正需要&quot;用户主动卸载&quot;的场景，要能清理清单与缓存，且不影响主包。</li>
+<li><strong>回滚与下架</strong>：DLC 下架时，已经买过的用户要能继续用（点对点服务），没买过的不能再看到入口。这要求版本清单支持&quot;指向旧清单&quot;。</li>
+<li><strong>依赖交叉</strong>：DLC 与主包互相引用时，谁先加载？主包更新后 DLC 的清单是否过期？这是 DLC 方案里最容易出问题的一环。</li>
+</ol>
+<h3 id="heading-7">平台差异（同一套技术，不同的约束）</h3>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>主要约束</th>
+<th>对 DLC 的影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Android（AAB）</td>
+<td>有分片机制，但资源分片与资源配置是两套东西</td>
+<td>原生分片不能替代资源 DLC 方案</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td>审核对&quot;下载后可改变功能&quot;的内容敏感</td>
+<td>内容形态与文案要提前对齐审核口径</td>
+</tr>
+<tr>
+<td>PC / 主机商店</td>
+<td>有正式的 DLC SKU 与授权体系（Entitlement）</td>
+<td>商业侧的 DLC 与技术侧的资源包要建立映射表</td>
+</tr>
+<tr>
+<td>微信小游戏等</td>
+<td>有明确的分包数量与体积上限</td>
+<td>&ldquo;DLC&rdquo; 实际是分包能力的重新组合，不能照搬移动端结论</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结论：DLC 方案 = 发行策略 + 包体结构 + 资源框架能力三者的组合。</strong> 三方任何一方没对齐，都会出现&quot;技术做完了但商业侧不理解&quot;或&quot;商业卖完了但技术下不下去&quot;的情况。</p>
+<p><a id="playmode"></a></p>
+<h2 id="playmode-">PlayMode 与资源的三层位置</h2>
+<p>同一份资源在运行时可能来自三个地方，<strong>PlayMode 决定它们的优先级和组合方式</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>资源来源</th>
+<th>典型用途</th>
+<th>关键差异</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Editor 模拟模式</td>
+<td>直接读 AssetDatabase</td>
+<td>日常开发</td>
+<td>不走 Bundle，加载行为与真机不同</td>
+</tr>
+<tr>
+<td>离线模式</td>
+<td>只读内置（StreamingAssets）</td>
+<td>单机、无网、首包自包含产品</td>
+<td>完全不请求远端，也无法热更</td>
+</tr>
+<tr>
+<td>联机模式（HostPlay）</td>
+<td>内置 + 沙盒缓存 + 远端</td>
+<td>绝大多数热更产品</td>
+<td>三层按优先级查找，沙盒覆盖内置</td>
+</tr>
+<tr>
+<td>Web 模式</td>
+<td>远端 HTTP 直读</td>
+<td>小游戏、WebGL</td>
+<td>无本地缓存概念，依赖浏览器缓存</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heading-8">三层位置与清理语义</h3>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>物理路径</th>
+<th>内容</th>
+<th>谁会清它</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>内置</strong></td>
+<td><code>StreamingAssets</code> 下</td>
+<td>随包发布的清单与 Bundle</td>
+<td>只能靠覆盖安装更新</td>
+</tr>
+<tr>
+<td><strong>沙盒</strong></td>
+<td><code>persistentDataPath</code> 下</td>
+<td>热更下载下来的清单与 Bundle、版本记录</td>
+<td>应用自身策略；覆盖安装/重装会清</td>
+</tr>
+<tr>
+<td><strong>远端</strong></td>
+<td>CDN，通常 <code>v{版本}/{包名}/</code></td>
+<td>权威清单与 Bundle</td>
+<td>由 CM 部署流程控制</td>
+</tr>
+</tbody>
+</table>
+<p>这里面有两个必须理解的行为：</p>
+<ol>
+<li><strong>沙盒的生效方式是把内置清单&quot;复制&quot;过来再更新。</strong> 首启时如果沙盒为空，框架会把内置清单复制进沙盒，然后在沙盒那份上继续做增量更新。这解释了为什么首启离线也能跑——它读的是内置产物，而不是远端。</li>
+<li><strong>覆盖安装会清沙盒。</strong> 用户覆盖安装新 App 版本后，沙盒里的清单与 Bundle 可能被清掉，于是回到&quot;用内置清单 + 重新下载&quot;。如果新 App 版本内置的是老清单，用户就会<strong>先回退到老版本资源，再更新上去</strong>——这段窗口期是线上 bug 的高发期，尤其是&quot;覆盖安装后必须重启一次才正常&quot;这类问题。</li>
+</ol>
+<h3 id="heading-9">版本记录文件</h3>
+<p>热更流程通常会在沙盒里留一个极小的版本文件（例如一行整数），记录&quot;上次成功更新到哪个资源版本&quot;。</p>
+<ul>
+<li>它的作用是<strong>下次启动的目标基线</strong>，避免每次都从头比对清单。</li>
+<li>它必须<strong>在下载全部成功之后才写入</strong>。写早了会出现&quot;版本号是新的，资源还是旧的&quot;这种最难查的状态：清单说资源都在，实际加载的是旧内容。</li>
+<li>它和远端不一致时，不要直接报错退出，而是<strong>重新走一次完整比对</strong>，这是最常见的自愈路径。</li>
+</ul>
+<p><a id="code-hotfix"></a></p>
+<h2 id="heading-10">代码热更的名词</h2>
+<p>代码热更会额外引入几个词，其中最容易被混为一谈的是：<strong>热更 DLL</strong> 和 <strong>AOT 补充元数据</strong>。两者都是 <code>.bytes</code> 文件、都放在资源里、都由同一份清单管理，但职责完全不同。</p>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>是什么</th>
+<th>数量</th>
+<th>何时需要更新</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>热更程序集</strong></td>
+<td>被编译成热更 DLL 的业务代码（Hotfix 层）</td>
+<td>通常 1 个</td>
+<td>业务逻辑改动时</td>
+</tr>
+<tr>
+<td><strong>AOT 补充元数据</strong></td>
+<td>AOT 程序集在热更代码里被泛型实例化时需要的元数据</td>
+<td>一组</td>
+<td><strong>AOT 层改动、或热更代码新用了 AOT 泛型时</strong></td>
+</tr>
+<tr>
+<td><strong>link.xml</strong></td>
+<td>告诉裁剪器&quot;这些类型/方法不要裁掉&quot;</td>
+<td>1 个</td>
+<td>反射、序列化、泛型被裁剪导致运行时才报错时</td>
+</tr>
+<tr>
+<td><strong>AOT 泛型引用收集产物</strong></td>
+<td>构建时扫出来的&quot;热更代码实际用到的 AOT 泛型组合&quot;</td>
+<td>1 个</td>
+<td>与 AOT 补充元数据配套</td>
+</tr>
+</tbody>
+</table>
+<p>关键推论：</p>
+<ul>
+<li><strong>只要热更代码新用到一个 AOT 泛型组合，就必须更新补充元数据。</strong> 这是&quot;代码热更上去后，只有某个功能崩溃，报 <code>ExecutionEngineException</code> / <code>Attempting to call method ... for which no ahead of time code was provided</code>&ldquo;这类问题的根因。</li>
+<li><strong>AOT 层改动无法热更。</strong> 它只存在于 App 版本里。所以架构上要把&quot;AOT 尽可能薄&quot;当作硬约束——AOT 越厚，需要强更的改动就越多。</li>
+<li>加载顺序必须是<strong>先补元数据、后加载热更程序集</strong>。顺序反了会在加载阶段就失败。</li>
+</ul>
+<p><a id="glossary"></a></p>
+<h2 id="heading-11">速查词表</h2>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>英文 / 常见写法</th>
+<th>一句话定义</th>
+<th>常见落点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>资源包</td>
+<td>Package</td>
+<td>一组资源的集合，独立清单 + 独立版本号</td>
+<td>框架名称空间下的 Package 对象</td>
+</tr>
+<tr>
+<td>清单目录</td>
+<td>Catalog</td>
+<td>&ldquo;目录&quot;的总称；两级粒度见正文</td>
+<td><code>catalog.json</code> / <code>BuildinCatalog.json</code></td>
+</tr>
+<tr>
+<td>内置清单</td>
+<td>BuildinCatalog</td>
+<td>包里内置的 Bundle 与清单版本索引</td>
+<td><code>StreamingAssets</code> 下</td>
+</tr>
+<tr>
+<td>资源清单</td>
+<td>Manifest / PackageManifest</td>
+<td>资源地址到 Bundle 的映射表</td>
+<td><code>{Package}_{版本}.json</code></td>
+</tr>
+<tr>
+<td>摘要文件</td>
+<td><code>.hash</code></td>
+<td>用来快速判断清单是否变化</td>
+<td>清单同目录</td>
+</tr>
+<tr>
+<td>资源</td>
+<td>Asset</td>
+<td>最小的加载单位</td>
+<td>工程内资源路径</td>
+</tr>
+<tr>
+<td>地址</td>
+<td>Address / Location</td>
+<td>业务层加载时用的逻辑名</td>
+<td>清单的 <code>Address</code> 字段</td>
+</tr>
+<tr>
+<td>容器</td>
+<td>Bundle / AssetBundle</td>
+<td>磁盘上的物理包文件</td>
+<td><code>*.bundle</code></td>
+</tr>
+<tr>
+<td>逻辑名</td>
+<td>BundleName</td>
+<td>相对稳定的包名</td>
+<td>清单的 <code>BundleName</code> 字段</td>
+</tr>
+<tr>
+<td>物理名</td>
+<td>FileName</td>
+<td>带内容 Hash 的真实文件名</td>
+<td>CDN 路径、本地缓存</td>
+</tr>
+<tr>
+<td>共享包</td>
+<td>Share Bundle</td>
+<td>被多个包共同依赖的包</td>
+<td>BundleName 含 share 标识</td>
+</tr>
+<tr>
+<td>正向依赖</td>
+<td>DependBundles</td>
+<td>我依赖谁</td>
+<td>清单的 <code>DependBundleIDs</code></td>
+</tr>
+<tr>
+<td>反向依赖</td>
+<td>ReferenceBundles</td>
+<td>谁依赖我（需构建反向索引）</td>
+<td>构建报告的 BundleInfos</td>
+</tr>
+<tr>
+<td>可下载内容</td>
+<td>DLC</td>
+<td>主包之外按需获取的内容单元（发行概念）</td>
+<td>无 API，用独立 Package 落地</td>
+</tr>
+<tr>
+<td>热更</td>
+<td>Patch / HotUpdate</td>
+<td>把已发布内容替换为新版本的机制</td>
+<td>版本比对 + 下载</td>
+</tr>
+<tr>
+<td>分包</td>
+<td>Split</td>
+<td>首包与其余内容的包体划分策略</td>
+<td>收集器与打包规则</td>
+</tr>
+<tr>
+<td>首包</td>
+<td>Buildin / Base</td>
+<td>随安装包一起发出的内容</td>
+<td><code>StreamingAssets</code></td>
+</tr>
+<tr>
+<td>沙盒</td>
+<td>persistentDataPath / Sandbox</td>
+<td>热更内容的本地落地目录</td>
+<td>可写目录</td>
+</tr>
+<tr>
+<td>播发模式</td>
+<td>PlayMode</td>
+<td>决定资源来源组合的运行模式</td>
+<td>框架初始化参数</td>
+</tr>
+<tr>
+<td>内容校验</td>
+<td>CRC / Hash</td>
+<td>下载完整性与内容变更判定</td>
+<td>清单字段</td>
+</tr>
+<tr>
+<td>构建报告</td>
+<td>Report</td>
+<td>人可读的构建产物说明</td>
+<td><code>*.report</code></td>
+</tr>
+<tr>
+<td>强更</td>
+<td>Force Update</td>
+<td>必须覆盖安装才能继续使用</td>
+<td>App 版本号比对</td>
+</tr>
+<tr>
+<td>授权</td>
+<td>Entitlement</td>
+<td>用户是否有权访问某内容</td>
+<td>服务端 / 商店侧</td>
+</tr>
+</tbody>
+</table>
+<p><a id="inspect"></a></p>
+<h2 id="heading-12">怎么查：实操路径</h2>
+<p>名词认清了，接下来是&quot;遇到问题怎么定位&rdquo;。这一节给的是<strong>从现象到文件</strong>的路径。</p>
+<h3 id="heading-13">想知道&quot;某个资源在哪个包里&rdquo;</h3>
+<ol>
+<li>打开构建报告，在 <code>AssetInfos</code> 里搜资源路径 → 拿到所属 <code>BundleName</code>。</li>
+<li>在 <code>BundleInfos</code> 里查这个 <code>BundleName</code> → 看它依赖谁、被谁依赖、包含哪些资源。</li>
+<li>只有拿不到报告时，才回到原始清单里做下标映射。</li>
+</ol>
+<h3 id="heading-14">想知道&quot;这个包为什么这么大&quot;</h3>
+<ol>
+<li>看报告 <code>Summary</code> 的体积分布，先确定是&quot;包多&quot;还是&quot;单包大&quot;。</li>
+<li>单包大 → 在 <code>BundleInfos</code> 里看它的 <code>BundleContents</code> 是否有意外的大资源（图集、音频、视频）。</li>
+<li>包多 → 检查收集器规则是否有重叠；<code>IndependAssets</code> 是否有本该合并的资源。</li>
+</ol>
+<h3 id="heading-15">想知道&quot;运行时实际用的是哪个版本&quot;</h3>
+<table>
+<thead>
+<tr>
+<th>查什么</th>
+<th>怎么查</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>当前资源版本</td>
+<td>读沙盒里的版本记录文件；或框架的 <code>GetPackageVersion()</code></td>
+</tr>
+<tr>
+<td>清单到底加载的是哪一份</td>
+<td>对比内置清单与沙盒清单的版本号</td>
+</tr>
+<tr>
+<td>资源是从内置还是远端来的</td>
+<td>看缓存命中日志；或临时禁用远端，观察是否还能加载</td>
+</tr>
+<tr>
+<td>Bundle 的真实内容</td>
+<td>用二进制工具列出 Bundle 内的资源名清单，与报告对照</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heading-16">一个通用原则</h3>
+<p><strong>所有资源问题的证据链都必须落在&quot;文件 + 版本&quot;上。</strong> 只看日志会出现&quot;日志说下载成功了，但加载的是旧资源&quot;这种无法收敛的状态；必须同时确认<strong>哪一份清单、哪一个版本、哪个物理文件</strong>。这也是前面反复强调&quot;分不清版本号就永远对不上&quot;的原因。</p>
+<p><a id="pitfalls"></a></p>
+<h2 id="heading-17">常见误解</h2>
+<table>
+<thead>
+<tr>
+<th>以为是 A</th>
+<th>实际是 B</th>
+<th>后果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Catalog 就是 Manifest</td>
+<td>Catalog 是&quot;目录&quot;的总称，Manifest 是其中&quot;资源映射&quot;这一级</td>
+<td>排查时找错文件</td>
+</tr>
+<tr>
+<td>Manifest 只有一个</td>
+<td>每个 Package、每个版本各一份</td>
+<td>拿错版本的清单去解释报错</td>
+</tr>
+<tr>
+<td>BundleID 是稳定 ID</td>
+<td>它是同一份清单内数组的下标</td>
+<td>持久化后跨版本必然失效</td>
+</tr>
+<tr>
+<td>DLC 是技术名词</td>
+<td>它是发行概念，技术侧只有&quot;按需下载一组资源&quot;</td>
+<td>在框架文档里找不到答案</td>
+</tr>
+<tr>
+<td>DLC 下载完了就等于有权访问</td>
+<td>可达性与授权是两道独立的门</td>
+<td>权限绕过，未购买用户加载到内容</td>
+</tr>
+<tr>
+<td>热更 DLL 和 AOT 补元数据是一回事</td>
+<td>分工完全不同，后者只在特定条件下才需要更新</td>
+<td>热更后局部功能崩溃</td>
+</tr>
+<tr>
+<td>代码热更有独立通道</td>
+<td>热更 DLL 本身就是资源，走同一条链路</td>
+<td>设计出多余的第二套版本体系</td>
+</tr>
+<tr>
+<td>Bundle 压缩能省内存</td>
+<td>容器压缩省磁盘与下载，不省运行时内存</td>
+<td>内存优化方向选错</td>
+</tr>
+<tr>
+<td>覆盖安装后一切从头开始</td>
+<td>沙盒被清 → 先回退到内置清单再更新</td>
+<td>&ldquo;覆盖安装后必须重启一次&quot;类问题</td>
+</tr>
+<tr>
+<td>版本号可以比大小</td>
+<td>它用于寻址目录，只该做相等判断</td>
+<td>灰度与回滚逻辑写歪</td>
+</tr>
+</tbody>
+</table>
+<p><a id="deliverables"></a></p>
+<h2 id="heading-18">落地清单</h2>
+<p>接入或接手一套资源热更框架时，把下面这些问题问清楚，基本就能对齐所有名词：</p>
+<ul>
+<li><input disabled="" type="checkbox" /> 这个项目的<strong>资源版本号</strong>存在哪个文件？谁负责写入？写入时机是在下载前还是下载后？</li>
+<li><input disabled="" type="checkbox" /> 一共划分了哪些 <strong>Package</strong>？切分维度是什么？有没有跨包引用？</li>
+<li><input disabled="" type="checkbox" /> <strong>Catalog 的入口文件</strong>是哪一个？它和资源映射清单分别叫什么名字？</li>
+<li><input disabled="" type="checkbox" /> 清单是否带 <strong>hash 摘要</strong>？更新检查是先比摘要还是直接下清单？</li>
+<li><input disabled="" type="checkbox" /> <strong>BundleID 是下标还是稳定标识</strong>？项目里有没有把它当稳定 ID 用错的地方？</li>
+<li><input disabled="" type="checkbox" /> 有没有可读的<strong>构建报告</strong>？<code>ReferenceBundles</code> 是否用于审查共享包？</li>
+<li><input disabled="" type="checkbox" /> 是否存在<strong>只有一个引用者的共享包</strong>？（拆包规则切错的信号）</li>
+<li><input disabled="" type="checkbox" /> <strong>DLC / 活动内容</strong>是用独立 Package 落的，还是混在主包里用标签控制？</li>
+<li><input disabled="" type="checkbox" /> DLC 的<strong>授权校验</strong>在哪里做？有没有&quot;资源可达即视为有权&quot;的隐患？</li>
+<li><input disabled="" type="checkbox" /> 三个资源位置（内置 / 沙盒 / 远端）的<strong>清理策略</strong>分别是什么？覆盖安装会怎样？</li>
+<li><input disabled="" type="checkbox" /> 热更 DLL 与 <strong>AOT 补充元数据</strong>是否都进了清单？更新条件是否明确？</li>
+<li><input disabled="" type="checkbox" /> 有没有<strong>回滚</strong>路径？回滚时是换清单还是换版本号？</li>
+</ul>
+<h2 id="heading-19">一句话总结</h2>
+<p><strong>资源热更的名词可以归到四层上：Package 是边界，Catalog / Manifest 是地图，Bundle 是实物，DLC 是需求。</strong></p>
+<ul>
+<li><strong>Catalog 和 Manifest 不是同义词</strong>：Catalog 是&quot;目录&rdquo;，Manifest 是目录里&quot;资源映射&quot;那一级；框架不同名字还不一样，先确认对方说的是哪一层再讨论。</li>
+<li><strong>BundleID 是下标不是 ID</strong>，所有&quot;跨版本对不上&quot;的问题多半源于此。</li>
+<li><strong>DLC 不是技术概念</strong>，技术侧只有&quot;按需下载一组资源&quot;；它真正难的地方在授权、卸载、回滚、依赖交叉，而不是下载。</li>
+<li><strong>三套版本号必须分开看</strong>，代码热更不是第四套通道，它本身就是资源。</li>
+<li>所有结论都要落到<strong>文件 + 版本 + 物理路径</strong>三件事上，只凭日志无法收敛。</li>
+</ul>
+<p>相关阅读：<a href="/post/unity-senior-developer-03-assets-hot-update/">Unity 开发高级/资深 03：资源管理与热更新</a>、<a href="/post/unity-texture-compression-formats-and-memory/">Unity 图片资源格式与内存</a>、<a href="/post/unity-senior-developer-skills/">Unity 开发高级/资深 技能总览</a>。</p>
+
+  </div>
+
+  
+  <nav class="post-nav">
+    
+    <a href="/post/gamerecord/" class="post-nav-card post-nav-card--prev">
+      
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">上一篇</span>
+        <span class="post-nav-card__title">GameRecord</span>
+      </div>
+      <span class="post-nav-card__arrow">&larr;</span>
+    </a>
+    
+    
+    <a href="/post/unity-texture-compression-formats-and-memory/" class="post-nav-card post-nav-card--next">
+      <div class="post-nav-card__body">
+        <span class="post-nav-card__label meta-text">下一篇</span>
+        <span class="post-nav-card__title">Unity 图片资源格式与内存：ASTC、ETC2、BC 的压缩原理、平台支持与工程规范</span>
+      </div>
+      
+      <div class="post-nav-card__img">
+        <img src="/post-images/unity-texture-compression-formats-and-memory-layers.svg" alt="Unity 图片资源格式与内存：ASTC、ETC2、BC 的压缩原理、平台支持与工程规范" loading="lazy" />
+      </div>
+      
+      <span class="post-nav-card__arrow">&rarr;</span>
+    </a>
+    
+  </nav>
+
+  
+  
+
+
+  
+    <section class="comment-section">
+  <h2 class="comment-section__title">评论</h2>
+  <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    var gitalk = new Gitalk({
+      clientID: 'ca79a66585e72af3bff6',
+      clientSecret: '4cf7eeea526df4a9d2fa6bfb14fcb3f135652731',
+      repo: 'zhoujun2303.github.io',
+      owner: 'zhoujun2303',
+      admin: ['zhoujun2303'],
+      id: location.pathname,
+      distractionFreeMode: false
+    });
+    gitalk.render('gitalk-container');
+  </script>
+</section>
+
+  
+
+
+
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+
+    
+    
+    <nav class="footer-nav" aria-label="页脚导航">
+      
+      <a class="footer-nav__link" href="/">首页</a>
+      
+      <a class="footer-nav__link" href="/post">博客</a>
+      
+      <a class="footer-nav__link" href="/memos">闪念</a>
+      
+      <a class="footer-nav__link" href="/archives">归档</a>
+      
+      <a class="footer-nav__link" href="/tags">标签</a>
+      
+      <a class="footer-nav__link" href="/links">友链</a>
+      
+      <a class="footer-nav__link" href="/post/about">关于</a>
+      
+    </nav>
+    
+
+    
+    <div class="footer-social">
+      
+      <a class="footer-social__link" href="https://github.com/ZhouJun2303" target="_blank" rel="noopener noreferrer"
+        aria-label="GitHub">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+      </a>
+      
+      
+      
+      <a class="footer-social__link" href="/feed.xml" aria-label="RSS">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6.18 15.64a2.18 2.18 0 110 4.36 2.18 2.18 0 010-4.36zM4 4.44A15.56 15.56 0 0119.56 20h-2.83A12.73 12.73 0 004 7.27V4.44zm0 5.66a9.9 9.9 0 019.9 9.9h-2.83A7.07 7.07 0 004 12.93V10.1z"/>
+        </svg>
+      </a>
+    </div>
+
+    
+    <div class="footer-copyright">
+      <p>&copy; 2026 idea. All rights reserved.</p>
+    </div>
+
+    
+    
+    <div class="footer-custom">
+      Powered by <a href="https://github.com/ZhouJun2303/">胖胖</a>
+    </div>
+    
+
+    
+    <div class="footer-powered">
+      <span>Powered by <a href="https://gridea.pro" target="_blank" rel="noopener noreferrer">Gridea Pro</a></span>
+    </div>
+
+  </div>
+</footer>
+
+  
+  <div class="search-overlay" id="searchOverlay" style="display:none;">
+  <div class="search-modal">
+    <div class="search-header">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索文章..." autocomplete="off" />
+      <span class="search-kbd">&#8984;K</span>
+      <button class="search-close" id="searchClose" type="button" aria-label="关闭搜索">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script src="/scripts/search.js"></script>
+  
+
+  
+
+  
+
+  
+
+<script>console.log("\n%c ✦ Gridea Pro v1.2.2 %c · Theme: flavor-theme v1.0.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+</body>
+</html>
