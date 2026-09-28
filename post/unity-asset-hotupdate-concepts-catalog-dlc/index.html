@@ -27,9 +27,9 @@
   })();
 </script>
   <meta name="generator" content="Gridea Pro 1.2.2">
-  <title>Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么 | idea</title>
+  <title>Unity 资源热更概念与分包地图：Catalog、Manifest、Bundle、Package、DLC 与打包粒度 | idea</title>
   
-<meta property="og:title" content="Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么" />
+<meta property="og:title" content="Unity 资源热更概念与分包地图：Catalog、Manifest、Bundle、Package、DLC 与打包粒度" />
 <meta property="og:type" content="article" />
 
 <meta property="og:image" content="/post-images/unity-asset-hotupdate-concept-map.svg" />
@@ -37,9 +37,9 @@
 
 <meta name="description" content="资源热更这块最大的沟通成本不在实现，而在名词。同一个词在不同框架里指不同文件，同一个文件在不同框架里叫不同名字：Addressables 叫 Catalog，YooAsset 里没有 Catalog 这个类却有一份 BuildinCatalog；Manifest 既可能是框架的运行时清单，也可能是 Unity 构建过程产出的一个副产物；而 DLC 干脆不是技术名词，是发行名词。 &amp;hellip;">
 <link rel="canonical" href="https://zhoujun2303.github.io/post/unity-asset-hotupdate-concepts-catalog-dlc/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么","url":"https://zhoujun2303.github.io/post/unity-asset-hotupdate-concepts-catalog-dlc/","description":"资源热更这块最大的沟通成本不在实现，而在名词。同一个词在不同框架里指不同文件，同一个文件在不同框架里叫不同名字：Addressables 叫 Catalog，YooAsset 里没有 Catalog 这个类却有一份 BuildinCatalog；Manifest 既可能是框架的运行时清单，也可能是 Unity 构建过程产出的一个副产物；而 DLC 干脆不是技术名词，是发行名词。 \u0026hellip;","image":"/post-images/unity-asset-hotupdate-concept-map.svg","datePublished":"2026-09-24T21:10:00+08:00","dateModified":"2026-09-24T21:10:00+08:00","author":{"@type":"Person","name":"idea"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"idea"}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"idea","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-asset-hotupdate-concepts-catalog-dlc/","name":"Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么","position":2}]}</script>
-<meta property="og:title" content="Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unity 资源热更概念与分包地图：Catalog、Manifest、Bundle、Package、DLC 与打包粒度","url":"https://zhoujun2303.github.io/post/unity-asset-hotupdate-concepts-catalog-dlc/","description":"资源热更这块最大的沟通成本不在实现，而在名词。同一个词在不同框架里指不同文件，同一个文件在不同框架里叫不同名字：Addressables 叫 Catalog，YooAsset 里没有 Catalog 这个类却有一份 BuildinCatalog；Manifest 既可能是框架的运行时清单，也可能是 Unity 构建过程产出的一个副产物；而 DLC 干脆不是技术名词，是发行名词。 \u0026hellip;","image":"/post-images/unity-asset-hotupdate-concept-map.svg","datePublished":"2026-09-24T21:10:00+08:00","dateModified":"2026-09-28T11:29:00+08:00","author":{"@type":"Person","name":"idea"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/images/avatar.png"},"name":"idea"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://zhoujun2303.github.io","name":"idea","position":1},{"@type":"ListItem","item":"https://zhoujun2303.github.io/post/unity-asset-hotupdate-concepts-catalog-dlc/","name":"Unity 资源热更概念与分包地图：Catalog、Manifest、Bundle、Package、DLC 与打包粒度","position":2}]}</script>
+<meta property="og:title" content="Unity 资源热更概念与分包地图：Catalog、Manifest、Bundle、Package、DLC 与打包粒度">
 <meta property="og:description" content="资源热更这块最大的沟通成本不在实现，而在名词。同一个词在不同框架里指不同文件，同一个文件在不同框架里叫不同名字：Addressables 叫 Catalog，YooAsset 里没有 Catalog 这个类却有一份 BuildinCatalog；Manifest 既可能是框架的运行时清单，也可能是 Unity 构建过程产出的一个副产物；而 DLC 干脆不是技术名词，是发行名词。 &amp;hellip;">
 <meta property="og:url" content="https://zhoujun2303.github.io/post/unity-asset-hotupdate-concepts-catalog-dlc/">
 <meta property="og:type" content="article">
@@ -47,7 +47,7 @@
 <meta property="og:image" content="/post-images/unity-asset-hotupdate-concept-map.svg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://zhoujun2303.github.io/post/unity-asset-hotupdate-concepts-catalog-dlc/">
-<meta name="twitter:title" content="Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么">
+<meta name="twitter:title" content="Unity 资源热更概念与分包地图：Catalog、Manifest、Bundle、Package、DLC 与打包粒度">
 <meta name="twitter:description" content="资源热更这块最大的沟通成本不在实现，而在名词。同一个词在不同框架里指不同文件，同一个文件在不同框架里叫不同名字：Addressables 叫 Catalog，YooAsset 里没有 Catalog 这个类却有一份 BuildinCatalog；Manifest 既可能是框架的运行时清单，也可能是 Unity 构建过程产出的一个副产物；而 DLC 干脆不是技术名词，是发行名词。 &amp;hellip;">
 <meta name="twitter:image" content="/post-images/unity-asset-hotupdate-concept-map.svg">
 </head>
@@ -174,7 +174,7 @@
     
 <article class="article-container">
   <header class="article-header">
-    <h1 class="article-title">Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么</h1>
+    <h1 class="article-title">Unity 资源热更概念与分包地图：Catalog、Manifest、Bundle、Package、DLC 与打包粒度</h1>
     <div class="article-meta">
       
       
@@ -186,7 +186,7 @@
       <span class="article-meta__item">2026-09-24</span>
       
       <span class="article-meta__sep">·</span>
-      <span class="article-meta__item">24 分钟阅读</span>
+      <span class="article-meta__item">47 分钟阅读</span>
       
     </div>
     
@@ -206,7 +206,7 @@
 
   
   <div class="article-feature">
-    <img src="/post-images/unity-asset-hotupdate-concept-map.svg" alt="Unity 资源热更概念地图：Catalog、Manifest、Bundle、Package 与 DLC 到底指什么" />
+    <img src="/post-images/unity-asset-hotupdate-concept-map.svg" alt="Unity 资源热更概念与分包地图：Catalog、Manifest、Bundle、Package、DLC 与打包粒度" />
   </div>
   
 
@@ -214,6 +214,7 @@
     <blockquote>
 <p>资源热更这块最大的沟通成本不在实现，而在<strong>名词</strong>。同一个词在不同框架里指不同文件，同一个文件在不同框架里叫不同名字：Addressables 叫 Catalog，YooAsset 里没有 Catalog 这个类却有一份 BuildinCatalog；<code>Manifest</code> 既可能是框架的运行时清单，也可能是 Unity 构建过程产出的一个副产物；而 DLC 干脆不是技术名词，是发行名词。</p>
 <p>这篇文章不按框架 API 组织，而是<strong>按名词组织</strong>：每个词先给一句话定义、再给它在文件系统里的落点、最后给&quot;怎么验证它&quot;。目标是下次看到别人文档里的一个词，能立刻判断它说的是哪一层，需要打开哪个文件。</p>
+<p>后半篇（<a href="#pack-rules">分包规则</a> 起）换一个视角：<strong>按机制组织</strong>——打包规则怎么决定粒度、粒度怎么影响请求 / 内存 / 热更、压缩怎么选、运行时怎么验证、优化怎么用 ROI 排序。每个结论都落到一个可执行的验收指标上。</p>
 </blockquote>
 <h2 id="heading">目录</h2>
 <table>
@@ -261,6 +262,34 @@
 <td>中英对照总表，可直接当交接文档用</td>
 </tr>
 <tr>
+<td><a href="#pack-rules">分包规则</a></td>
+<td>收集器、打包规则、共享包：三层机制与常见配置错误</td>
+</tr>
+<tr>
+<td><a href="#granularity">粒度与请求数</a></td>
+<td>&ldquo;请求&quot;是什么、两个极端的代价、共载聚类</td>
+</tr>
+<tr>
+<td><a href="#compression">压缩格式</a></td>
+<td>Uncompressed / LZMA / LZ4，以及双重压缩为什么无效</td>
+</tr>
+<tr>
+<td><a href="#load-memory">加载与内存</a></td>
+<td>加载 Bundle ≠ 资源进内存，卸载与引用计数</td>
+</tr>
+<tr>
+<td><a href="#hotupdate-cost">热更代价</a></td>
+<td>为什么是整包替换、改一张图要重下多少</td>
+</tr>
+<tr>
+<td><a href="#runtime-debug">运行时观测</a></td>
+<td>四种手段：调试器、Profiler、内存快照、API</td>
+</tr>
+<tr>
+<td><a href="#report-driven">报告驱动与 ROI</a></td>
+<td>指标分诊、ROI 排序、验收对照数</td>
+</tr>
+<tr>
 <td><a href="#inspect">怎么查：实操路径</a></td>
 <td>定位资源在哪个包、确认运行时用的哪个版本</td>
 </tr>
@@ -276,7 +305,7 @@
 </table>
 <p><a id="version-trio"></a></p>
 <h2 id="heading-1">先分清三套版本号</h2>
-<p>所有资源热更的排障，第一步都是&quot;你到底在比哪个版本号&quot;。这三套版本号的生命周期、比较方、更新代价都不一样。</p>
+<p>所有资源热更的排障，第一步都是&quot;你到底在比哪个版本号&rdquo;。这三套版本号的生命周期、比较方、更新代价都不一样。</p>
 <table>
 <thead>
 <tr>
@@ -1009,22 +1038,979 @@ $bundle.BundleName
 </tr>
 </tbody>
 </table>
+<p><a id="pack-rules"></a></p>
+<h2 id="heading-12">分包规则：三层机制</h2>
+<p><strong>一句话定义</strong>：分包规则不是一条规则，而是<strong>三层机制的叠加</strong>——收集器决定&quot;哪些资源进哪个组&rdquo;，打包规则决定&quot;组内资源怎么变成 bundle 文件&rdquo;，共享包规则与依赖闭包决定&quot;bundle 之间怎么互相引用&quot;。</p>
+<p>理解这三层，才能解释&quot;为什么我只是改了一个目录名，产物结构全变了&quot;。</p>
+<h3 id="collector">第一层：收集器（Collector）</h3>
+<p>收集器回答&quot;这个目录下的资源，归谁管&quot;。它以<strong>目录为单位</strong>配置，一个收集器绑定一段工程路径。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>作用</th>
+<th>典型取值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>收集路径</td>
+<td>扫哪个目录</td>
+<td><code>Assets/GameMain/...</code></td>
+</tr>
+<tr>
+<td>收集类型</td>
+<td>主资源 / 静态资源 / 依赖资源</td>
+<td>Main / Static / Depend</td>
+</tr>
+<tr>
+<td>地址规则</td>
+<td>业务加载时用什么字符串</td>
+<td>按文件名 / 按工程路径 / 按 GUID / 按组+文件名</td>
+</tr>
+<tr>
+<td>打包规则</td>
+<td>组内怎么切 bundle</td>
+<td>见第二层</td>
+</tr>
+<tr>
+<td>筛选规则</td>
+<td>目录里只收哪类资源</td>
+<td>全部 / 场景 / 预制体 / 精灵</td>
+</tr>
+<tr>
+<td>忽略规则</td>
+<td>哪些文件跳过</td>
+<td>常规忽略（<code>.</code>、<code>~</code> 开头）/ 关闭忽略</td>
+</tr>
+<tr>
+<td>标签</td>
+<td>用于按标签批量下载</td>
+<td>业务自定义（如 <code>preload</code>）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>收集类型是这里最容易用错的一格</strong>：它表达的是&quot;这个资源是内容本身，还是别人的依赖&quot;。分错会导致共享资源被重复打进多个包——这类问题在报告里表现为&quot;同一资源出现在多个包中&quot;。</p>
+<h3 id="packrule">第二层：打包规则（PackRule）</h3>
+<p>打包规则决定&quot;组内的资源怎么切成文件&quot;。这是粒度控制的<strong>唯一旋钮</strong>，掌握下面这几档就够用：</p>
+<table>
+<thead>
+<tr>
+<th>打包规则</th>
+<th>切法</th>
+<th>粒度</th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>按目录打包</td>
+<td>一个目录一个 bundle，含子目录</td>
+<td>中</td>
+<td>默认；目录结构恰好约等于生命周期时用</td>
+</tr>
+<tr>
+<td>按顶层目录打包</td>
+<td>只按最上层目录切，子目录合并</td>
+<td>粗</td>
+<td>目录层级过深、想减少包数</td>
+</tr>
+<tr>
+<td>按文件单独打包</td>
+<td>一个资源一个 bundle</td>
+<td>最细</td>
+<td>需要独立热更 / 独立卸载的大资源</td>
+</tr>
+<tr>
+<td>按收集器打包</td>
+<td>一个收集器一个 bundle</td>
+<td>粗</td>
+<td>整块内容要整体上下线</td>
+</tr>
+<tr>
+<td>按组打包</td>
+<td>一个收集器组一个 bundle</td>
+<td>最粗</td>
+<td>极小项目或强制整包</td>
+</tr>
+<tr>
+<td>按原始文件打包</td>
+<td>原始文件各自成包、不改名</td>
+<td>最细</td>
+<td>视频、下载器管理的二进制</td>
+</tr>
+<tr>
+<td>按着色器打包</td>
+<td>Shader 集中到一个包</td>
+<td>特例</td>
+<td>配合自动收集 Shader</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键认知：打包规则的粒度 = 热更粒度 = 卸载粒度。</strong> 一个 bundle 无法只更新其中一部分，也无法只卸载其中一部分。</p>
+<h3 id="heading-13">第三层：共享包与依赖闭包</h3>
+<p>前两层只决定&quot;哪些资源在一起&quot;，第三层决定&quot;它们怎么互相引用&quot;。</p>
+<ul>
+<li><strong>共享包规则</strong>：当一个资源被多个收集器 / 多个包引用时，把它单独抽成一个 <code>share</code> 包，其余包以&quot;依赖&quot;的方式指向它。开启后产物里会出现 <code>..._share_assets_...</code> 这类包名；关闭则共享资源会被并进第一个引用它的包里。</li>
+<li><strong>依赖闭包</strong>：加载一个包时，框架会<strong>递归加载它依赖的所有包</strong>。所以&quot;加载一个资源的实际代价&quot; = 该资源所在包 + 其依赖闭包的总体积，而不是那个包本身的大小。</li>
+</ul>
+<p>这两条一起解释了报告里最有价值的一列——反向依赖（被谁依赖）：它是判断共享是否合理的唯一依据。</p>
+<h3 id="heading-14">从产物反推规则</h3>
+<p>BundleName 是规则的&quot;打印输出&quot;。看名字基本能还原配置：</p>
+<pre><code>defaultpackage_share_assets_gamemain_fonts
+^^^^^^^^^^^^ ^^^^^ ^^^^^ ^^^^^^^^^^^^^^
+   包名        共享  目录    资源类型
+</code></pre>
+<ul>
+<li>大量 <code>share</code> 前缀 → 开了共享包规则。</li>
+<li>名字里目录层级很深 → 用的是按目录打包。</li>
+<li>同名资源出现在多个包名里 → 收集器路径重叠或收集类型分错。</li>
+</ul>
+<h3 id="heading-15">常见配置错误</h3>
+<table>
+<thead>
+<tr>
+<th>症状</th>
+<th>根因</th>
+<th>修法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>同一资源被打进多个包</td>
+<td>收集类型分错（该 Depend 的填了 Main），或收集器路径重叠</td>
+<td>修正收集类型、去重路径</td>
+</tr>
+<tr>
+<td>只有一个引用者的 share 包</td>
+<td>打包规则切太细，把独占资源也拆了</td>
+<td>合并回引用方</td>
+</tr>
+<tr>
+<td>包多得离谱</td>
+<td>用&quot;按文件单独打包&quot;扫了一个大目录</td>
+<td>换成按目录 / 按顶层目录</td>
+</tr>
+<tr>
+<td>改一处资产，大量包变 hash</td>
+<td>共享包把无关资源捆在一起</td>
+<td>按生命周期重切共享包</td>
+</tr>
+</tbody>
+</table>
+<p><a id="granularity"></a></p>
+<h2 id="heading-16">粒度：从一个包到每资源一包</h2>
+<p><strong>一句话定义</strong>：粒度就是&quot;一次打包产出的 bundle 有多粗&quot;。它是所有资源问题的总开关——<strong>请求数、峰值内存、卸载能力、热更体积，四个指标全部由它决定，而且方向互相冲突</strong>。</p>
+<h3 id="request">先明确&quot;请求（Request）&ldquo;是什么</h3>
+<p>一次请求 = <strong>加载一个 bundle 文件</strong> = 一次文件 IO（本地）或一次 HTTP GET（远端）。</p>
+<p>它和资源数是两个维度：</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>单位</th>
+<th>一个真实项目的量级</th>
+<th>决定因素</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>资源数</td>
+<td>个</td>
+<td>6852</td>
+<td>工程内容量</td>
+</tr>
+<tr>
+<td>包数</td>
+<td>个</td>
+<td>621</td>
+<td>打包规则</td>
+</tr>
+<tr>
+<td>首次加载请求数</td>
+<td>次</td>
+<td>≤ 621</td>
+<td>包数（已加载的包不重复请求）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>加载 100 个资源，如果它们都在同一个包里，只产生 1 次请求；如果分在 100 个包里，就是 100 次请求。</strong> 请求的代价不在&quot;传输&rdquo;（本地 IO 几乎免费），而在每次请求的固定开销：打开文件、读索引、建 bundle 对象、走一遍依赖解析。</p>
+<p>远端场景下请求更贵，因为每个请求都带 HTTP 往返。所以要分清两类病：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>受什么影响</th>
+<th>该用什么手段治</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>下载总量</td>
+<td>包的实际字节数</td>
+<td>减资源、换压缩格式、提高压缩率</td>
+</tr>
+<tr>
+<td>请求数</td>
+<td>包的个数</td>
+<td>合并小包、减少碎片</td>
+</tr>
+<tr>
+<td>首加载延迟</td>
+<td>请求数 + 压缩格式</td>
+<td>合并小包、LZ4</td>
+</tr>
+<tr>
+<td>峰值内存</td>
+<td>最大单包体积 + 压缩格式</td>
+<td>拆分大包、LZ4</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heading-17">两个极端的完整代价</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>全部一个包</th>
+<th>每资源一个包</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>请求数</td>
+<td>1</td>
+<td>≈ 资源数（上例约 6600+）</td>
+</tr>
+<tr>
+<td>重复资源</td>
+<td>无（天然无重复）</td>
+<td>无（但依赖会被拆散）</td>
+</tr>
+<tr>
+<td>固定开销</td>
+<td>最低（只有一份 header / 索引 / TypeTree）</td>
+<td>最高（每包都有一份）</td>
+</tr>
+<tr>
+<td>卸载粒度</td>
+<td><strong>无</strong>（要么全在，要么全没）</td>
+<td>每个资源独立</td>
+</tr>
+<tr>
+<td>热更体积</td>
+<td><strong>全量</strong>（改一个字节重下整包）</td>
+<td>最小（只重下改动的那一个）</td>
+</tr>
+<tr>
+<td>构建耗时</td>
+<td>最短</td>
+<td>最长</td>
+</tr>
+<tr>
+<td>压缩率</td>
+<td>最高（大文件上下文长）</td>
+<td>最低（小文件压不动）</td>
+</tr>
+<tr>
+<td>加载延迟</td>
+<td>首包最大，之后最省</td>
+<td>每次都有请求开销</td>
+</tr>
+<tr>
+<td>失败影响面</td>
+<td>一个包坏了，全游戏不可用</td>
+<td>单点故障</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>一次性小内容、原型验证</td>
+<td>大资源按需下载</td>
+</tr>
+</tbody>
+</table>
+<p>两个极端都能用，但都只在<strong>特定场景</strong>下才是对的。绝大多数项目要的是中间态。</p>
+<h3 id="heading-18">中间态：按&quot;共载聚类&quot;切</h3>
+<p>中间态的原则只有一句：<strong>让 bundle 的边界等于资源生命周期的边界。</strong></p>
+<p>判据是&quot;<strong>这些资源会不会在同一时间被同一功能加载、又在同一时间一起不用了</strong>&quot;。会，就放一个包；不会，就切开。</p>
+<table>
+<thead>
+<tr>
+<th>分层</th>
+<th>特征</th>
+<th>典型资源</th>
+<th>建议粒度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>常驻层</td>
+<td>全程不卸载</td>
+<td>主界面图集、公共 Shader、字体</td>
+<td>合并成少数几个包</td>
+</tr>
+<tr>
+<td>场景层</td>
+<td>进出场景 / 功能时整体装卸</td>
+<td>一个关卡、一个模块的资源</td>
+<td>一个功能一个包或几个包</td>
+</tr>
+<tr>
+<td>单体层</td>
+<td>大且按需</td>
+<td>高清立绘、BGM、视频、大图集</td>
+<td>一个资源一个包</td>
+</tr>
+</tbody>
+</table>
+<p><strong>共载聚类为什么是&quot;最优解&quot;</strong>：它同时压住四个指标——常驻层包数少（请求少）、单体层拆得开（卸载 / 热更粒度细）、同类资源同包（压缩率不塌）、没有跨生命周期捆绑（热更不会误伤）。</p>
+<h3 id="heading-19">判断粒度是否切错的三个信号</h3>
+<ol>
+<li>一个包里的资源，<strong>加载时机各不相同</strong> → 切粗了，应该拆。</li>
+<li>加载一个资源时，<strong>顺带拉起了几 MB 的依赖闭包</strong> → 共享包切错了，或该资源没独立。</li>
+<li>一个包<strong>一年都不会单独热更</strong>，却因为别的资源变更被重下 → 切细了，应该合。</li>
+</ol>
+<p><a id="compression"></a></p>
+<h2 id="uncompressed--lzma--lz4">压缩：Uncompressed / LZMA / LZ4</h2>
+<p><strong>一句话定义</strong>：压缩选项决定 bundle 在磁盘 / 网络上的体积，以及<strong>加载时要不要把整个包解到内存</strong>——它是&quot;下载体积&quot;和&quot;峰值内存&quot;之间的一个交换。</p>
+<h3 id="heading-20">先分清两层数据</h3>
+<p>一个 bundle 里其实有两类数据，可达性不同：</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>内容</th>
+<th>是否可随机访问</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>索引层</td>
+<td>文件头、资源目录、TypeTree、块索引</td>
+<td>是（映射后可直接读）</td>
+</tr>
+<tr>
+<td>数据层</td>
+<td>每个资源的实际内容</td>
+<td>取决于压缩格式</td>
+</tr>
+</tbody>
+</table>
+<p><strong>只有数据层会被&quot;压缩 / 解压&quot;影响，索引层永远要能被随机读。</strong></p>
+<h3 id="heading-21">三种选项</h3>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>压缩机制</th>
+<th>体积</th>
+<th>加载行为</th>
+<th>峰值内存</th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不压缩</td>
+<td>不压缩</td>
+<td>最大</td>
+<td>直接映射，懒读取</td>
+<td>最低</td>
+<td>需要极速启动、本地已无冗余的内容</td>
+</tr>
+<tr>
+<td>LZMA</td>
+<td>流式全量压缩</td>
+<td>最小</td>
+<td><strong>整个包一次性解压到内存</strong></td>
+<td><strong>最高</strong></td>
+<td>只下载不常驻的内容、包体极度紧张</td>
+</tr>
+<tr>
+<td>LZ4（分块）</td>
+<td>按块压缩（Unity 为 128KB / 块）</td>
+<td>中等</td>
+<td>分块按需解压</td>
+<td>低</td>
+<td><strong>绝大多数默认场景</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="lz4---">LZ4 的关键：分块 + 随机访问</h3>
+<p>LZ4 在 AB 里是按<strong>固定块</strong>压缩的。带来的直接结果是：</p>
+<ul>
+<li>文件可以被映射，<strong>只解压你要读的那几块</strong>；其它块在磁盘上原样待着。</li>
+<li>加载一个小资源，不会把整个包解到内存 → 峰值内存 ≈ 该资源大小，而不是包大小。</li>
+<li>代价是压缩率略低于 LZMA（块与块之间不能共享上下文）。</li>
+</ul>
+<p>这也是为什么<strong>运行时默认选 LZ4</strong>：它在体积、加载速度、峰值内存三者之间给了最稳的组合。</p>
+<h3 id="lzma-">LZMA 的陷阱</h3>
+<p>LZMA 压缩率最好，但它是<strong>流式</strong>的：要读包里任何一个资源，必须先把整个包解压出来。</p>
+<ul>
+<li>一个 50MB 的 LZMA 包，加载第一个资源就要先付出约 50MB 的峰值内存和解压时间。</li>
+<li>它适合&quot;下完就写盘、之后用 LZ4 版本&quot;这种离线流程，不适合运行时高频加载。</li>
+</ul>
+<p><strong>结论：LZMA 省的是流量，付的是内存和首加载延迟。</strong></p>
+<h3 id="heading-22">双重压缩：为什么&quot;再压一次&quot;没用</h3>
+<p>LZ4 / LZMA 只能压缩<strong>还有冗余</strong>的数据。而 AB 里的大头——贴图、音频——<strong>在导入时已经是压缩格式</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>资源类型</th>
+<th>导入后形态</th>
+<th>再上 LZ4 / LZMA 的收益</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>贴图（ASTC / ETC2 / BC）</td>
+<td>块压缩，已高度熵编码</td>
+<td>极低（通常个位数百分比）</td>
+</tr>
+<tr>
+<td>音频（Vorbis / MP3 / AAC）</td>
+<td>有损压缩</td>
+<td>极低</td>
+</tr>
+<tr>
+<td>文本 / JSON / 代码 / Shader</td>
+<td>原始文本</td>
+<td><strong>高</strong></td>
+</tr>
+<tr>
+<td>网格 / 动画（未压缩）</td>
+<td>二进制</td>
+<td>中高</td>
+</tr>
+</tbody>
+</table>
+<p>所以&quot;压缩选项&quot;对<strong>包体</strong>的提升，主要体现在文本类资源上；指望靠 LZ4 / LZMA 把贴图包瘦一圈是不现实的。贴图包要瘦，只能靠<strong>减小分辨率、换压缩格式、拆分不共用的大图集</strong>。</p>
+<h3 id="heading-23">与分包的联动</h3>
+<p>压缩率和粒度是<strong>反向</strong>的：包切得越细，每个文件越小，LZ4 能利用的上下文越短，压缩率越低。</p>
+<ul>
+<li>从&quot;一个大包&quot;拆成&quot;一百个小包&quot;，总字节数通常会<strong>变大</strong>（固定开销 + 压缩率下降）。</li>
+<li>所以拆包是在用&quot;一点体积&quot;换&quot;热更与卸载的粒度&quot;，要算总账，不要只盯压缩率。</li>
+</ul>
+<blockquote>
+<p>补充两点：一是更高压缩率的 LZ4 变体（LZ4HC）只提高压缩率、不改变解压速度，但构建更慢，且主流 AB 构建管线默认不暴露；实际项目里换压缩选项的决策点通常只有不压缩 / LZMA / LZ4 三个。二是如果给 bundle 加了<strong>加密</strong>，就无法再做映射式随机访问，LZ4 的按需解压优势会被抹掉——加密与&quot;低峰值内存&quot;往往要二选一。</p>
+</blockquote>
+<p><a id="load-memory"></a></p>
+<h2 id="-bundle-">加载与内存：加载 Bundle 不等于资源进内存</h2>
+<p><strong>一句话定义</strong>：打开 bundle 只把它的<strong>索引</strong>映射进内存；只有真正加载过的资源，才占用内存。把 bundle 文件大小等同于内存占用，是资源预算里最常见的错误。</p>
+<h3 id="heading-24">一次加载的五个阶段</h3>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>做什么</th>
+<th>内存动作</th>
+<th>量级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 打开文件</td>
+<td>从路径加载 bundle</td>
+<td>映射文件、读 header</td>
+<td>KB 级</td>
+</tr>
+<tr>
+<td>2. 建索引</td>
+<td>解析资源目录、依赖表、TypeTree</td>
+<td>常驻少量结构</td>
+<td>KB ~ 低 MB</td>
+</tr>
+<tr>
+<td>3. 取资源</td>
+<td>加载目标资源对象</td>
+<td>解压 + 反序列化</td>
+<td>随资源大小</td>
+</tr>
+<tr>
+<td>4. 上传</td>
+<td>贴图 / 网格上传 GPU</td>
+<td>显存 / GPU 内存</td>
+<td>随资源大小</td>
+</tr>
+<tr>
+<td>5. 卸载</td>
+<td>释放 → 引用计数归零 → 强制卸载</td>
+<td>释放资源 + 包索引</td>
+<td>归零</td>
+</tr>
+</tbody>
+</table>
+<p>关键结论：</p>
+<ul>
+<li><strong>第 1、2 步的成本与包体积无关</strong>（除索引 / TypeTree 大小外），更与&quot;包里有几个资源&quot;无关。</li>
+<li><strong>第 3 步才是有代价的那一步</strong>，而它只处理你<strong>实际用到</strong>的资源。</li>
+<li>所以：一个 100MB 的包，如果只加载了里面一个 1MB 的贴图，驻留内存约等于 1MB + 索引开销，<strong>不是 100MB</strong>。</li>
+</ul>
+<h3 id="lz4-">LZ4 让&quot;部分加载&quot;成立</h3>
+<p>上面的结论<strong>只在 LZ4 / 不压缩时成立</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th>打开文件之后</th>
+<th>加载单个资源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不压缩</td>
+<td>只映射索引</td>
+<td>直接读，不解压</td>
+</tr>
+<tr>
+<td>LZ4</td>
+<td>只映射索引</td>
+<td>只解压相关块</td>
+</tr>
+<tr>
+<td>LZMA</td>
+<td><strong>整个包已解到内存</strong></td>
+<td>从内存里取</td>
+</tr>
+</tbody>
+</table>
+<p>这是上一节&quot;运行时默认选 LZ4&quot;的另一个理由：<strong>只有 LZ4 能让&quot;大包 + 小用量&quot;不付出大内存。</strong></p>
+<h3 id="--">卸载是&quot;引用计数 + 强制清对象&quot;</h3>
+<ul>
+<li>每次加载资源都会增加引用计数；释放时减少计数。</li>
+<li>计数归零后，框架才真正卸载：YooAsset 的做法是调用 <code>AssetBundle.Unload(true)</code>。</li>
+<li><code>Unload(true)</code> 的语义是&quot;<strong>卸载这个包，并销毁其中所有已加载的对象</strong>&quot;；相对地 <code>Unload(false)</code> 会保留对象但让它们失去所属包，容易造成泄漏与悬空引用，实践中基本不用。</li>
+<li>因此&quot;资源为什么还在内存里&quot;通常只有两个答案：<strong>引用计数没归零</strong>，或者<strong>有别的对象在引用它</strong>（用 Memory Profiler 查引用链）。</li>
+</ul>
+<h3 id="---1">文件体积 ≠ 驻留内存</h3>
+<p>三个数字必须分开记：</p>
+<table>
+<thead>
+<tr>
+<th>数字</th>
+<th>含义</th>
+<th>怎么拿</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>磁盘 / 下载体积</td>
+<td>bundle 文件大小</td>
+<td>构建报告</td>
+</tr>
+<tr>
+<td>峰值内存</td>
+<td>加载瞬间的最高占用</td>
+<td>Profiler 抓峰值</td>
+</tr>
+<tr>
+<td>驻留内存</td>
+<td>稳定状态下的常驻占用</td>
+<td>Memory Profiler 快照</td>
+</tr>
+</tbody>
+</table>
+<p><strong>优化内存看后两个，优化流量看第一个。</strong> 一个包体积很大，可能驻留内存为零（没用到）；一个包体积很小，也可能因为反复加载—卸载造成抖动。</p>
+<p><a id="hotupdate-cost"></a></p>
+<h2 id="heading-25">热更代价：改一个资源要重下多少</h2>
+<p><strong>一句话定义</strong>：热更是<strong>整个 bundle 文件的替换</strong>，不是&quot;资源级增量&quot;。改一个资源，代价是它所在 bundle 的完整体积。</p>
+<h3 id="heading-26">为什么是整包替换</h3>
+<p>清单里 bundle 的物理名是 <code>BundleName_HashName</code>，Hash 由<strong>包内容</strong>算出：</p>
+<pre><code>defaultpackage_uispriteatlas_a1b2c3d4....bundle
+                          ^^^^^^^^ 内容变 → 这里变 → 文件名变
+</code></pre>
+<ul>
+<li>文件名含 Hash 是为了让 CDN 上&quot;新旧内容共存&quot;、可灰度、可回滚。</li>
+<li>但代价是：<strong>没有任何二进制差分</strong>。只要包内容变了，就是换一个全新的文件，客户端要下完整的新文件。</li>
+</ul>
+<h3 id="heading-27">一个真实的反例</h3>
+<p>在真实项目里出现过一次典型的误判，值得单独记账：</p>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>数字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>图集包 <code>uispriteatlas</code> 体积</td>
+<td><strong>18.24 MB</strong>，装了 53 张图集</td>
+</tr>
+<tr>
+<td>打包规则</td>
+<td>按目录打包（53 张图集同属一个目录 → 一个包）</td>
+</tr>
+<tr>
+<td>只改其中 1 张图集</td>
+<td>该包 Hash 变 → <strong>重下 18.24 MB</strong></td>
+</tr>
+<tr>
+<td>误判</td>
+<td>曾按&quot;数据库平均包体积&quot;估成约 2MB</td>
+</tr>
+</tbody>
+</table>
+<p><strong>教训</strong>：估热更量必须查<strong>目标资源所在包的实际大小</strong>，不能用平均值、更不能按资源本身大小估。资源 50KB，不代表热更 50KB。</p>
+<h3 id="heading-28">拆包后的账</h3>
+<p>把图集包从&quot;按目录打包&quot;改成&quot;按文件单独打包&quot;：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>包数</th>
+<th>单包平均</th>
+<th>改一张图集的重下量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>现状（按目录）</td>
+<td>1</td>
+<td>18.24 MB</td>
+<td>18.24 MB</td>
+</tr>
+<tr>
+<td>拆开（按文件）</td>
+<td>53</td>
+<td>约 350 KB</td>
+<td>约 0.1 ~ 2 MB（按该图集大小）</td>
+</tr>
+<tr>
+<td>收益</td>
+<td>—</td>
+<td>—</td>
+<td><strong>降低约 90%+</strong></td>
+</tr>
+</tbody>
+</table>
+<p>这就是&quot;粒度 = 热更粒度&quot;的直接体现：<strong>同样的资源，只是换了打包规则，单次热更量差一个数量级。</strong></p>
+<h3 id="heading-29">但不要为了热更无限拆细</h3>
+<p>拆细的隐性代价必须一起算：</p>
+<table>
+<thead>
+<tr>
+<th>代价</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>体积变大</td>
+<td>包多了，固定开销与压缩率损失累加</td>
+</tr>
+<tr>
+<td>请求变多</td>
+<td>每个包一次 IO，首加载更碎</td>
+</tr>
+<tr>
+<td>清单变大</td>
+<td>包数直接放大清单条目</td>
+</tr>
+<tr>
+<td>构建变慢</td>
+<td>包数影响构建与缓存命中</td>
+</tr>
+</tbody>
+</table>
+<p><strong>判据</strong>：只有当&quot;这个资源的独立热更频率明显高于周围资源&quot;时，拆开才划算。<strong>会一起改的放一起，不会一起改的分开</strong>——这是热更粒度与共载聚类之间唯一的冲突点，按发布节奏拍板。</p>
+<p><a id="runtime-debug"></a></p>
+<h2 id="-bundle">运行时怎么观测 Bundle</h2>
+<p>静态报告（构建产物）能回答&quot;包里有什么&quot;，但回答不了&quot;<strong>运行时到底谁被加载了、谁在占内存、谁卸不掉</strong>&quot;。这一节给四种手段。</p>
+<h3 id="-bundle--1">手段一：框架自带的 Bundle 调试器（首选）</h3>
+<p>YooAsset 在调试构建下会自动挂载一个运行时调试组件（<code>RemoteDebuggerInRuntime</code>），把运行中包的数据回传给编辑器窗口 <strong><code>YooAsset/AssetBundle Debugger</code></strong>。它有三个页签：</p>
+<table>
+<thead>
+<tr>
+<th>页签</th>
+<th>回答什么问题</th>
+<th>关键字段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>资源列表（Asset List）</td>
+<td>这个资源被谁加载、加载多久</td>
+<td>加载耗时、所属包、被哪些场景 / 面板引用</td>
+</tr>
+<tr>
+<td>包列表（Bundle List）</td>
+<td>这个包在不在内存、被谁引用</td>
+<td><strong>引用计数</strong>、状态（活跃 / 空闲）、被哪些包依赖</td>
+</tr>
+<tr>
+<td>操作列表（Operation List）</td>
+<td>正在进行的加载任务</td>
+<td>任务状态、耗时</td>
+</tr>
+</tbody>
+</table>
+<p>用法要点：</p>
+<ul>
+<li>窗口上有<strong>单次采样 / 自动采样</strong>：排查用单次，长期观察用自动。</li>
+<li>看&quot;卸载不掉&quot;：在包列表里找<strong>引用计数 &gt; 0 但业务上已关闭</strong>的包，再顺着&quot;被谁依赖&quot;往上找。</li>
+<li>看&quot;内存莫名高&quot;：在资源列表按加载耗时 / 大小排序，找<strong>比预期大</strong>的资源。</li>
+<li><strong>它只统计框架加载的资源</strong>，不覆盖 <code>Resources</code> 等直接加载的对象——不要拿它当唯一真相。</li>
+</ul>
+<h3 id="unity-profiler">手段二：Unity Profiler</h3>
+<p>看引擎层的真实占用：</p>
+<ul>
+<li>Memory 模块 → 详细视图 → Assets 分组，能看到 <strong>AssetBundle</strong>（容器本身）、<strong>SerializedFile</strong>（包索引）、<strong>Texture2D / Mesh</strong> 等具体对象。</li>
+<li>用来回答：&ldquo;内存是花在<strong>容器</strong>上，还是花在<strong>资源对象</strong>上。&rdquo; 容器大 = 包多 / 包大；对象大 = 资源本身大。</li>
+</ul>
+<h3 id="memory-profiler-">手段三：Memory Profiler 包</h3>
+<p><code>com.unity.memoryprofiler</code> 适合查<strong>驻留与泄漏</strong>：</p>
+<ul>
+<li>抓快照后能看到进程里所有已加载的 AB、每个包内的对象，以及<strong>引用链</strong>（谁在引用导致卸不掉）。</li>
+<li>Profiler 看&quot;有多少&quot;，Memory Profiler 看&quot;<strong>为什么还在</strong>&quot;。</li>
+</ul>
+<h3 id="api---">手段四：API 兜底（线上 / 自动化）</h3>
+<p>需要写日志或在无窗口环境排查时，用代码枚举：</p>
+<pre><code class="language-csharp">foreach (var bundle in AssetBundle.GetAllLoadedAssetBundles())
+{
+    Debug.Log($&quot;{bundle.name}&quot;);
+}
+</code></pre>
+<p>配合框架自己的诊断开关，可以把&quot;当前加载了哪些包&quot;打成日志带到线上。</p>
+<h3 id="heading-30">四种手段怎么选</h3>
+<table>
+<thead>
+<tr>
+<th>手段</th>
+<th>视角</th>
+<th>强项</th>
+<th>局限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bundle 调试器</td>
+<td>业务层</td>
+<td>引用计数、依赖关系、加载耗时</td>
+<td>只覆盖框架加载</td>
+</tr>
+<tr>
+<td>Profiler</td>
+<td>引擎层</td>
+<td>容器 vs 对象的真实内存</td>
+<td>引用关系弱</td>
+</tr>
+<tr>
+<td>Memory Profiler</td>
+<td>对象层</td>
+<td>引用链、泄漏定位</td>
+<td>需抓快照，较重</td>
+</tr>
+<tr>
+<td>API / 日志</td>
+<td>脚本层</td>
+<td>可自动化、可线上</td>
+<td>信息最少</td>
+</tr>
+</tbody>
+</table>
+<p><strong>推荐顺序：调试器定位&quot;哪个包&quot;→ Profiler 定位&quot;哪类内存&quot;→ Memory Profiler 定位&quot;为什么没释放&quot;。</strong></p>
+<p><a id="report-driven"></a></p>
+<h2 id="-roi">报告驱动的优化与 ROI</h2>
+<p><strong>一句话定义</strong>：优化不该靠&quot;感觉包大&quot;，而该靠构建报告里的几个<strong>可量化指标</strong>分诊，再用 ROI 决定先做哪个。</p>
+<h3 id="heading-31">先看指标：报告里哪几列值得盯</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>健康信号</th>
+<th>危险信号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>重复资源</td>
+<td>0</td>
+<td>&gt; 0</td>
+<td>同一资源进了多个包，白占体积</td>
+</tr>
+<tr>
+<td>单包体积</td>
+<td>分布平滑</td>
+<td>存在超大包（如 &gt; 5MB）</td>
+<td>首加载与热更的痛点</td>
+</tr>
+<tr>
+<td>包数 / 碎片</td>
+<td>无大量极小包</td>
+<td>大量 &lt; 10KB 的包</td>
+<td>请求数与固定开销浪费</td>
+</tr>
+<tr>
+<td>反向依赖数</td>
+<td>共享包被很多包依赖</td>
+<td><strong>共享包只有 1 个引用者</strong></td>
+<td>拆包规则切错的信号</td>
+</tr>
+<tr>
+<td>依赖闭包体积</td>
+<td>加载一个资源拉不动多少</td>
+<td>加载一个小资源拉起几 MB</td>
+<td>共享包粘得太死</td>
+</tr>
+<tr>
+<td>环形依赖</td>
+<td>无</td>
+<td>存在</td>
+<td>加载死锁风险</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heading-32">再分诊：问题出在哪一层</h3>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>大概率问题层</th>
+<th>对应动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>总体积太大</td>
+<td>内容本身</td>
+<td>减资源、换压缩格式、去无用资源</td>
+</tr>
+<tr>
+<td>单包特别大</td>
+<td>打包规则太粗</td>
+<td>按文件 / 按功能拆</td>
+</tr>
+<tr>
+<td>包数特别多、单包特别小</td>
+<td>打包规则太细</td>
+<td>合并、按顶层目录</td>
+</tr>
+<tr>
+<td>重复资源 &gt; 0</td>
+<td>收集类型 / 路径重叠</td>
+<td>修正收集器配置</td>
+</tr>
+<tr>
+<td>加载一个小资源很慢</td>
+<td>共享包粘死</td>
+<td>重切共享包、拆分闭包</td>
+</tr>
+<tr>
+<td>一个包有一堆引用者却很小</td>
+<td>正常（公共资源）</td>
+<td>保持，但确认它常驻</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-roi-">排序：用 ROI 决定先做谁</h3>
+<p><strong>ROI（投入产出比）= 收益 ÷ 投入。</strong> 资源优化里三项都要量化：</p>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>怎么量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>收益</td>
+<td>省下的字节数 / 请求数 / 峰值内存 / 单次热更量</td>
+</tr>
+<tr>
+<td>投入</td>
+<td>改动范围（配置 or 代码 or 架构）、验证成本</td>
+</tr>
+<tr>
+<td>风险</td>
+<td>是否影响加载时序、是否引入新依赖、是否要回归测试</td>
+</tr>
+</tbody>
+</table>
+<p>把它套进候选优化项，大致能排出优先级：</p>
+<table>
+<thead>
+<tr>
+<th>优化项</th>
+<th>收益</th>
+<th>投入</th>
+<th>风险</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>关闭 TypeTree 写入</td>
+<td>每包固定开销下降，聚沙成塔</td>
+<td>一个开关</td>
+<td>低（需回归）</td>
+<td>高</td>
+</tr>
+<tr>
+<td>字体 ttf 裁剪子集</td>
+<td>单个超大字库包显著下降</td>
+<td>中（要定字符集）</td>
+<td>低</td>
+<td>高</td>
+</tr>
+<tr>
+<td>图集按文件拆包</td>
+<td>单次热更 18MB → &lt; 2MB</td>
+<td>配置</td>
+<td>低</td>
+<td>高</td>
+</tr>
+<tr>
+<td>BGM 按需解绑</td>
+<td>压低峰值内存与首加载</td>
+<td>中（改加载时机）</td>
+<td>中</td>
+<td>中高</td>
+</tr>
+<tr>
+<td>小包合并</td>
+<td>请求数与固定开销下降</td>
+<td>中（需核对共载）</td>
+<td>中</td>
+<td>中</td>
+</tr>
+<tr>
+<td>环形依赖治理</td>
+<td>消除死锁风险</td>
+<td>高（改架构）</td>
+<td>高</td>
+<td>低（但要做）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>排序原则：先做&quot;一个开关换全局收益&quot;的（TypeTree），再做&quot;针对单个巨型包&quot;的（字体、图集），最后才是需要动架构的（依赖治理）。</strong></p>
+<h3 id="heading-33">验收：优化要有对照数</h3>
+<p>每项优化都应在<strong>同一版本对比</strong>下给出：</p>
+<ul>
+<li><input disabled="" type="checkbox" /> 总包数、总体积 变化多少</li>
+<li><input disabled="" type="checkbox" /> 超大包 / 碎片包 数量变化</li>
+<li><input disabled="" type="checkbox" /> 单次典型热更量 变化</li>
+<li><input disabled="" type="checkbox" /> 首加载请求数、峰值内存 变化</li>
+<li><input disabled="" type="checkbox" /> 构建耗时 变化（不能让构建时间失控）</li>
+</ul>
+<p>没有对照数的优化，不算完成。</p>
 <p><a id="inspect"></a></p>
-<h2 id="heading-12">怎么查：实操路径</h2>
-<p>名词认清了，接下来是&quot;遇到问题怎么定位&rdquo;。这一节给的是<strong>从现象到文件</strong>的路径。</p>
-<h3 id="heading-13">想知道&quot;某个资源在哪个包里&rdquo;</h3>
+<h2 id="heading-34">怎么查：实操路径</h2>
+<p>名词认清了，接下来是&quot;遇到问题怎么定位&quot;。这一节给的是<strong>从现象到文件</strong>的路径。</p>
+<h3 id="heading-35">想知道&quot;某个资源在哪个包里&quot;</h3>
 <ol>
 <li>打开构建报告，在 <code>AssetInfos</code> 里搜资源路径 → 拿到所属 <code>BundleName</code>。</li>
 <li>在 <code>BundleInfos</code> 里查这个 <code>BundleName</code> → 看它依赖谁、被谁依赖、包含哪些资源。</li>
 <li>只有拿不到报告时，才回到原始清单里做下标映射。</li>
 </ol>
-<h3 id="heading-14">想知道&quot;这个包为什么这么大&quot;</h3>
+<h3 id="heading-36">想知道&quot;这个包为什么这么大&quot;</h3>
 <ol>
 <li>看报告 <code>Summary</code> 的体积分布，先确定是&quot;包多&quot;还是&quot;单包大&quot;。</li>
 <li>单包大 → 在 <code>BundleInfos</code> 里看它的 <code>BundleContents</code> 是否有意外的大资源（图集、音频、视频）。</li>
 <li>包多 → 检查收集器规则是否有重叠；<code>IndependAssets</code> 是否有本该合并的资源。</li>
 </ol>
-<h3 id="heading-15">想知道&quot;运行时实际用的是哪个版本&quot;</h3>
+<h3 id="heading-37">想知道&quot;运行时实际用的是哪个版本&quot;</h3>
 <table>
 <thead>
 <tr>
@@ -1051,10 +2037,10 @@ $bundle.BundleName
 </tr>
 </tbody>
 </table>
-<h3 id="heading-16">一个通用原则</h3>
+<h3 id="heading-38">一个通用原则</h3>
 <p><strong>所有资源问题的证据链都必须落在&quot;文件 + 版本&quot;上。</strong> 只看日志会出现&quot;日志说下载成功了，但加载的是旧资源&quot;这种无法收敛的状态；必须同时确认<strong>哪一份清单、哪一个版本、哪个物理文件</strong>。这也是前面反复强调&quot;分不清版本号就永远对不上&quot;的原因。</p>
 <p><a id="pitfalls"></a></p>
-<h2 id="heading-17">常见误解</h2>
+<h2 id="heading-39">常见误解</h2>
 <table>
 <thead>
 <tr>
@@ -1114,10 +2100,50 @@ $bundle.BundleName
 <td>它用于寻址目录，只该做相等判断</td>
 <td>灰度与回滚逻辑写歪</td>
 </tr>
+<tr>
+<td>加载 Bundle 就等于资源进内存</td>
+<td>只映射索引；被加载过的资源才进内存</td>
+<td>内存预算严重高估</td>
+</tr>
+<tr>
+<td>资源数 = 请求数</td>
+<td>请求数由包数决定，已加载的包不重复请求</td>
+<td>高估或低估 IO</td>
+</tr>
+<tr>
+<td>包拆得越细越好</td>
+<td>每包有固定开销，压缩率随包数下降</td>
+<td>包数爆炸、加载反而更慢</td>
+</tr>
+<tr>
+<td>热更会下&quot;改动的资源&rdquo;</td>
+<td>实际是整个 bundle 文件替换（无差分）</td>
+<td>热更量被低估数十倍</td>
+</tr>
+<tr>
+<td>已压缩资源再压一次能大省</td>
+<td>ASTC / 音频已高度压缩，再压收益极低</td>
+<td>压缩收益误判</td>
+</tr>
+<tr>
+<td>按目录打包就是最优粒度</td>
+<td>粒度应由生命周期决定，目录只是巧合对齐</td>
+<td>分包切错</td>
+</tr>
+<tr>
+<td>共享包越多越好</td>
+<td>只有 1 个引用者的共享包是纯浪费</td>
+<td>多余 IO 与清单开销</td>
+</tr>
+<tr>
+<td>热更量可以按平均包体积估</td>
+<td>必须查目标资源所在包的真实大小</td>
+<td>方案评估失真</td>
+</tr>
 </tbody>
 </table>
 <p><a id="deliverables"></a></p>
-<h2 id="heading-18">落地清单</h2>
+<h2 id="heading-40">落地清单</h2>
 <p>接入或接手一套资源热更框架时，把下面这些问题问清楚，基本就能对齐所有名词：</p>
 <ul>
 <li><input disabled="" type="checkbox" /> 这个项目的<strong>资源版本号</strong>存在哪个文件？谁负责写入？写入时机是在下载前还是下载后？</li>
@@ -1132,8 +2158,18 @@ $bundle.BundleName
 <li><input disabled="" type="checkbox" /> 三个资源位置（内置 / 沙盒 / 远端）的<strong>清理策略</strong>分别是什么？覆盖安装会怎样？</li>
 <li><input disabled="" type="checkbox" /> 热更 DLL 与 <strong>AOT 补充元数据</strong>是否都进了清单？更新条件是否明确？</li>
 <li><input disabled="" type="checkbox" /> 有没有<strong>回滚</strong>路径？回滚时是换清单还是换版本号？</li>
+<li><input disabled="" type="checkbox" /> 分包边界按什么维度切？（目录 / 生命周期 / 功能）它和&quot;会不会一起加载、一起卸载&quot;一致吗？</li>
+<li><input disabled="" type="checkbox" /> 是否存在<strong>没有任何独立热更 / 卸载需求却单独成包</strong>的资源，或<strong>跨生命周期被捆在一起</strong>的包？</li>
+<li><input disabled="" type="checkbox" /> 压缩选项是<strong>逐包有依据</strong>，还是全局一刀切？有没有对已压缩资源（贴图 / 音频）抱有不切实际的体积预期？</li>
+<li><input disabled="" type="checkbox" /> 是否开启了共享包规则？有没有<strong>只有 1 个引用者的共享包</strong>？</li>
+<li><input disabled="" type="checkbox" /> 是否关闭了 TypeTree 写入？关闭后有没有做过反射 / 反序列化的回归？</li>
+<li><input disabled="" type="checkbox" /> &ldquo;加载一个资源&quot;的<strong>依赖闭包体积上限</strong>是多少？有没有超标的包？</li>
+<li><input disabled="" type="checkbox" /> <strong>单次典型热更量</strong>是多少？有没有超大 bundle 让它变成全量重下？</li>
+<li><input disabled="" type="checkbox" /> 是否存在<strong>环形依赖</strong>？</li>
+<li><input disabled="" type="checkbox" /> 有没有可用的运行时观测手段（Bundle 调试器 / Profiler / Memory Profiler / 日志）？</li>
+<li><input disabled="" type="checkbox" /> 每项优化的<strong>验收对照数</strong>（体积、请求数、峰值内存、热更量、构建耗时）是否齐备？</li>
 </ul>
-<h2 id="heading-19">一句话总结</h2>
+<h2 id="heading-41">一句话总结</h2>
 <p><strong>资源热更的名词可以归到四层上：Package 是边界，Catalog / Manifest 是地图，Bundle 是实物，DLC 是需求。</strong></p>
 <ul>
 <li><strong>Catalog 和 Manifest 不是同义词</strong>：Catalog 是&quot;目录&rdquo;，Manifest 是目录里&quot;资源映射&quot;那一级；框架不同名字还不一样，先确认对方说的是哪一层再讨论。</li>
@@ -1141,6 +2177,16 @@ $bundle.BundleName
 <li><strong>DLC 不是技术概念</strong>，技术侧只有&quot;按需下载一组资源&quot;；它真正难的地方在授权、卸载、回滚、依赖交叉，而不是下载。</li>
 <li><strong>三套版本号必须分开看</strong>，代码热更不是第四套通道，它本身就是资源。</li>
 <li>所有结论都要落到<strong>文件 + 版本 + 物理路径</strong>三件事上，只凭日志无法收敛。</li>
+</ul>
+<h3 id="heading-42">机制层：粒度是一切的开关</h3>
+<p><strong>在名词之下，真正决定体验的是粒度与压缩这两个旋钮。</strong> 记住这几条：</p>
+<ul>
+<li><strong>粒度决定四个互相冲突的指标</strong>：请求数、峰值内存、卸载粒度、热更体积。最优解不是某个极端，而是<strong>共载聚类</strong>——让 bundle 边界等于生命周期边界。</li>
+<li><strong>&ldquo;请求&rdquo;= 一次 bundle 文件加载</strong>，数量由<strong>包数</strong>决定，不由资源数决定；&ldquo;请求多&quot;和&quot;包大&quot;要分开治。</li>
+<li><strong>加载 bundle ≠ 资源进内存</strong>：只映射索引，被加载过的资源才驻留；引用计数归零的强制卸载才真正释放。</li>
+<li><strong>压缩只在&quot;体积 vs 峰值内存&quot;之间选</strong>：运行时默认 LZ4（分块、可随机访问、低峰值）；LZMA 省流量但抬峰值；已压缩资源再压几乎无效。</li>
+<li><strong>热更是整包替换，不是资源级增量</strong>：估热更量必须查目标包的真实体积；拆包能把单次热更量降一个数量级，但要用请求数与压缩率还账。</li>
+<li><strong>先量化再排序</strong>：报告指标分诊 → ROI 排序 → 每项优化给出对照数；没有对照数的优化不算完成。</li>
 </ul>
 <p>相关阅读：<a href="/post/unity-senior-developer-03-assets-hot-update/">Unity 开发高级/资深 03：资源管理与热更新</a>、<a href="/post/unity-texture-compression-formats-and-memory/">Unity 图片资源格式与内存</a>、<a href="/post/unity-senior-developer-skills/">Unity 开发高级/资深 技能总览</a>。</p>
 
